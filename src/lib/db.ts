@@ -8,6 +8,7 @@ const DATA_DIR = process.env.DATA_DIR || (isServerless ? path.join("/tmp", "dr-r
 const UPLOAD_DIR = process.env.UPLOAD_DIR || (isServerless ? path.join("/tmp", "uploads") : path.join(process.cwd(), "public", "uploads"));
 
 const CONTENT_FILE = path.join(DATA_DIR, "content.json");
+const BUNDLED_CONTENT_FILE = path.join(process.cwd(), "data", "content.json");
 const SUBMISSIONS_FILE = path.join(DATA_DIR, "submissions.json");
 const MEDIA_FILE = path.join(DATA_DIR, "media.json");
 const ADMIN_FILE = path.join(DATA_DIR, "admin.json");
@@ -25,20 +26,19 @@ async function ensureDir() {
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
   } catch (err) {
     // In read-only serverless environments, ignore directory creation errors
-    console.warn("Notice: Using in-memory/temp storage due to read-only filesystem:", err);
   }
 }
 
 // Atomic file write using temporary file + rename with memory fallback
 async function atomicWriteJson(filePath: string, data: unknown) {
-  await ensureDir();
   try {
+    await ensureDir();
     const tmpPath = `${filePath}.tmp.${Date.now()}.${Math.random().toString(36).substring(2)}`;
     const content = JSON.stringify(data, null, 2);
     await fs.writeFile(tmpPath, content, "utf-8");
     await fs.rename(tmpPath, filePath);
   } catch (err) {
-    console.warn(`Filesystem write failed for ${filePath}, updating in-memory state:`, err);
+    // In read-only serverless environments, retain updates in-memory
   }
 }
 
@@ -555,17 +555,28 @@ const defaultMediaItems: MediaItem[] = [
 // Content Accessors
 export async function getSiteContent(): Promise<SiteContent> {
   if (memoryContent) return memoryContent;
-  await ensureDir();
+  
+  // 1. Try reading updated file in writable DATA_DIR
   try {
     const data = await fs.readFile(CONTENT_FILE, "utf-8");
     memoryContent = JSON.parse(data);
     return memoryContent as SiteContent;
   } catch {
-    // If not found or corrupt, initialize with default seed
-    memoryContent = defaultSiteContent;
-    await atomicWriteJson(CONTENT_FILE, defaultSiteContent);
-    return defaultSiteContent;
+    // Ignore
   }
+
+  // 2. Try reading bundled repository data
+  try {
+    const data = await fs.readFile(BUNDLED_CONTENT_FILE, "utf-8");
+    memoryContent = JSON.parse(data);
+    return memoryContent as SiteContent;
+  } catch {
+    // Ignore
+  }
+
+  // 3. Fallback to default in-memory content
+  memoryContent = defaultSiteContent;
+  return defaultSiteContent;
 }
 
 export async function updateSiteContent(content: SiteContent): Promise<void> {
@@ -620,14 +631,12 @@ export async function deleteSubmission(id: string): Promise<boolean> {
 // Media Accessors
 export async function getMediaList(): Promise<MediaItem[]> {
   if (memoryMedia) return memoryMedia;
-  await ensureDir();
   try {
     const data = await fs.readFile(MEDIA_FILE, "utf-8");
     memoryMedia = JSON.parse(data);
     return memoryMedia as MediaItem[];
   } catch {
     memoryMedia = defaultMediaItems;
-    await atomicWriteJson(MEDIA_FILE, defaultMediaItems);
     return defaultMediaItems;
   }
 }
@@ -679,7 +688,6 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
 // Admin User Accessors
 export async function getAdminUser(): Promise<AdminUser> {
   if (memoryAdmin) return memoryAdmin;
-  await ensureDir();
   try {
     const data = await fs.readFile(ADMIN_FILE, "utf-8");
     memoryAdmin = JSON.parse(data);
@@ -695,7 +703,6 @@ export async function getAdminUser(): Promise<AdminUser> {
       updatedAt: new Date().toISOString()
     };
     memoryAdmin = defaultAdmin;
-    await atomicWriteJson(ADMIN_FILE, defaultAdmin);
     return defaultAdmin;
   }
 }

@@ -133,7 +133,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 import { getSiteContent } from "@/lib/db";
 
-export const dynamic = "force-dynamic";
+export const revalidate = 60;
 
 export default async function DoctorProfilePage({ params }: Props) {
   const resolvedParams = await params;
