@@ -24,7 +24,7 @@ async function ensureDir() {
   try {
     await fs.mkdir(DATA_DIR, { recursive: true });
     await fs.mkdir(UPLOAD_DIR, { recursive: true });
-  } catch (err) {
+  } catch {
     // In read-only serverless environments, ignore directory creation errors
   }
 }
@@ -37,7 +37,7 @@ async function atomicWriteJson(filePath: string, data: unknown) {
     const content = JSON.stringify(data, null, 2);
     await fs.writeFile(tmpPath, content, "utf-8");
     await fs.rename(tmpPath, filePath);
-  } catch (err) {
+  } catch {
     // In read-only serverless environments, retain updates in-memory
   }
 }
