@@ -110,8 +110,8 @@ export default function AdminPagesEditor() {
       onSelect(data.mediaItem.url, data.mediaItem.alt);
       setStatusMessage({ type: 'success', text: `Uploaded "${data.mediaItem.filename}" and updated section!` });
       await loadAllData();
-    } catch (err: any) {
-      setStatusMessage({ type: 'error', text: err.message || 'Error uploading image' });
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error uploading image' });
     } finally {
       setUploadingImage(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -137,8 +137,8 @@ export default function AdminPagesEditor() {
         type: 'success',
         text: `Published successfully! Updates to ${PAGE_LIST.find((p) => p.key === activePage)?.label} are now live on the website.`,
       });
-    } catch (err: any) {
-      setStatusMessage({ type: 'error', text: err.message || 'Error publishing content' });
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error publishing content' });
     } finally {
       setSaving(false);
     }

@@ -123,8 +123,8 @@ export default function AdminDoctorsPage() {
         type: 'success',
         text: `Doctor profile "${editingDoctor.name}" saved and published successfully!`,
       });
-    } catch (err: any) {
-      alert(err.message || 'Error saving doctor profile');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error saving doctor profile');
     } finally {
       setSaving(false);
     }
@@ -150,8 +150,8 @@ export default function AdminDoctorsPage() {
 
       setContent(updatedContent);
       setStatusMessage({ type: 'success', text: `Doctor profile "${name}" deleted.` });
-    } catch (err: any) {
-      alert(err.message || 'Error deleting doctor');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error deleting doctor');
     } finally {
       setSaving(false);
     }
@@ -176,8 +176,8 @@ export default function AdminDoctorsPage() {
 
       setEditingDoctor({ ...editingDoctor, image: data.mediaItem.url });
       await loadDoctors();
-    } catch (err: any) {
-      alert(err.message || 'Failed to upload photo');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Failed to upload photo');
     } finally {
       setUploadingImage(false);
       if (fileInputRef.current) fileInputRef.current.value = '';

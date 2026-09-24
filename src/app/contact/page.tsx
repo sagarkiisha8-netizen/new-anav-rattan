@@ -40,8 +40,8 @@ export default function ContactPage() {
       }
 
       setSubmitted(true);
-    } catch (err: any) {
-      setSubmitError(err.message || "Something went wrong. Please call reception directly.");
+    } catch (err: unknown) {
+      setSubmitError(err instanceof Error ? err.message : "Something went wrong. Please call reception directly.");
     } finally {
       setIsSubmitting(false);
     }

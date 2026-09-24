@@ -216,8 +216,8 @@ export default function AdminMediaPage() {
 
       setStatusMessage({ type: 'success', text: `Uploaded "${data.mediaItem.filename}" successfully!` });
       await loadMedia();
-    } catch (err: any) {
-      setStatusMessage({ type: 'error', text: err.message || 'Error uploading file' });
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error uploading file' });
     } finally {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = '';
@@ -242,8 +242,8 @@ export default function AdminMediaPage() {
 
       setStatusMessage({ type: 'success', text: `Deleted "${filename}".` });
       await loadMedia();
-    } catch (err: any) {
-      alert(err.message || 'Error deleting media asset');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error deleting media asset');
     }
   };
 

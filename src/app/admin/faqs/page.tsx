@@ -12,11 +12,7 @@ export default function AdminFAQsPage() {
   const [selectedCategory, setSelectedCategory] = useState<string>('All');
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  useEffect(() => {
-    loadFAQs();
-  }, []);
-
-  async function loadFAQs() {
+  const loadFAQs = async () => {
     try {
       const res = await fetch('/api/admin/content');
       const data = await res.json();
@@ -28,7 +24,11 @@ export default function AdminFAQsPage() {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    loadFAQs();
+  }, []);
 
   const categories = ['All', 'General', 'Appointments', 'Treatments', 'Insurance & Billing', 'Post-Op Care'];
 
@@ -96,8 +96,8 @@ export default function AdminFAQsPage() {
       setEditingFAQ(null);
       setStatusMessage({ type: 'success', text: 'FAQ saved successfully!' });
       setTimeout(() => setStatusMessage(null), 3000);
-    } catch (err: any) {
-      alert(err.message || 'Error saving FAQ');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error saving FAQ');
     } finally {
       setSaving(false);
     }
@@ -128,8 +128,8 @@ export default function AdminFAQsPage() {
       setContent(updatedContent);
       setStatusMessage({ type: 'success', text: 'FAQ deleted.' });
       setTimeout(() => setStatusMessage(null), 3000);
-    } catch (err: any) {
-      alert(err.message || 'Error deleting FAQ');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error deleting FAQ');
     } finally {
       setSaving(false);
     }

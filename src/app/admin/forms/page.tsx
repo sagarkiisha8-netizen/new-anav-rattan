@@ -64,8 +64,8 @@ export default function AdminFormsPage() {
 
       setStatusMessage('Status updated successfully');
       setTimeout(() => setStatusMessage(null), 2500);
-    } catch (err: any) {
-      alert(err.message || 'Error updating status');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error updating status');
     }
   };
 
@@ -91,8 +91,8 @@ export default function AdminFormsPage() {
       setSelectedSubmission({ ...selectedSubmission, notes: internalNote, adminNotes: internalNote });
       setStatusMessage('Internal notes saved successfully');
       setTimeout(() => setStatusMessage(null), 2500);
-    } catch (err: any) {
-      alert(err.message || 'Error saving internal notes');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error saving internal notes');
     } finally {
       setSavingNote(false);
     }
@@ -112,8 +112,8 @@ export default function AdminFormsPage() {
       if (selectedSubmission?.id === id) setSelectedSubmission(null);
       setStatusMessage('Submission deleted');
       setTimeout(() => setStatusMessage(null), 2500);
-    } catch (err: any) {
-      alert(err.message || 'Error deleting submission');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error deleting submission');
     }
   };
 

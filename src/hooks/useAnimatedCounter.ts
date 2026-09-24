@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { useScrollReveal } from "./useScrollReveal";
 
 export function useAnimatedCounter(target: number, duration: number = 2000) {
   const [count, setCount] = useState(0);

@@ -15,7 +15,7 @@ export const metadata: Metadata = {
 
 export default async function ResearchPage() {
   const content = await getSiteContent();
-  const research = (content as any)?.research || {};
+  const research = content?.research;
 
   const heroTitle = research.title || "Research, Conferences & Surgical Milestones";
   const heroSubtitle = research.subtitle || "Continuous academic engagement, national conference presentations, and certified surgical fellowships ensure that our patients benefit from modern, evidence-backed clinical protocols.";
@@ -260,7 +260,7 @@ export default async function ResearchPage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
-            {ongoingInquiries.map((item: any, idx: number) => (
+            {ongoingInquiries.map((item, idx: number) => (
               <div key={idx} style={{ background: "#fff", padding: "28px", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)" }}>
                 <h3 style={{ fontFamily: "var(--serif)", fontSize: "20px", color: "var(--navy)", marginBottom: "10px" }}>
                   {item.title}

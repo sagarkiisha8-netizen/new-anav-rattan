@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAdminSession } from '@/lib/auth';
 import { getMediaItems, deleteMediaItem } from '@/lib/db';
 
-export async function GET(request: NextRequest) {
+export async function GET() {
   const session = await getAdminSession();
   if (!session) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
@@ -32,7 +32,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: 'Media item deleted' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to delete media item' }, { status: 500 });
   }
 }

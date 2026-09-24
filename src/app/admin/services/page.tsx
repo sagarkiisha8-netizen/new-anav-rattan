@@ -12,11 +12,7 @@ export default function AdminServicesPage() {
   const [search, setSearch] = useState('');
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  useEffect(() => {
-    loadServices();
-  }, []);
-
-  async function loadServices() {
+  const loadServices = async () => {
     try {
       const res = await fetch('/api/admin/content');
       const data = await res.json();
@@ -30,7 +26,11 @@ export default function AdminServicesPage() {
     } finally {
       setLoading(false);
     }
-  }
+  };
+
+  useEffect(() => {
+    loadServices();
+  }, []);
 
   const handleOpenAdd = () => {
     setIsNew(true);
@@ -107,8 +107,8 @@ export default function AdminServicesPage() {
         type: 'success',
         text: `Service "${editingService.name}" saved and published successfully!`,
       });
-    } catch (err: any) {
-      alert(err.message || 'Error saving service');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error saving service');
     } finally {
       setSaving(false);
     }
@@ -134,8 +134,8 @@ export default function AdminServicesPage() {
 
       setContent(updatedContent);
       setStatusMessage({ type: 'success', text: `Service "${name}" deleted.` });
-    } catch (err: any) {
-      alert(err.message || 'Error deleting service');
+    } catch (err: unknown) {
+      alert(err instanceof Error ? err.message : 'Error deleting service');
     } finally {
       setSaving(false);
     }

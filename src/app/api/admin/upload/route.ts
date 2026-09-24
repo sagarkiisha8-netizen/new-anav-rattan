@@ -39,10 +39,20 @@ export async function POST(request: Request) {
     // Sanitize filename
     const cleanName = file.name.replace(/[^a-zA-Z0-9.-]/g, "_").toLowerCase();
     const uniqueName = `${Date.now()}-${cleanName}`;
-    const uploadDir = path.join(process.cwd(), "public", "uploads");
+    
+    // Serverless-resilient upload directory
+    const isServerless = Boolean(process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+    let uploadDir = process.env.UPLOAD_DIR || (isServerless ? path.join("/tmp", "uploads") : path.join(process.cwd(), "public", "uploads"));
 
-    await fs.mkdir(uploadDir, { recursive: true });
-    await fs.writeFile(path.join(uploadDir, uniqueName), buffer);
+    try {
+      await fs.mkdir(uploadDir, { recursive: true });
+      await fs.writeFile(path.join(uploadDir, uniqueName), buffer);
+    } catch {
+      // If primary upload directory is read-only (serverless), fallback to /tmp/uploads
+      uploadDir = path.join("/tmp", "uploads");
+      await fs.mkdir(uploadDir, { recursive: true });
+      await fs.writeFile(path.join(uploadDir, uniqueName), buffer);
+    }
 
     const relativeUrl = `/uploads/${uniqueName}`;
 
@@ -62,7 +72,7 @@ export async function POST(request: Request) {
     await addMediaItem(mediaItem);
 
     return NextResponse.json({ success: true, item: mediaItem, mediaItem });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Upload error:", err);
     return NextResponse.json({ error: "Failed to upload image" }, { status: 500 });
   }

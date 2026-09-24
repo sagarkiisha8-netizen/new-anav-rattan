@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     await setAdminSessionCookie(admin.email);
 
     return NextResponse.json({ success: true, email: admin.email });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Login error:", err);
     return NextResponse.json({ error: "Authentication failed" }, { status: 500 });
   }

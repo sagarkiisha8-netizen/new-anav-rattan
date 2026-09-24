@@ -3,29 +3,43 @@ import path from "path";
 import { SiteContent, Submission, MediaItem, AdminUser } from "./types";
 import { hashPassword } from "./auth";
 
-const DATA_DIR = path.join(process.cwd(), "data");
+const isServerless = Boolean(process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+const DATA_DIR = process.env.DATA_DIR || (isServerless ? path.join("/tmp", "dr-rattan-data") : path.join(process.cwd(), "data"));
+const UPLOAD_DIR = process.env.UPLOAD_DIR || (isServerless ? path.join("/tmp", "uploads") : path.join(process.cwd(), "public", "uploads"));
+
 const CONTENT_FILE = path.join(DATA_DIR, "content.json");
 const SUBMISSIONS_FILE = path.join(DATA_DIR, "submissions.json");
 const MEDIA_FILE = path.join(DATA_DIR, "media.json");
 const ADMIN_FILE = path.join(DATA_DIR, "admin.json");
 
+// In-memory runtime fallbacks for serverless environments
+let memoryContent: SiteContent | null = null;
+let memorySubmissions: Submission[] | null = null;
+let memoryMedia: MediaItem[] | null = null;
+let memoryAdmin: AdminUser | null = null;
+
 // Ensure data directory exists
 async function ensureDir() {
   try {
     await fs.mkdir(DATA_DIR, { recursive: true });
-    await fs.mkdir(path.join(process.cwd(), "public", "uploads"), { recursive: true });
+    await fs.mkdir(UPLOAD_DIR, { recursive: true });
   } catch (err) {
-    console.error("Error creating directories:", err);
+    // In read-only serverless environments, ignore directory creation errors
+    console.warn("Notice: Using in-memory/temp storage due to read-only filesystem:", err);
   }
 }
 
-// Atomic file write using temporary file + rename
-async function atomicWriteJson(filePath: string, data: any) {
+// Atomic file write using temporary file + rename with memory fallback
+async function atomicWriteJson(filePath: string, data: unknown) {
   await ensureDir();
-  const tmpPath = `${filePath}.tmp.${Date.now()}.${Math.random().toString(36).substring(2)}`;
-  const content = JSON.stringify(data, null, 2);
-  await fs.writeFile(tmpPath, content, "utf-8");
-  await fs.rename(tmpPath, filePath);
+  try {
+    const tmpPath = `${filePath}.tmp.${Date.now()}.${Math.random().toString(36).substring(2)}`;
+    const content = JSON.stringify(data, null, 2);
+    await fs.writeFile(tmpPath, content, "utf-8");
+    await fs.rename(tmpPath, filePath);
+  } catch (err) {
+    console.warn(`Filesystem write failed for ${filePath}, updating in-memory state:`, err);
+  }
 }
 
 // Default initial content representing current website data
@@ -540,28 +554,35 @@ const defaultMediaItems: MediaItem[] = [
 
 // Content Accessors
 export async function getSiteContent(): Promise<SiteContent> {
+  if (memoryContent) return memoryContent;
   await ensureDir();
   try {
     const data = await fs.readFile(CONTENT_FILE, "utf-8");
-    return JSON.parse(data);
+    memoryContent = JSON.parse(data);
+    return memoryContent as SiteContent;
   } catch {
     // If not found or corrupt, initialize with default seed
+    memoryContent = defaultSiteContent;
     await atomicWriteJson(CONTENT_FILE, defaultSiteContent);
     return defaultSiteContent;
   }
 }
 
 export async function updateSiteContent(content: SiteContent): Promise<void> {
+  memoryContent = content;
   await atomicWriteJson(CONTENT_FILE, content);
 }
 
 // Submissions Accessors
 export async function getSubmissions(): Promise<Submission[]> {
+  if (memorySubmissions) return memorySubmissions;
   await ensureDir();
   try {
     const data = await fs.readFile(SUBMISSIONS_FILE, "utf-8");
-    return JSON.parse(data);
+    memorySubmissions = JSON.parse(data);
+    return memorySubmissions as Submission[];
   } catch {
+    memorySubmissions = [];
     await atomicWriteJson(SUBMISSIONS_FILE, []);
     return [];
   }
@@ -570,6 +591,7 @@ export async function getSubmissions(): Promise<Submission[]> {
 export async function addSubmission(submission: Submission): Promise<Submission> {
   const list = await getSubmissions();
   list.unshift(submission);
+  memorySubmissions = list;
   await atomicWriteJson(SUBMISSIONS_FILE, list);
   return submission;
 }
@@ -580,6 +602,7 @@ export async function updateSubmission(id: string, updates: Partial<Submission>)
   if (index === -1) return null;
 
   list[index] = { ...list[index], ...updates } as Submission;
+  memorySubmissions = list;
   await atomicWriteJson(SUBMISSIONS_FILE, list);
   return list[index];
 }
@@ -589,17 +612,21 @@ export async function deleteSubmission(id: string): Promise<boolean> {
   const filtered = list.filter(item => item.id !== id);
   if (filtered.length === list.length) return false;
 
+  memorySubmissions = filtered;
   await atomicWriteJson(SUBMISSIONS_FILE, filtered);
   return true;
 }
 
 // Media Accessors
 export async function getMediaList(): Promise<MediaItem[]> {
+  if (memoryMedia) return memoryMedia;
   await ensureDir();
   try {
     const data = await fs.readFile(MEDIA_FILE, "utf-8");
-    return JSON.parse(data);
+    memoryMedia = JSON.parse(data);
+    return memoryMedia as MediaItem[];
   } catch {
+    memoryMedia = defaultMediaItems;
     await atomicWriteJson(MEDIA_FILE, defaultMediaItems);
     return defaultMediaItems;
   }
@@ -610,6 +637,7 @@ export const getMediaItems = getMediaList;
 export async function addMediaItem(item: MediaItem): Promise<MediaItem> {
   const list = await getMediaList();
   list.unshift(item);
+  memoryMedia = list;
   await atomicWriteJson(MEDIA_FILE, list);
   return item;
 }
@@ -620,6 +648,7 @@ export async function updateMediaItem(id: string, updates: Partial<MediaItem>): 
   if (index === -1) return null;
 
   list[index] = { ...list[index], ...updates };
+  memoryMedia = list;
   await atomicWriteJson(MEDIA_FILE, list);
   return list[index];
 }
@@ -630,12 +659,15 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
   if (!item) return false;
 
   const filtered = list.filter(m => m.id !== id);
+  memoryMedia = filtered;
   await atomicWriteJson(MEDIA_FILE, filtered);
 
-  // If the file is in /uploads/, delete the disk file as well
+  // If the file is in /uploads/, delete the disk file as well if accessible
   if (item.url.startsWith("/uploads/")) {
     try {
-      const diskPath = path.join(process.cwd(), "public", item.url);
+      const isServerlessEnv = Boolean(process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
+      const uploadBasePath = process.env.UPLOAD_DIR || (isServerlessEnv ? path.join("/tmp", "uploads") : path.join(process.cwd(), "public", "uploads"));
+      const diskPath = path.join(uploadBasePath, item.filename || path.basename(item.url));
       await fs.unlink(diskPath);
     } catch (err) {
       console.warn("Could not delete physical file:", err);
@@ -646,10 +678,12 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
 
 // Admin User Accessors
 export async function getAdminUser(): Promise<AdminUser> {
+  if (memoryAdmin) return memoryAdmin;
   await ensureDir();
   try {
     const data = await fs.readFile(ADMIN_FILE, "utf-8");
-    return JSON.parse(data);
+    memoryAdmin = JSON.parse(data);
+    return memoryAdmin as AdminUser;
   } catch {
     // Default admin: admin@drrattanentclinic.com / Admin@Rattan2026
     const { hash, salt } = hashPassword("Admin@Rattan2026");
@@ -660,6 +694,7 @@ export async function getAdminUser(): Promise<AdminUser> {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
+    memoryAdmin = defaultAdmin;
     await atomicWriteJson(ADMIN_FILE, defaultAdmin);
     return defaultAdmin;
   }

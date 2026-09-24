@@ -53,8 +53,8 @@ export default function AdminSettingsPage() {
       setCurrentPassword('');
       setNewPassword('');
       setConfirmPassword('');
-    } catch (err: any) {
-      setStatusMessage({ type: 'error', text: err.message || 'Error updating password' });
+    } catch (err: unknown) {
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error updating password' });
     } finally {
       setLoading(false);
     }

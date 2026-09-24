@@ -1,98 +1,13 @@
 import Link from "next/link";
 import { Metadata } from "next";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { getSiteContent } from "@/lib/db";
 
 export const metadata: Metadata = {
   title: "Clinical Services | Dr. Rattan ENT Clinic Chandigarh",
   description:
     "Comprehensive ENT diagnostic, medical, and advanced surgical interventions in Chandigarh. Specialising in Otology, Hearing Restoration, Cochlear Implants, Endoscopic Sinus Surgery, Voice Disorders, and Skull Base Surgery.",
 };
-
-const servicesList = [
-  {
-    num: "01",
-    name: "Ear Care & Otology",
-    link: "ear-care",
-    category: "Otology",
-    icon: "👂",
-    desc: "Comprehensive diagnosis and microscopic surgical management for chronic otitis media, tympanic membrane perforations, cholesteatoma, and mastoid disease.",
-    highlights: ["Tympanoplasty", "Mastoidectomy", "Stapedectomy", "Ear Discharge Treatment"]
-  },
-  {
-    num: "02",
-    name: "Hearing Loss & Audiology",
-    link: "hearing-loss",
-    category: "Audiology",
-    icon: "🔊",
-    desc: "Formal audiometric assessment, pure tone audiometry, impedance testing, and precision hearing rehabilitation for pediatric and adult hearing impairments.",
-    highlights: ["Pure Tone Audiometry", "Tympanometry", "Sudden Sensorineural Loss", "Hearing Aids & Counseling"]
-  },
-  {
-    num: "03",
-    name: "Sinus & Allergy Care",
-    link: "sinus-allergy",
-    category: "Rhinology",
-    icon: "👃",
-    desc: "High-definition nasal endoscopy, medical allergy protocol, and Functional Endoscopic Sinus Surgery (FESS) for chronic sinusitis and nasal polyps.",
-    highlights: ["FESS Surgery", "Deviated Septum (Septoplasty)", "Nasal Polyposis", "Allergic Rhinitis Protocol"]
-  },
-  {
-    num: "04",
-    name: "Throat & Voice Care",
-    link: "throat-voice",
-    category: "Laryngology",
-    icon: "🗣️",
-    desc: "Fibreoptic laryngoscopy and microsurgical intervention for vocal cord nodules, hoarseness, chronic tonsillitis, adenoids, and swallowing difficulties.",
-    highlights: ["Microlaryngeal Surgery (MLS)", "Vocal Nodules & Polyps", "Coblation Tonsillectomy", "Hoarseness Workup"]
-  },
-  {
-    num: "05",
-    name: "Pediatric ENT Care",
-    link: "pediatric-ent",
-    category: "Pediatrics",
-    icon: "👶",
-    desc: "Gentle, specialized ENT care for newborns, infants, and children. Dedicated protocols for recurrent ear discharge, glue ear, adenotonsillar hypertrophy, and speech delays.",
-    highlights: ["Grommet Insertion", "Adenoidectomy", "Congenital Hearing Screening", "Childhood Stridor"]
-  },
-  {
-    num: "06",
-    name: "Vertigo & Balance Disorders",
-    link: "vertigo",
-    category: "Vestibular",
-    icon: "🌀",
-    desc: "Systematic neuro-otological evaluation to pinpoint peripheral vestibular disorders from central pathology, featuring repositioning maneuvers and medical care.",
-    highlights: ["Epley Maneuver for BPPV", "Meniere's Disease", "Vestibular Neuritis", "Labyrinthitis Care"]
-  },
-  {
-    num: "07",
-    name: "Cochlear Implants & Auditory Implants",
-    link: "cochlear-implants",
-    category: "Advanced Otology",
-    icon: "🦻",
-    desc: "State-of-the-art surgical implantation program for profound sensorineural hearing loss unresponsive to conventional hearing aids, trained at KEM Hospital Mumbai.",
-    highlights: ["Pre-implant Candidacy Workup", "Minimally Invasive Implantation", "Post-op Telemetry & Mapping", "Auditory-Verbal Handoff"]
-  },
-  {
-    num: "08",
-    name: "Skull Base Surgery",
-    link: "skull-base-surgery",
-    category: "Neurotology",
-    icon: "🧠",
-    desc: "Complex lateral and anterior skull base surgical procedures for acoustic neuromas, glomus jugulare tumors, CSF leaks, and temporal bone pathologies.",
-    highlights: ["Lateral Skull Base Approaches", "Acoustic Neuroma Care", "Endoscopic CSF Leak Repair", "Facial Nerve Decompression"]
-  },
-  {
-    num: "09",
-    name: "Head & Neck Surgery",
-    link: "head-neck-care",
-    category: "Head & Neck",
-    icon: "🩺",
-    desc: "Diagnostic fine-needle cytology, ultrasound correlation, and meticulous surgical excision of salivary gland neoplasms, thyroid nodules, and congenital neck cysts.",
-    highlights: ["Superficial Parotidectomy", "Hemithyroidectomy", "Branchial Cleft & Thyroglossal Excision", "Cervical Lymphadenopathy"]
-  },
-];
-
-import { getSiteContent } from "@/lib/db";
 
 export const dynamic = "force-dynamic";
 

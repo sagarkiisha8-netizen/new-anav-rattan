@@ -8,7 +8,7 @@ export async function GET() {
   try {
     const content = await getSiteContent();
     return NextResponse.json({ ...content, content });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Error reading content:", err);
     return NextResponse.json({ error: "Failed to read content" }, { status: 500 });
   }
@@ -33,7 +33,7 @@ export async function PUT(request: Request) {
 
     await updateSiteContent(updatedContent);
     return NextResponse.json({ success: true, content: updatedContent });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Error updating content:", err);
     return NextResponse.json({ error: "Failed to update content" }, { status: 500 });
   }

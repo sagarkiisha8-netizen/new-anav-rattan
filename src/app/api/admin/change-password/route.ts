@@ -28,7 +28,7 @@ export async function POST(request: Request) {
     await updateAdminPassword(newPassword);
 
     return NextResponse.json({ success: true, message: "Password updated successfully" });
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Change password error:", err);
     return NextResponse.json({ error: "Failed to update password" }, { status: 500 });
   }

@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
 
 export default function BookAppointmentPage() {
@@ -50,8 +49,8 @@ export default function BookAppointmentPage() {
 
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
-    } catch (err: any) {
-      setSubmitError(err.message || "Failed to process appointment request. Please contact clinic reception.");
+    } catch (err: unknown) {
+      setSubmitError(err instanceof Error ? err.message : "Failed to process appointment request. Please contact clinic reception.");
     } finally {
       setIsSubmitting(false);
     }

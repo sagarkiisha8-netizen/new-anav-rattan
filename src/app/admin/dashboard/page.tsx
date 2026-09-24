@@ -358,12 +358,12 @@ export default function AdminDashboardPage() {
                         </span>
                       </td>
                       <td style={{ fontSize: '12px', color: '#64748b' }}>
-                        {new Date(sub.createdAt || sub.submittedAt || Date.now()).toLocaleDateString('en-US', {
+                        {(sub.createdAt || sub.submittedAt) ? new Date((sub.createdAt || sub.submittedAt) as string).toLocaleDateString('en-US', {
                           month: 'short',
                           day: 'numeric',
                           hour: '2-digit',
                           minute: '2-digit'
-                        })}
+                        }) : 'Recent'}
                       </td>
                       <td style={{ textAlign: 'right' }}>
                         <Link href="/admin/forms" style={{ color: '#123653', fontWeight: 600, textDecoration: 'none', fontSize: '12px' }}>

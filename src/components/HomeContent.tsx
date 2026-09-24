@@ -9,6 +9,7 @@ import WhyChooseUsSection from "@/components/WhyChooseUsSection";
 import MeetTheDoctorsSection from "@/components/MeetTheDoctorsSection";
 import PatientJourneySection from "@/components/PatientJourneySection";
 import PatientTestimonialsSection from "@/components/PatientTestimonialsSection";
+import { SiteContent } from "@/lib/types";
 
 function AnimatedStat({ target, suffix, label }: { target: number, suffix: string, label: string }) {
   const { count, ref } = useAnimatedCounter(target, 2000);
@@ -20,22 +21,21 @@ function AnimatedStat({ target, suffix, label }: { target: number, suffix: strin
   );
 }
 
-export default function HomeContent({ initialContent }: { initialContent?: any }) {
+export default function HomeContent({ initialContent }: { initialContent?: SiteContent | null }) {
   const heroRef = useScrollReveal();
   const trustRef = useScrollReveal();
   const servicesRef = useScrollReveal();
-  const contactRef = useScrollReveal();
 
-  const homeInit = initialContent?.home || {};
+  const homeInit = initialContent?.home;
   const [cmsHome, setCmsHome] = useState({
-    heroBadge: homeInit.hero?.badge || homeInit.heroBadge || "Specialist ENT Clinic · Sector 33C, Chandigarh",
-    heroTitle: homeInit.hero?.title || homeInit.heroTitle || "Complete Ear, Nose & Throat Care in Chandigarh",
-    heroSubtitle: homeInit.hero?.highlightedTitle || homeInit.heroSubtitle || "Ear, Nose & Throat",
-    heroDescription: homeInit.hero?.description || homeInit.heroDescription || "Providing comprehensive ear, nose, throat, sinus, allergy, voice, hearing, and head-and-neck care with institution-level expertise and compassionate patient care.",
-    heroImage: homeInit.hero?.image || homeInit.heroImage || "/images/dr-rattan-and-dr-anav-rattan-hero2.png",
-    patientJourney: homeInit.patientJourney || undefined,
-    testimonialsSection: homeInit.testimonialsSection || undefined,
-    testimonials: homeInit.testimonials || undefined
+    heroBadge: homeInit?.hero?.badge || homeInit?.heroBadge || "Specialist ENT Clinic · Sector 33C, Chandigarh",
+    heroTitle: homeInit?.hero?.title || homeInit?.heroTitle || "Complete Ear, Nose & Throat Care in Chandigarh",
+    heroSubtitle: homeInit?.hero?.highlightedTitle || homeInit?.heroSubtitle || "Ear, Nose & Throat",
+    heroDescription: homeInit?.hero?.description || homeInit?.heroDescription || "Providing comprehensive ear, nose, throat, sinus, allergy, voice, hearing, and head-and-neck care with institution-level expertise and compassionate patient care.",
+    heroImage: homeInit?.hero?.image || homeInit?.heroImage || "/images/dr-rattan-and-dr-anav-rattan-hero2.png",
+    patientJourney: homeInit?.patientJourney || undefined,
+    testimonialsSection: homeInit?.testimonialsSection || undefined,
+    testimonials: homeInit?.testimonials || undefined
   });
 
   useEffect(() => {

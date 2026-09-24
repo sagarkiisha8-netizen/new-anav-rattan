@@ -29,19 +29,14 @@ export default function AdminShell({
   );
   const [loading, setLoading] = useState(isLoginPage || isRootAdmin ? false : !initialSession);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  // Close mobile sidebar on route change
-  useEffect(() => {
+  const [prevPath, setPrevPath] = useState(pathname);
+  if (prevPath !== pathname) {
+    setPrevPath(pathname);
     setMobileMenuOpen(false);
-  }, [pathname]);
+  }
 
   useEffect(() => {
-    if (isLoginPage || isRootAdmin) {
-      setLoading(false);
-      return;
-    }
-    if (initialSession) {
-      setLoading(false);
+    if (isLoginPage || isRootAdmin || initialSession) {
       return;
     }
 

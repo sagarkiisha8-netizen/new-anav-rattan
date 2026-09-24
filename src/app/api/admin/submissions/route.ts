@@ -108,7 +108,7 @@ export async function PATCH(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, submission: updated });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to update submission.' }, { status: 500 });
   }
 }
@@ -133,7 +133,7 @@ export async function DELETE(request: NextRequest) {
     }
 
     return NextResponse.json({ success: true, message: 'Submission deleted.' });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ error: 'Failed to delete submission.' }, { status: 500 });
   }
 }
