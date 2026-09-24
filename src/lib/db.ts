@@ -1,0 +1,678 @@
+import fs from "fs/promises";
+import path from "path";
+import { SiteContent, Submission, MediaItem, AdminUser } from "./types";
+import { hashPassword } from "./auth";
+
+const DATA_DIR = path.join(process.cwd(), "data");
+const CONTENT_FILE = path.join(DATA_DIR, "content.json");
+const SUBMISSIONS_FILE = path.join(DATA_DIR, "submissions.json");
+const MEDIA_FILE = path.join(DATA_DIR, "media.json");
+const ADMIN_FILE = path.join(DATA_DIR, "admin.json");
+
+// Ensure data directory exists
+async function ensureDir() {
+  try {
+    await fs.mkdir(DATA_DIR, { recursive: true });
+    await fs.mkdir(path.join(process.cwd(), "public", "uploads"), { recursive: true });
+  } catch (err) {
+    console.error("Error creating directories:", err);
+  }
+}
+
+// Atomic file write using temporary file + rename
+async function atomicWriteJson(filePath: string, data: any) {
+  await ensureDir();
+  const tmpPath = `${filePath}.tmp.${Date.now()}.${Math.random().toString(36).substring(2)}`;
+  const content = JSON.stringify(data, null, 2);
+  await fs.writeFile(tmpPath, content, "utf-8");
+  await fs.rename(tmpPath, filePath);
+}
+
+// Default initial content representing current website data
+export const defaultSiteContent: SiteContent = {
+  home: {
+    hero: {
+      badge: "PGI-Trained ENT Surgeons · 35+ Years of Care",
+      title: "Advanced ENT Care & Microscopic Surgery",
+      highlightedTitle: "in Chandigarh",
+      description: "Providing comprehensive ear, nose, throat, sinus, allergy, voice, hearing, and head-and-neck care with institution-level expertise and compassionate patient care.",
+      primaryButton: { label: "Book Appointment", link: "/book-appointment", variant: "primary" },
+      secondaryButton: { label: "Explore Our Services", link: "/services", variant: "secondary" },
+      image: "/images/dr-rattan-and-dr-anav-rattan-hero2.png",
+      doctorCardName: "Dr. Ganesh Dutt Rattan & Dr. Anav Rattan",
+      doctorCardRole: "ENT Specialists",
+      doctorCardClinic: "Dr. Rattan ENT Clinic",
+      trustPoints: ["Experienced Care", "Modern Diagnosis", "Patient-Focused Treatment"]
+    },
+    statistics: [
+      { number: "35+", label: "Years Experienced ENT Specialists" },
+      { number: "100%", label: "Patient-Centred Treatment" },
+      { number: "24/7", label: "Advanced Diagnostic Care" },
+      { number: "Modern", label: "Clinical & Audiology Facilities" }
+    ],
+    whyChooseUs: {
+      label: "WHY CHOOSE US",
+      title: "A legacy of expert surgical care",
+      benefits: [
+        {
+          id: "exp",
+          num: "01",
+          title: "Experienced specialists",
+          desc: "PGI-trained surgeons bringing decades of institutional experience to your care.",
+          subPoints: ["Former Senior Residents at PGIMER Chandigarh & Sir Ganga Ram Hospital", "Over 35 years of high-volume surgical expertise"]
+        },
+        {
+          id: "personalized",
+          num: "02",
+          title: "Personalised treatment",
+          desc: "Tailored treatment plans focused entirely on your specific health needs.",
+          subPoints: ["Custom medical protocols before surgical decisions", "Unhurried clinical listening and evaluation"]
+        },
+        {
+          id: "advanced",
+          num: "03",
+          title: "Advanced diagnosis",
+          desc: "Equipped with state-of-the-art diagnostic tools for accurate evaluation.",
+          subPoints: ["High-magnification otomicroscopy", "Karl Storz rigid and flexible endoscopy"]
+        },
+        {
+          id: "transparent",
+          num: "04",
+          title: "Transparent guidance",
+          desc: "Clear explanations of your condition so you can make informed decisions.",
+          subPoints: ["Detailed review of endoscopy and CT scans with patients", "Clear discussion of surgical benefits and recovery timeline"]
+        },
+        {
+          id: "comfortable",
+          num: "05",
+          title: "Comfortable experience",
+          desc: "Warm and compassionate care in a patient-first clinical environment.",
+          subPoints: ["Clean, air-conditioned waiting suites", "Gentle pediatric and geriatric examination techniques"]
+        }
+      ]
+    },
+    testimonials: [
+      {
+        id: "1",
+        stars: 5,
+        text: "Dr. Rattan provided excellent care for my chronic sinus issues. The surgery went smoothly and recovery was much faster than expected.",
+        author: "A. Sharma",
+        location: "Chandigarh"
+      },
+      {
+        id: "2",
+        stars: 5,
+        text: "Very professional clinic. Dr. Anav was patient, explained the diagnosis clearly, and gave a transparent treatment plan for my vertigo.",
+        author: "R. Singh",
+        location: "Mohali"
+      },
+      {
+        id: "3",
+        stars: 5,
+        text: "Got my mother's hearing aid fitted here. The entire staff is very courteous and the doctors are highly experienced. Highly recommended.",
+        author: "S. Gupta",
+        location: "Panchkula"
+      }
+    ],
+    ctaBanner: {
+      heading: "Your ENT health deserves expert care.",
+      subheading: "Schedule a consultation with our PGI-trained specialists today.",
+      buttonText: "Book Appointment",
+      buttonLink: "/book-appointment"
+    }
+  },
+  about: {
+    label: "INSTITUTIONAL HERITAGE & CARE",
+    title: "Dedicated to Precision Surgical & Medical ENT Care",
+    subtitle: "Founded on the principles of academic discipline, institutional surgical precision, and unhurried patient listening, Dr. Rattan ENT Clinic has served generations of families across Chandigarh, Punjab, Haryana, and Himachal Pradesh.",
+    legacyTitle: "A Legacy Built on PGI Rigour & Diagnostic Integrity",
+    legacyParagraph1: "Dr. Rattan ENT Clinic was established by Dr. Ganesh Dutt Rattan following years of senior residency at the prestigious Postgraduate Institute of Medical Education and Research (PGIMER), Chandigarh and Sir Ganga Ram Hospital, New Delhi.",
+    legacyParagraph2: "From its inception, the clinic was envisioned as a center where complex ear, nose, and throat disorders are assessed with institutional diagnostic thoroughness. Today, with Dr. Anav Rattan (MS ENT, DNB, MNAMS) bringing subspecialty mastery in Otology, Cochlear Implants, and Skull Base Surgery from Seth G.S. Medical College & KEM Hospital, Mumbai, the practice combines mature surgical judgment with modern techniques.",
+    legacyImage: "/images/dr-rattan-and-dr-anav-rattan-hero2.png",
+    experienceYears: "35+",
+    trainingInstitution: "PGI & KEM",
+    mission: "To deliver honest, evidence-driven, and patient-centered ENT healthcare. We aim to restore hearing, alleviate chronic sinonasal discomfort, safeguard vocal function, and resolve balance disorders through accurate clinical workup.",
+    vision: "To remain the regional benchmark for otological microsurgery, auditory implant rehabilitation, and skull base care in North India, upholding the highest standards of safety, sterility, and long-term functional recovery.",
+    ethics: "We believe surgery is reserved for conditions where conservative medical management has reached its limits or where definitive anatomical correction is clinically mandatory.",
+    facilities: [
+      { icon: "🔬", title: "High-Magnification Otomicroscopy", desc: "Enables microscopic assessment of the tympanic membrane, retraction pockets, middle ear mucosa, and precise micro-suction." },
+      { icon: "📸", title: "High-Definition Rigid & Flexible Endoscopy", desc: "Karl Storz endoscopic visualization of sinonasal passages, osteomeatal complexes, adenoids, and dynamic vocal cord motion." },
+      { icon: "📊", title: "Audiological Assessment Suite", desc: "Sound-treated room testing including Pure Tone Audiometry, speech audiometry, and impedance tympanometry for middle ear pressure." },
+      { icon: "🛡️", title: "Hospital-Grade Autoclaving", desc: "Rigorous multi-stage sterilization protocols, single-use disposables, and ultrasonic cleaning meeting institutional safety benchmarks." }
+    ],
+    patientJourney: [
+      { step: "01", title: "Comprehensive Clinical Consultation", desc: "Detailed discussion of your symptoms, duration, prior prescriptions, and full medical history without rushing." },
+      { step: "02", title: "Objective Diagnostic Workup", desc: "In-clinic microscopic or endoscopic examination and audiometric evaluation when indicated, providing instant clarity on anatomy." },
+      { step: "03", title: "Transparent Decision-Making", desc: "We review findings directly with you on monitor displays, explaining medical management options and surgical indications clearly." },
+      { step: "04", title: "Personalised Treatment & Follow-up", desc: "Structured medical treatment courses or meticulous operative planning followed by scheduled post-intervention reviews." }
+    ]
+  },
+  services: [
+    {
+      id: "srv-1",
+      slug: "ear-care",
+      num: "01",
+      name: "Ear Care & Otology",
+      category: "Otology",
+      icon: "👂",
+      desc: "Comprehensive diagnosis and microscopic surgical management for chronic otitis media, tympanic membrane perforations, cholesteatoma, and mastoid disease.",
+      highlights: ["Tympanoplasty", "Mastoidectomy", "Stapedectomy", "Ear Discharge Treatment"],
+      order: 1,
+      isPublished: true
+    },
+    {
+      id: "srv-2",
+      slug: "hearing-loss",
+      num: "02",
+      name: "Hearing Loss & Audiology",
+      category: "Audiology",
+      icon: "🔊",
+      desc: "Formal audiometric assessment, pure tone audiometry, impedance testing, and precision hearing rehabilitation for pediatric and adult hearing impairments.",
+      highlights: ["Pure Tone Audiometry", "Tympanometry", "Sudden Sensorineural Loss", "Hearing Aids & Counseling"],
+      order: 2,
+      isPublished: true
+    },
+    {
+      id: "srv-3",
+      slug: "sinus-allergy",
+      num: "03",
+      name: "Sinus & Allergy Care",
+      category: "Rhinology",
+      icon: "👃",
+      desc: "High-definition nasal endoscopy, medical allergy protocol, and Functional Endoscopic Sinus Surgery (FESS) for chronic sinusitis and nasal polyps.",
+      highlights: ["FESS Surgery", "Deviated Septum (Septoplasty)", "Nasal Polyposis", "Allergic Rhinitis Protocol"],
+      order: 3,
+      isPublished: true
+    },
+    {
+      id: "srv-4",
+      slug: "throat-voice",
+      num: "04",
+      name: "Throat & Voice Care",
+      category: "Laryngology",
+      icon: "🗣️",
+      desc: "Fibreoptic laryngoscopy and microsurgical intervention for vocal cord nodules, hoarseness, chronic tonsillitis, adenoids, and swallowing difficulties.",
+      highlights: ["Microlaryngeal Surgery (MLS)", "Vocal Nodules & Polyps", "Coblation Tonsillectomy", "Hoarseness Workup"],
+      order: 4,
+      isPublished: true
+    },
+    {
+      id: "srv-5",
+      slug: "pediatric-ent",
+      num: "05",
+      name: "Pediatric ENT Care",
+      category: "Pediatrics",
+      icon: "👶",
+      desc: "Gentle, specialized ENT care for newborns, infants, and children. Dedicated protocols for recurrent ear discharge, glue ear, adenotonsillar hypertrophy, and speech delays.",
+      highlights: ["Grommet Insertion", "Adenoidectomy", "Congenital Hearing Screening", "Childhood Stridor"],
+      order: 5,
+      isPublished: true
+    },
+    {
+      id: "srv-6",
+      slug: "vertigo",
+      num: "06",
+      name: "Vertigo & Balance Disorders",
+      category: "Vestibular",
+      icon: "🌀",
+      desc: "Systematic neuro-otological evaluation to pinpoint peripheral vestibular disorders from central pathology, featuring repositioning maneuvers and medical care.",
+      highlights: ["Epley Maneuver for BPPV", "Meniere's Disease", "Vestibular Neuritis", "Labyrinthitis Care"],
+      order: 6,
+      isPublished: true
+    },
+    {
+      id: "srv-7",
+      slug: "cochlear-implants",
+      num: "07",
+      name: "Cochlear Implants & Auditory Implants",
+      category: "Advanced Otology",
+      icon: "🦻",
+      desc: "State-of-the-art surgical implantation program for profound sensorineural hearing loss unresponsive to conventional hearing aids, trained at KEM Hospital Mumbai.",
+      highlights: ["Pre-implant Candidacy Workup", "Minimally Invasive Implantation", "Post-op Telemetry & Mapping", "Auditory-Verbal Handoff"],
+      order: 7,
+      isPublished: true
+    },
+    {
+      id: "srv-8",
+      slug: "skull-base-surgery",
+      num: "08",
+      name: "Skull Base Surgery",
+      category: "Neurotology",
+      icon: "🧠",
+      desc: "Complex lateral and anterior skull base surgical procedures for acoustic neuromas, glomus jugulare tumors, CSF leaks, and temporal bone pathologies.",
+      highlights: ["Lateral Skull Base Approaches", "Acoustic Neuroma Care", "Endoscopic CSF Leak Repair", "Facial Nerve Decompression"],
+      order: 8,
+      isPublished: true
+    },
+    {
+      id: "srv-9",
+      slug: "head-neck-care",
+      num: "09",
+      name: "Head & Neck Surgery",
+      category: "Head & Neck",
+      icon: "🩺",
+      desc: "Diagnostic fine-needle cytology, ultrasound correlation, and meticulous surgical excision of salivary gland neoplasms, thyroid nodules, and congenital neck cysts.",
+      highlights: ["Superficial Parotidectomy", "Hemithyroidectomy", "Branchial Cleft & Thyroglossal Excision", "Cervical Lymphadenopathy"],
+      order: 9,
+      isPublished: true
+    }
+  ],
+  doctors: [
+    {
+      id: "doc-1",
+      slug: "ganesh-dutt-rattan",
+      name: "Dr. Ganesh Dutt Rattan",
+      title: "Founder & Senior Consultant ENT Surgeon",
+      degrees: "MBBS · DLO · MS (ENT), PGI Chandigarh",
+      regNumber: "Punjab Medical Council (PMC) Reg. No. 23702",
+      bio: "Founder of Dr. Rattan ENT Clinic with over 35 years of dedicated surgical practice. Former Senior Resident at PGIMER Chandigarh and Sir Ganga Ram Hospital, New Delhi.",
+      detailedBio: [
+        "Dr. Ganesh Dutt Rattan is among the most senior and respected otolaryngologists in the Chandigarh tricity region, with over three and a half decades of surgical and clinical expertise.",
+        "Following his post-graduation from the Postgraduate Institute of Medical Education and Research (PGIMER), Chandigarh, he completed high-volume senior residencies at PGIMER Chandigarh and the prestigious Sir Ganga Ram Hospital, New Delhi.",
+        "His clinical approach is rooted in uncompromising diagnostic accuracy, gentle patient listening, and conservative surgical decision-making. Over thirty-five years, he has successfully treated tens of thousands of complex ear, nose, and throat cases with enduring results."
+      ],
+      experience: "35+ Years in Surgical Practice",
+      image: "/images/dr-ganesh-dutt-rattan-0.jpeg",
+      specialties: [
+        "Microscopic Ear Surgery (Tympanoplasty, Mastoidectomy)",
+        "Chronic Otitis Media & Hearing Restoration",
+        "Endoscopic Sinus Surgery (FESS)",
+        "Pediatric ENT & Adenotonsillectomy",
+        "Thyroid, Salivary Gland & Neck Mass Evaluation",
+        "Conservative Medical Management of ENT Disorders"
+      ],
+      education: [
+        "MS (ENT) — Postgraduate Institute of Medical Education and Research (PGIMER), Chandigarh",
+        "Former Senior Resident — PGIMER, Chandigarh",
+        "Former Senior Resident — Sir Ganga Ram Hospital, New Delhi",
+        "Diploma in Laryngology and Otology (DLO)",
+        "MBBS — Renowned Government Medical Institution"
+      ],
+      clinicalFocus: [
+        "Middle Ear Reconstruction",
+        "Chronic Sinusitis & Nasal Polyposis",
+        "Vocal Cord & Laryngeal Disorders",
+        "Pediatric Hearing & Airway Concerns"
+      ],
+      opdTimings: "Mon–Sat: 10:00 AM – 2:00 PM & 5:30 PM – 8:00 PM | Sun: 11:00 AM – 1:00 PM",
+      isPublished: true,
+      order: 1
+    },
+    {
+      id: "doc-2",
+      slug: "anav-rattan",
+      name: "Dr. Anav Rattan",
+      title: "Consultant ENT, Otologist & Skull Base Surgeon",
+      degrees: "MS (ENT), DNB, MNAMS",
+      bio: "Subspecialist in Advanced Otology, Cochlear Implantation, Lateral Skull Base Surgery, and Neuro-otology. Trained at Seth G.S. Medical College & KEM Hospital, Mumbai and PGIMER Chandigarh.",
+      detailedBio: [
+        "Dr. Anav Rattan is an accomplished ENT surgeon with subspecialised training in Otology, Auditory Implantation, and Skull Base Surgery.",
+        "He completed his MS (ENT) from the prestigious Seth G.S. Medical College & KEM Hospital, Mumbai, followed by a demanding Senior Residency at PGIMER, Chandigarh. He holds the prestigious Diplomate of National Board (DNB) and Membership of the National Academy of Medical Sciences (MNAMS).",
+        "Dr. Anav Rattan has completed advanced certified training in the Cochlear Implant Programme at KEM Hospital Mumbai and actively presents his research at national scientific forums, including the Indian Academy of Otolaryngology - Head & Neck Surgery (IAOHNS). His clinical practice integrates high-magnification microsurgery, rigid endoscopy, and vestibular diagnostic protocols."
+      ],
+      experience: "Institutional Specialised Practice",
+      image: "/images/dr-anav-rattan-1.jpeg",
+      specialties: [
+        "Cochlear Implantation & Auditory Rehabilitation",
+        "Lateral Skull Base Surgery & Acoustic Neuroma Management",
+        "Microscopic Ear Surgery (Ossiculoplasty, Stapedectomy, Mastoidectomy)",
+        "Neuro-otology & Vestibular Balance Assessment (BPPV, Meniere's)",
+        "Endoscopic Sinus Surgery & CSF Rhinorrhea Repair",
+        "Microlaryngeal Phonosurgery for Vocal Cord Lesions"
+      ],
+      education: [
+        "Senior Residency — PGIMER, Chandigarh",
+        "MS (ENT) — Seth G.S. Medical College & KEM Hospital, Mumbai",
+        "DNB (Otorhinolaryngology) — National Board of Examinations",
+        "MNAMS — National Academy of Medical Sciences, New Delhi",
+        "Certified Cochlear Implant Surgeon — KEM Hospital, Mumbai",
+        "MBBS — Government Medical College and Hospital, Chandigarh"
+      ],
+      clinicalFocus: [
+        "Severe-to-Profound Sensorineural Hearing Loss",
+        "Complex Cholesteatoma & Revision Ear Surgery",
+        "Intractable Vertigo & Vestibular Dysfunction",
+        "Skull Base Tumors & Temporal Bone Pathology"
+      ],
+      opdTimings: "Mon–Sat: 10:00 AM – 2:00 PM & 5:30 PM – 8:00 PM | Sun: 11:00 AM – 1:00 PM",
+      isPublished: true,
+      order: 2
+    }
+  ],
+  research: {
+    title: "Research, Conferences & Surgical Milestones",
+    subtitle: "Continuous academic engagement, national conference presentations, and certified surgical fellowships ensure that our patients benefit from modern, evidence-backed clinical protocols.",
+    milestones: [
+      {
+        id: "ms-1",
+        badge: "NATIONAL SCIENTIFIC CONFERENCES",
+        title: "IAOHNS National Conference, Jammu",
+        desc1: "Dr. Anav Rattan actively contributes to scientific discussions at major national gatherings of the Indian Academy of Otorhinolaryngology – Head & Neck Surgery (IAOHNS), presenting clinical data and participating in peer surgical roundtables.",
+        desc2: "These conferences bring together the country’s leading neurotologists, rhinologists, and head-neck oncologists to examine nuanced surgical techniques and outcomes in temporal bone and skull base procedures.",
+        focusTitle: "Key Scientific Focus:",
+        focusDesc: "Contemporary approaches in Otology, Mastoid Obliteration, and Diagnostic Pitfalls in Peripheral Vestibulopathies.",
+        image: "/images/dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg",
+        caption: "Dr. Anav Rattan at IAOHNS Conference, Jammu",
+        subType: "Academic Forum"
+      },
+      {
+        id: "ms-2",
+        badge: "ADVANCED SURGICAL CERTIFICATION",
+        title: "Cochlear Implant Surgical Fellowship & Certification",
+        desc1: "Dr. Anav Rattan completed comprehensive specialized training in the Cochlear Implant Programme at Seth G.S. Medical College & KEM Hospital, Mumbai.",
+        desc2: "This institutional program covers all facets of pediatric and adult auditory implantation: high-resolution temporal bone radiological planning, posterior tympanotomy round-window surgical access, intraoperative neural telemetry, and multi-disciplinary rehabilitation handoff.",
+        focusTitle: "Certification Details:",
+        focusDesc: "Round Window Insertion & Intraoperative Neural Response Telemetry Verification at KEM Hospital Mumbai.",
+        image: "/images/cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg",
+        caption: "Certified Cochlear Implant Training — KEM Hospital Mumbai",
+        subType: "Certification"
+      }
+    ],
+    ongoingInquiry: [
+      { title: "1. Otology & Ossicular Reconstruction", desc: "Comparative anatomical outcomes between autologous incus interposition and titanium total/partial ossicular replacement prostheses (TORP/PORP) in diseased middle ears." },
+      { title: "2. Auditory Implants in Severe Hearing Loss", desc: "Pre-operative imaging predictors of cochlear patency, round-window visibility during posterior tympanotomy, and hearing preservation electrode protocols." },
+      { title: "3. Endoscopic Sinus Anatomy & Revision FESS", desc: "Systematic evaluation of frontal recess pneumatization patterns and mucosal preservation strategies to minimize recurrent polyp formation in allergic fungal sinusitis." },
+      { title: "4. Peripheral Vestibulopathies & Balance", desc: "Multi-canal canalithiasis identification, refractory BPPV repositioning variations, and clinical differentiators of acute peripheral vs central vestibular syndromes." }
+    ]
+  },
+  faqs: [
+    {
+      id: "faq-1",
+      category: "Ear & Hearing",
+      q: "How do I know if my ear discharge needs surgical intervention?",
+      a: "Clear, transient discharge during a cold may resolve with antibiotics, but foul-smelling, recurrent, or blood-tinged discharge that does not dry up often indicates chronic suppurative otitis media (CSOM) with a tympanic perforation or cholesteatoma. In such cases, high-magnification microscopy and CT temporal bone imaging are needed to determine if tympanoplasty or mastoidectomy is warranted.",
+      order: 1,
+      isPublished: true
+    },
+    {
+      id: "faq-2",
+      category: "Ear & Hearing",
+      q: "What causes persistent ringing in the ears (tinnitus)?",
+      a: "Tinnitus can stem from prolonged noise exposure, age-related sensorineural hearing loss (presbycusis), middle ear fluid, otosclerosis, wax impaction, or vascular conditions. A comprehensive diagnostic audiogram and impedance test help isolate whether the cause originates in the outer, middle, or inner ear.",
+      order: 2,
+      isPublished: true
+    },
+    {
+      id: "faq-3",
+      category: "Ear & Hearing",
+      q: "Who is a candidate for a cochlear implant?",
+      a: "Children born with profound bilateral sensorineural hearing loss who show limited benefit after structured hearing aid trials, as well as adults with post-lingual severe-to-profound hearing loss where hearing aids fail to provide adequate speech clarity, are evaluated for cochlear implantation. Dr. Anav Rattan has completed dedicated certified fellowship training in this field at KEM Hospital Mumbai.",
+      order: 3,
+      isPublished: true
+    },
+    {
+      id: "faq-4",
+      category: "Sinus & Allergy",
+      q: "How is chronic sinusitis differentiated from common allergic rhinitis?",
+      a: "Allergic rhinitis typically presents with itchy watery eyes, sneezing fits, and clear nasal discharge triggered by dust or pollen. Chronic sinusitis persists beyond 12 weeks with thick discoloured mucus, facial pressure/pain over the cheeks or forehead, nasal congestion, and reduced smell. In-clinic diagnostic nasal endoscopy provides immediate visual distinction.",
+      order: 4,
+      isPublished: true
+    },
+    {
+      id: "faq-5",
+      category: "Sinus & Allergy",
+      q: "When is Functional Endoscopic Sinus Surgery (FESS) recommended?",
+      a: "FESS is indicated when chronic sinusitis or nasal polyposis fails to resolve after optimal medical management (such as intranasal steroids, saline irrigations, and targeted antibiotics), or when there is anatomical obstruction blocking the sinus drainage pathways.",
+      order: 5,
+      isPublished: true
+    },
+    {
+      id: "faq-6",
+      category: "Throat & Voice",
+      q: "When should hoarseness of voice be evaluated by an ENT specialist?",
+      a: "Any change in voice or hoarseness persisting for more than 2 to 3 weeks must be evaluated via rigid or flexible video laryngoscopy. This rules out vocal cord nodules, polyps, cysts, papillomas, or early neoplastic lesions, particularly in smokers or professional voice users.",
+      order: 6,
+      isPublished: true
+    },
+    {
+      id: "faq-7",
+      category: "Throat & Voice",
+      q: "What are the indications for tonsillectomy in adults?",
+      a: "In adults, recurrent acute tonsillitis (5 or more episodes in a year), peritonsillar abscess (quinsy), unilateral tonsillar enlargement, chronic cryptic tonsillitis with persistent tonsilloliths and halitosis, or severe obstructive sleep apnea are standard indications for surgical removal.",
+      order: 7,
+      isPublished: true
+    },
+    {
+      id: "faq-8",
+      category: "Pediatric ENT",
+      q: "How can parents recognize enlarged adenoids in children?",
+      a: "Key symptoms include chronic mouth breathing, loud snoring during sleep, frequent pauses in breathing (pediatric sleep apnea), recurring ear infections due to Eustachian tube blockage (glue ear), and daytime sluggishness or behavioral changes.",
+      order: 8,
+      isPublished: true
+    },
+    {
+      id: "faq-9",
+      category: "Pediatric ENT",
+      q: "What is 'glue ear' and does it require ear grommets?",
+      a: "Glue ear (Otitis Media with Effusion) is the accumulation of thick fluid behind the intact eardrum without active fever. It leads to muffled hearing and speech delays. If fluid persists past 3 months despite medical treatment, tiny ventilation tubes (grommets) are placed through the eardrum to restore normal hearing.",
+      order: 9,
+      isPublished: true
+    },
+    {
+      id: "faq-10",
+      category: "Vertigo & Balance",
+      q: "What is BPPV and how is it treated at the clinic?",
+      a: "Benign Paroxysmal Positional Vertigo (BPPV) occurs when microscopic calcium crystals (otoconia) become dislodged into the semicircular canals of the inner ear, triggering intense spinning sensations when turning in bed or looking upward. It is diagnosed using the Dix-Hallpike test and treated right in the clinic with canalith repositioning maneuvers such as the Epley maneuver.",
+      order: 10,
+      isPublished: true
+    },
+    {
+      id: "faq-11",
+      category: "Vertigo & Balance",
+      q: "How do you distinguish inner ear vertigo from cervical or cardiac dizziness?",
+      a: "Inner ear vertigo produces a true rotational spinning sensation often associated with nystagmus (involuntary eye movements), nausea, and sometimes ear fullness or tinnitus. Lightheadedness, feeling faint, or unsteadiness without true rotational vertigo is systematically evaluated to differentiate peripheral vestibular disease from cervical, neurological, or cardiovascular etiologies.",
+      order: 11,
+      isPublished: true
+    },
+    {
+      id: "faq-12",
+      category: "Surgeries & Procedures",
+      q: "Where are surgical operations performed?",
+      a: "In-office procedures—such as diagnostic otomicroscopy, rigid nasal endoscopy, video laryngoscopy, ear cleaning, and minor biopsies—are performed at our Sector 33C clinic. Major surgeries—such as Tympanoplasty, Mastoidectomy, FESS, Cochlear Implantation, Stapedectomy, and Parotid/Thyroid resections—are carried out in modern, fully accredited tertiary hospital operating theatres with full anaesthetic backup.",
+      order: 12,
+      isPublished: true
+    },
+    {
+      id: "faq-13",
+      category: "Appointments & Visits",
+      q: "What are the regular OPD consultation timings?",
+      a: "Dr. Rattan ENT Clinic is open Monday through Saturday: Morning OPD from 10:00 AM to 2:00 PM, and Evening OPD from 5:30 PM to 8:00 PM. On Sundays, the clinic is open for consultations from 11:00 AM to 1:00 PM.",
+      order: 13,
+      isPublished: true
+    }
+  ],
+  gallery: [
+    { id: "g-1", src: "/images/surgical-team-pgi-chandigarh-8.jpeg", title: "Surgical Team at PGI Chandigarh", category: "surgical", categoryLabel: "Academic & Surgical", alt: "Surgical team and faculty in scrub attire at PGI Chandigarh", order: 1 },
+    { id: "g-2", src: "/images/ent-team-pgi-chandigarh-9.jpeg", title: "ENT Department Faculty & Residents", category: "surgical", categoryLabel: "Academic & Surgical", alt: "ENT department colleagues and surgical residents at PGI Chandigarh", order: 2 },
+    { id: "g-3", src: "/images/operating-theatre-pgi-chandigarh-10.jpeg", title: "Advanced Surgical Operating Theatre", category: "surgical", categoryLabel: "Academic & Surgical", alt: "Advanced surgical operating theatre with OT lights and surgical team", order: 3 },
+    { id: "g-4", src: "/images/gallery-15.jpeg", title: "Guest Speaker & Academic Presentation", category: "surgical", categoryLabel: "Academic & Surgical", alt: "Guest speaker presentation and felicitation at medical conference", order: 4 },
+    { id: "g-5", src: "/images/cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg", title: "Cochlear Implant Certification, KEM Hospital", category: "surgical", categoryLabel: "Academic & Surgical", alt: "Dr. Anav Rattan receiving Cochlear Implant training certificate at KEM Hospital Mumbai", order: 5 },
+    { id: "g-6", src: "/images/kem-hospital-auditorium-department-gathering-13.jpeg", title: "Academic Gathering, KEM Hospital Auditorium", category: "surgical", categoryLabel: "Academic & Surgical", alt: "Department gathering and clinical lecture in the historic KEM Hospital auditorium", order: 6 },
+    { id: "g-7", src: "/images/seth-g-s-medical-college-kem-hospital-mumbai-14.jpeg", title: "Seth G.S. Medical College & KEM Hospital, Mumbai", category: "surgical", categoryLabel: "Academic & Surgical", alt: "Historic quadrangle and heritage facade of Seth G.S. Medical College, Mumbai", order: 7 },
+    { id: "g-8", src: "/images/surgery-in-progress-11.jpeg", title: "Precision Microsurgery in Progress", category: "surgical", categoryLabel: "Academic & Surgical", alt: "Surgeons performing delicate ENT microsurgery under theatre lighting", order: 8 },
+    { id: "g-9", src: "/images/dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg", title: "IAOHNS Annual National Conference, Jammu", category: "surgical", categoryLabel: "Academic & Surgical", alt: "Dr. Anav Rattan attending the 9th Annual Conference of IAOHNS in Jammu", order: 9 },
+    { id: "g-10", src: "/images/full-waiting-room-2.jpeg", title: "Patient Waiting Lounge", category: "clinic", categoryLabel: "Clinic & Facility", alt: "Spacious and comfortable patient waiting lounge at Dr. Rattan ENT Clinic", order: 10 },
+    { id: "g-11", src: "/images/consultation-room-with-instruments-3.jpeg", title: "Diagnostic & Consultation Suite", category: "clinic", categoryLabel: "Clinic & Facility", alt: "ENT examination unit with specialized diagnostic endoscopy and microscopic equipment", order: 11 },
+    { id: "g-12", src: "/images/waiting-area-notice-board-4.jpeg", title: "Clinic Accreditation & Patient Guidance", category: "clinic", categoryLabel: "Clinic & Facility", alt: "Accreditations, registrations, and patient health guidelines notice board", order: 12 },
+    { id: "g-13", src: "/images/clinic-seating-area-6.jpeg", title: "Comfortable Patient Seating Area", category: "clinic", categoryLabel: "Clinic & Facility", alt: "Air-conditioned patient seating area and consultation corridor", order: 13 },
+    { id: "g-14", src: "/images/clinic-entrance-area-7.jpeg", title: "Modern Clinic Entrance & Chambers", category: "clinic", categoryLabel: "Clinic & Facility", alt: "Clinic main entrance with handcrafted teak consultation chamber doors", order: 14 },
+    { id: "g-15", src: "/images/dr-g-d-rattan-nameplate-5.jpeg", title: "Senior Consultant Chambers", category: "clinic", categoryLabel: "Clinic & Facility", alt: "Consultation chamber entrance for Senior ENT Surgeon Dr. Ganesh Dutt Rattan", order: 15 }
+  ],
+  contact: {
+    address: "SCO 123, Sector 33C, Chandigarh 160020",
+    phone: "0172-2610806",
+    whatsapp: "+91 9988004806",
+    email: "rattananav@gmail.com",
+    googleMapsUrl: "https://maps.google.com/?q=Sector+33C+Chandigarh",
+    morningOpd: "10:00 AM – 2:00 PM (Mon – Sat)",
+    eveningOpd: "5:30 PM – 8:00 PM (Mon – Sat)",
+    sundayOpd: "11:00 AM – 1:00 PM"
+  },
+  navigation: {
+    logoText: "Dr. Rattan",
+    logoHighlight: "ENT",
+    topBarHours: "Mon–Sat: 10 AM–2 PM & 5:30–8 PM · Sun: 11 AM–1 PM",
+    whatsappNumber: "919988004806",
+    appointmentLink: "/book-appointment",
+    footerTagline: "Expert ENT care in Chandigarh by PGI-trained surgeons. We provide comprehensive ear, nose, throat, and head-neck surgical services.",
+    links: [
+      { label: "Home", href: "/", enabled: true },
+      { label: "About", href: "/about", enabled: true },
+      { label: "Services", href: "/services", enabled: true },
+      { label: "Our Doctors", href: "/doctors", enabled: true },
+      { label: "Research", href: "/research", enabled: true },
+      { label: "FAQs", href: "/faqs", enabled: true },
+      { label: "Gallery", href: "/gallery", enabled: true },
+      { label: "Contact", href: "/contact", enabled: true }
+    ]
+  }
+};
+
+// Initial media items seeded from existing public/images
+const defaultMediaItems: MediaItem[] = [
+  { id: "m-1", url: "/images/dr-rattan-and-dr-anav-rattan-hero2.png", filename: "dr-rattan-and-dr-anav-rattan-hero2.png", title: "Doctors Joint Portrait", alt: "Dr. Ganesh Dutt Rattan and Dr. Anav Rattan", sizeBytes: 1688023, uploadedAt: new Date().toISOString() },
+  { id: "m-2", url: "/images/dr-ganesh-dutt-rattan-0.jpeg", filename: "dr-ganesh-dutt-rattan-0.jpeg", title: "Dr. Ganesh Dutt Rattan Portrait", alt: "Dr. Ganesh Dutt Rattan Senior ENT Surgeon", sizeBytes: 62351, uploadedAt: new Date().toISOString() },
+  { id: "m-3", url: "/images/dr-anav-rattan-1.jpeg", filename: "dr-anav-rattan-1.jpeg", title: "Dr. Anav Rattan Portrait", alt: "Dr. Anav Rattan Otologist and Skull Base Surgeon", sizeBytes: 70124, uploadedAt: new Date().toISOString() },
+  { id: "m-4", url: "/images/operating-theatre-pgi-chandigarh-10.jpeg", filename: "operating-theatre-pgi-chandigarh-10.jpeg", title: "PGI Operating Theatre", alt: "Advanced surgical operating theatre at PGI Chandigarh", sizeBytes: 64754, uploadedAt: new Date().toISOString() },
+  { id: "m-5", url: "/images/cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg", filename: "cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg", title: "Cochlear Implant Certificate", alt: "Cochlear Implant Certificate from KEM Hospital Mumbai", sizeBytes: 49041, uploadedAt: new Date().toISOString() },
+  { id: "m-6", url: "/images/dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg", filename: "dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg", title: "IAOHNS Jammu Conference", alt: "Dr. Anav Rattan at IAOHNS 2023 conference in Jammu", sizeBytes: 115655, uploadedAt: new Date().toISOString() }
+];
+
+// Content Accessors
+export async function getSiteContent(): Promise<SiteContent> {
+  await ensureDir();
+  try {
+    const data = await fs.readFile(CONTENT_FILE, "utf-8");
+    return JSON.parse(data);
+  } catch {
+    // If not found or corrupt, initialize with default seed
+    await atomicWriteJson(CONTENT_FILE, defaultSiteContent);
+    return defaultSiteContent;
+  }
+}
+
+export async function updateSiteContent(content: SiteContent): Promise<void> {
+  await atomicWriteJson(CONTENT_FILE, content);
+}
+
+// Submissions Accessors
+export async function getSubmissions(): Promise<Submission[]> {
+  await ensureDir();
+  try {
+    const data = await fs.readFile(SUBMISSIONS_FILE, "utf-8");
+    return JSON.parse(data);
+  } catch {
+    await atomicWriteJson(SUBMISSIONS_FILE, []);
+    return [];
+  }
+}
+
+export async function addSubmission(submission: Submission): Promise<Submission> {
+  const list = await getSubmissions();
+  list.unshift(submission);
+  await atomicWriteJson(SUBMISSIONS_FILE, list);
+  return submission;
+}
+
+export async function updateSubmission(id: string, updates: Partial<Submission>): Promise<Submission | null> {
+  const list = await getSubmissions();
+  const index = list.findIndex(item => item.id === id);
+  if (index === -1) return null;
+
+  list[index] = { ...list[index], ...updates } as Submission;
+  await atomicWriteJson(SUBMISSIONS_FILE, list);
+  return list[index];
+}
+
+export async function deleteSubmission(id: string): Promise<boolean> {
+  const list = await getSubmissions();
+  const filtered = list.filter(item => item.id !== id);
+  if (filtered.length === list.length) return false;
+
+  await atomicWriteJson(SUBMISSIONS_FILE, filtered);
+  return true;
+}
+
+// Media Accessors
+export async function getMediaList(): Promise<MediaItem[]> {
+  await ensureDir();
+  try {
+    const data = await fs.readFile(MEDIA_FILE, "utf-8");
+    return JSON.parse(data);
+  } catch {
+    await atomicWriteJson(MEDIA_FILE, defaultMediaItems);
+    return defaultMediaItems;
+  }
+}
+
+export const getMediaItems = getMediaList;
+
+export async function addMediaItem(item: MediaItem): Promise<MediaItem> {
+  const list = await getMediaList();
+  list.unshift(item);
+  await atomicWriteJson(MEDIA_FILE, list);
+  return item;
+}
+
+export async function updateMediaItem(id: string, updates: Partial<MediaItem>): Promise<MediaItem | null> {
+  const list = await getMediaList();
+  const index = list.findIndex(m => m.id === id);
+  if (index === -1) return null;
+
+  list[index] = { ...list[index], ...updates };
+  await atomicWriteJson(MEDIA_FILE, list);
+  return list[index];
+}
+
+export async function deleteMediaItem(id: string): Promise<boolean> {
+  const list = await getMediaList();
+  const item = list.find(m => m.id === id);
+  if (!item) return false;
+
+  const filtered = list.filter(m => m.id !== id);
+  await atomicWriteJson(MEDIA_FILE, filtered);
+
+  // If the file is in /uploads/, delete the disk file as well
+  if (item.url.startsWith("/uploads/")) {
+    try {
+      const diskPath = path.join(process.cwd(), "public", item.url);
+      await fs.unlink(diskPath);
+    } catch (err) {
+      console.warn("Could not delete physical file:", err);
+    }
+  }
+  return true;
+}
+
+// Admin User Accessors
+export async function getAdminUser(): Promise<AdminUser> {
+  await ensureDir();
+  try {
+    const data = await fs.readFile(ADMIN_FILE, "utf-8");
+    return JSON.parse(data);
+  } catch {
+    // Default admin: admin@drrattanentclinic.com / Admin@Rattan2026
+    const { hash, salt } = hashPassword("Admin@Rattan2026");
+    const defaultAdmin: AdminUser = {
+      email: "admin@drrattanentclinic.com",
+      passwordHash: hash,
+      salt,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    await atomicWriteJson(ADMIN_FILE, defaultAdmin);
+    return defaultAdmin;
+  }
+}
+
+export async function updateAdminPassword(newPassword: string): Promise<void> {
+  const current = await getAdminUser();
+  const { hash, salt } = hashPassword(newPassword);
+  const updated: AdminUser = {
+    ...current,
+    passwordHash: hash,
+    salt,
+    updatedAt: new Date().toISOString()
+  };
+  await atomicWriteJson(ADMIN_FILE, updated);
+}
