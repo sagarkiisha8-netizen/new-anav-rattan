@@ -45,3 +45,6 @@ next-env.d.ts
 # runtime data
 data/submissions.json
 data/admin.json
+
+# inner clones/folders
+dr-anav-rattan/
