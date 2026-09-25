@@ -215,68 +215,25 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
                   transition: `opacity 0.75s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, transform 0.75s cubic-bezier(0.16, 1, 0.3, 1) ${delay}ms, box-shadow 0.35s ease, border-color 0.35s ease`
                 }}
               >
-                {/* Doctor Photo Container with Fixed Height & Natural Framing */}
-                <div className="doc-photo-wrapper">
-                  {doc.image ? (
-                    <>
-                      <Image 
-                        src={doc.image}
-                        alt={doc.alt}
-                        fill
-                        sizes="(max-width: 860px) 100vw, 500px"
-                        style={{ 
-                          objectFit: "cover", 
-                          objectPosition: doc.objectPosition,
-                          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
-                        }}
-                        className="doc-zoom-photo"
-                        priority={idx === 0}
-                      />
-                      <div className="doc-photo-gradient" />
-                    </>
-                  ) : (
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        background: "linear-gradient(135deg, #123653 0%, #0d283e 100%)",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#ffffff",
-                        padding: "20px",
-                        textAlign: "center",
+                {/* Doctor Photo Container (Only rendered when image is present) */}
+                {doc.image && doc.image.trim() !== "" && (
+                  <div className="doc-photo-wrapper">
+                    <Image 
+                      src={doc.image}
+                      alt={doc.alt}
+                      fill
+                      sizes="(max-width: 860px) 100vw, 500px"
+                      style={{ 
+                        objectFit: "cover", 
+                        objectPosition: doc.objectPosition,
+                        transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1)"
                       }}
-                    >
-                      <div
-                        style={{
-                          width: "80px",
-                          height: "80px",
-                          borderRadius: "50%",
-                          background: "rgba(201,162,74,0.15)",
-                          border: "2px solid #C9A24A",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontFamily: "var(--serif), serif",
-                          fontSize: "28px",
-                          fontWeight: 700,
-                          color: "#C9A24A",
-                          marginBottom: "12px",
-                        }}
-                      >
-                        {doc.name.split(" ").map((w: string) => w[0]).filter(Boolean).slice(0, 2).join("") || "DR"}
-                      </div>
-                      <div style={{ fontFamily: "var(--serif), serif", fontSize: "18px", fontWeight: 700, color: "#ffffff" }}>
-                        {doc.name}
-                      </div>
-                      <div style={{ fontSize: "12px", color: "#C9A24A", marginTop: "4px" }}>
-                        {doc.role}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                      className="doc-zoom-photo"
+                      priority={idx === 0}
+                    />
+                    <div className="doc-photo-gradient" />
+                  </div>
+                )}
 
                 {/* Doctor Information Card Body */}
                 <div className="doc-info-body">
@@ -338,65 +295,22 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
                   transition: `opacity 0.65s ease ${idx * 100}ms, transform 0.65s ease ${idx * 100}ms`
                 }}
               >
-                <div className="doc-photo-wrapper">
-                  {doc.image ? (
-                    <>
-                      <Image 
-                        src={doc.image}
-                        alt={doc.alt}
-                        fill
-                        sizes="(max-width: 860px) 85vw, 420px"
-                        style={{ 
-                          objectFit: "cover", 
-                          objectPosition: doc.objectPosition 
-                        }}
-                        className="doc-zoom-photo"
-                      />
-                      <div className="doc-photo-gradient" />
-                    </>
-                  ) : (
-                    <div
-                      style={{
-                        width: "100%",
-                        height: "100%",
-                        background: "linear-gradient(135deg, #123653 0%, #0d283e 100%)",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#ffffff",
-                        padding: "20px",
-                        textAlign: "center",
+                {doc.image && doc.image.trim() !== "" && (
+                  <div className="doc-photo-wrapper">
+                    <Image 
+                      src={doc.image}
+                      alt={doc.alt}
+                      fill
+                      sizes="(max-width: 860px) 85vw, 420px"
+                      style={{ 
+                        objectFit: "cover", 
+                        objectPosition: doc.objectPosition 
                       }}
-                    >
-                      <div
-                        style={{
-                          width: "72px",
-                          height: "72px",
-                          borderRadius: "50%",
-                          background: "rgba(201,162,74,0.15)",
-                          border: "2px solid #C9A24A",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontFamily: "var(--serif), serif",
-                          fontSize: "24px",
-                          fontWeight: 700,
-                          color: "#C9A24A",
-                          marginBottom: "10px",
-                        }}
-                      >
-                        {doc.name.split(" ").map((w: string) => w[0]).filter(Boolean).slice(0, 2).join("") || "DR"}
-                      </div>
-                      <div style={{ fontFamily: "var(--serif), serif", fontSize: "16px", fontWeight: 700, color: "#ffffff" }}>
-                        {doc.name}
-                      </div>
-                      <div style={{ fontSize: "11px", color: "#C9A24A", marginTop: "2px" }}>
-                        {doc.role}
-                      </div>
-                    </div>
-                  )}
-                </div>
+                      className="doc-zoom-photo"
+                    />
+                    <div className="doc-photo-gradient" />
+                  </div>
+                )}
 
                 <div className="doc-info-body">
                   <span className="doc-role-badge">{doc.role}</span>

@@ -186,17 +186,17 @@ export default async function DoctorProfilePage({ params }: Props) {
             
             {/* Left Photo & Key Facts Box */}
             <div>
-              <div style={{ 
-                borderRadius: "16px", 
-                overflow: "hidden", 
-                boxShadow: "0 12px 36px rgba(18,54,83,0.12)", 
-                border: "1px solid rgba(18,54,83,0.1)",
-                position: "relative",
-                height: "440px",
-                background: "var(--cream)",
-                marginBottom: "24px"
-              }}>
-                {doctor.image ? (
+              {doctor.image && doctor.image.trim() !== "" && (
+                <div style={{ 
+                  borderRadius: "16px", 
+                  overflow: "hidden", 
+                  boxShadow: "0 12px 36px rgba(18,54,83,0.12)", 
+                  border: "1px solid rgba(18,54,83,0.1)",
+                  position: "relative",
+                  height: "440px",
+                  background: "var(--cream)",
+                  marginBottom: "24px"
+                }}>
                   <Image 
                     src={doctor.image} 
                     alt={doctor.name} 
@@ -204,49 +204,8 @@ export default async function DoctorProfilePage({ params }: Props) {
                     style={{ objectFit: "cover", objectPosition: "top center" }} 
                     priority
                   />
-                ) : (
-                  <div
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      background: "linear-gradient(135deg, var(--navy) 0%, #0d283e 100%)",
-                      display: "flex",
-                      flexDirection: "column",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      color: "#ffffff",
-                      padding: "24px",
-                      textAlign: "center",
-                    }}
-                  >
-                    <div
-                      style={{
-                        width: "96px",
-                        height: "96px",
-                        borderRadius: "50%",
-                        background: "rgba(201,162,74,0.15)",
-                        border: "2px solid #C9A24A",
-                        display: "flex",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        fontFamily: "var(--serif), serif",
-                        fontSize: "36px",
-                        fontWeight: 700,
-                        color: "#C9A24A",
-                        marginBottom: "16px",
-                      }}
-                    >
-                      {doctor.name.split(" ").map((w: string) => w[0]).filter(Boolean).slice(0, 2).join("") || "DR"}
-                    </div>
-                    <div style={{ fontFamily: "var(--serif), serif", fontSize: "22px", fontWeight: 700, color: "#ffffff" }}>
-                      {doctor.name}
-                    </div>
-                    <div style={{ fontSize: "14px", color: "var(--gold)", marginTop: "4px" }}>
-                      {doctor.title}
-                    </div>
-                  </div>
-                )}
-              </div>
+                </div>
+              )}
 
               {/* Consultation Card */}
               <div style={{ background: "var(--cream)", padding: "28px", borderRadius: "14px", border: "1px solid rgba(18,54,83,0.08)" }}>

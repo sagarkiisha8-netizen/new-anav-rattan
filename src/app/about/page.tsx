@@ -41,97 +41,69 @@ export default async function AboutPage() {
       </section>
 
       {/* Legacy and History Section */}
-      <section style={{ padding: "5rem 2rem", background: "#fff" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "48px", alignItems: "center" }}>
-          <div>
-            <div className="section-label" style={{ color: "var(--gold)", marginBottom: "0.5rem" }}>
-              {about.experienceYears || "35+"} YEARS OF SURGICAL CARE
-            </div>
-            <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 36px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.25 }}>
-              A Legacy Built on PGI Rigour & Diagnostic Integrity
-            </h2>
-            <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.8, marginBottom: "1.2rem" }}>
-              Dr. Rattan ENT Clinic was established by <strong>Dr. Ganesh Dutt Rattan</strong> following years of senior residency at the prestigious <em>Postgraduate Institute of Medical Education and Research (PGIMER), Chandigarh</em> and <em>Sir Ganga Ram Hospital, New Delhi</em>. 
-            </p>
-            <p style={{ fontSize: "15px", color: "var(--text-muted)", lineHeight: 1.8, marginBottom: "1.5rem" }}>
-              From its inception, the clinic was envisioned as a center where complex ear, nose, and throat disorders are assessed with institutional diagnostic thoroughness, avoiding hasty judgments or unnecessary surgical interventions. Today, with <strong>Dr. Anav Rattan</strong> (MS ENT, DNB, MNAMS) bringing subspecialty mastery in Otology, Cochlear Implants, and Skull Base Surgery from Seth G.S. Medical College & KEM Hospital, Mumbai, the practice combines mature surgical judgment with modern techniques.
-            </p>
-
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px", marginTop: "2rem" }}>
-              <div style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "16px" }}>
-                <div style={{ fontFamily: "var(--serif)", fontSize: "28px", color: "var(--navy)", fontWeight: 700 }}>{about.experienceYears || "35+"}</div>
-                <div style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "4px" }}>Years of Clinical Experience</div>
-              </div>
-              <div style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "16px" }}>
-                <div style={{ fontFamily: "var(--serif)", fontSize: "28px", color: "var(--navy)", fontWeight: 700 }}>{about.trainingInstitution || "PGI & KEM"}</div>
-                <div style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "4px" }}>Premier Institutional Training</div>
-              </div>
-            </div>
-          </div>
-
-          <div style={{ position: "relative", borderRadius: "16px", overflow: "hidden", boxShadow: "0 16px 40px rgba(18,54,83,0.12)", border: "1px solid rgba(18,54,83,0.1)" }}>
-            {about.legacyImage ? (
-              <Image 
-                src={about.legacyImage} 
-                alt="Dr. Ganesh Dutt Rattan and Dr. Anav Rattan at Dr. Rattan ENT Clinic Chandigarh"
-                width={700}
-                height={550}
-                style={{ width: "100%", height: "auto", objectFit: "cover", display: "block" }}
-                priority
-              />
-            ) : (
-              <div
-                style={{
-                  minHeight: "360px",
-                  background: "linear-gradient(135deg, #123653 0%, #0d283e 100%)",
-                  display: "flex",
-                  flexDirection: "column",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  padding: "40px",
-                  textAlign: "center",
-                  color: "#ffffff",
-                }}
-              >
-                <div
-                  style={{
-                    width: "74px",
-                    height: "74px",
-                    borderRadius: "50%",
-                    background: "rgba(201,162,74,0.15)",
-                    border: "2px solid #C9A24A",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    fontFamily: "var(--serif), serif",
-                    fontSize: "26px",
-                    fontWeight: 700,
-                    color: "#C9A24A",
-                    marginBottom: "16px",
-                  }}
-                >
-                  35+
-                </div>
-                <div style={{ fontFamily: "var(--serif), serif", fontSize: "22px", fontWeight: 700, color: "#ffffff", marginBottom: "8px" }}>
-                  Institutional Heritage & Care
-                </div>
-                <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.75)", maxWidth: "340px", lineHeight: 1.6 }}>
-                  Serving patients across Chandigarh, Punjab, Haryana & Himachal Pradesh with conservative ethics and microscopic precision.
-                </div>
-              </div>
-            )}
-            <div style={{ padding: "16px 20px", background: "var(--navy)", color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+      {(() => {
+        const hasLegacyImage = Boolean(about.legacyImage && about.legacyImage.trim());
+        return (
+          <section style={{ padding: "5rem 2rem", background: "#fff" }}>
+            <div style={{
+              maxWidth: hasLegacyImage ? "1200px" : "860px",
+              margin: "0 auto",
+              display: hasLegacyImage ? "grid" : "block",
+              gridTemplateColumns: hasLegacyImage ? "repeat(auto-fit, minmax(320px, 1fr))" : undefined,
+              gap: hasLegacyImage ? "48px" : undefined,
+              alignItems: "center"
+            }}>
               <div>
-                <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--gold)" }}>Dr. Ganesh Dutt Rattan & Dr. Anav Rattan</div>
-                <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.75)" }}>Consultant ENT & Head-Neck Surgeons</div>
+                <div className="section-label" style={{ color: "var(--gold)", marginBottom: "0.5rem" }}>
+                  {about.experienceYears || "35+"} YEARS OF SURGICAL CARE
+                </div>
+                <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 36px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.25 }}>
+                  A Legacy Built on PGI Rigour & Diagnostic Integrity
+                </h2>
+                <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.8, marginBottom: "1.2rem" }}>
+                  Dr. Rattan ENT Clinic was established by <strong>Dr. Ganesh Dutt Rattan</strong> following years of senior residency at the prestigious <em>Postgraduate Institute of Medical Education and Research (PGIMER), Chandigarh</em> and <em>Sir Ganga Ram Hospital, New Delhi</em>. 
+                </p>
+                <p style={{ fontSize: "15px", color: "var(--text-muted)", lineHeight: 1.8, marginBottom: "1.5rem" }}>
+                  From its inception, the clinic was envisioned as a center where complex ear, nose, and throat disorders are assessed with institutional diagnostic thoroughness, avoiding hasty judgments or unnecessary surgical interventions. Today, with <strong>Dr. Anav Rattan</strong> (MS ENT, DNB, MNAMS) bringing subspecialty mastery in Otology, Cochlear Implants, and Skull Base Surgery from Seth G.S. Medical College & KEM Hospital, Mumbai, the practice combines mature surgical judgment with modern techniques.
+                </p>
+
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px", marginTop: "2rem" }}>
+                  <div style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "16px" }}>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: "28px", color: "var(--navy)", fontWeight: 700 }}>{about.experienceYears || "35+"}</div>
+                    <div style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "4px" }}>Years of Clinical Experience</div>
+                  </div>
+                  <div style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "16px" }}>
+                    <div style={{ fontFamily: "var(--serif)", fontSize: "28px", color: "var(--navy)", fontWeight: 700 }}>{about.trainingInstitution || "PGI & KEM"}</div>
+                    <div style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "4px" }}>Premier Institutional Training</div>
+                  </div>
+                </div>
               </div>
-              <span style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", background: "rgba(201,162,74,0.2)", padding: "4px 10px", borderRadius: "20px", color: "var(--gold)" }}>
-                Chandigarh
-              </span>
+
+              {hasLegacyImage && (
+                <div style={{ position: "relative", borderRadius: "16px", overflow: "hidden", boxShadow: "0 16px 40px rgba(18,54,83,0.12)", border: "1px solid rgba(18,54,83,0.1)" }}>
+                  <Image 
+                    src={about.legacyImage} 
+                    alt="Dr. Ganesh Dutt Rattan and Dr. Anav Rattan at Dr. Rattan ENT Clinic Chandigarh"
+                    width={700}
+                    height={550}
+                    style={{ width: "100%", height: "auto", objectFit: "cover", display: "block" }}
+                    priority
+                  />
+                  <div style={{ padding: "16px 20px", background: "var(--navy)", color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <div>
+                      <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--gold)" }}>Dr. Ganesh Dutt Rattan & Dr. Anav Rattan</div>
+                      <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.75)" }}>Consultant ENT & Head-Neck Surgeons</div>
+                    </div>
+                    <span style={{ fontSize: "11px", textTransform: "uppercase", letterSpacing: "0.08em", background: "rgba(201,162,74,0.2)", padding: "4px 10px", borderRadius: "20px", color: "var(--gold)" }}>
+                      Chandigarh
+                    </span>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        );
+      })()}
 
       {/* Mission, Vision, and Clinical Philosophy */}
       <section style={{ padding: "5rem 2rem", background: "var(--cream)" }}>

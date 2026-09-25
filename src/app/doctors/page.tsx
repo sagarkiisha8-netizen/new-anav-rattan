@@ -57,8 +57,8 @@ export default async function DoctorsPage() {
               }}
             >
               <div>
-                <div style={{ height: "380px", position: "relative", background: "var(--navy)" }}>
-                  {doctor.image ? (
+                {doctor.image && doctor.image.trim() !== "" ? (
+                  <div style={{ height: "380px", position: "relative", background: "var(--navy)" }}>
                     <Image
                       src={doctor.image}
                       alt={doctor.name}
@@ -66,67 +66,33 @@ export default async function DoctorsPage() {
                       style={{ objectFit: "cover", objectPosition: "top center" }}
                       priority
                     />
-                  ) : (
                     <div
                       style={{
-                        width: "100%",
-                        height: "100%",
-                        background: "linear-gradient(135deg, var(--navy) 0%, #0d283e 100%)",
-                        display: "flex",
-                        flexDirection: "column",
-                        alignItems: "center",
-                        justifyContent: "center",
-                        color: "#ffffff",
-                        padding: "24px",
-                        textAlign: "center",
+                        position: "absolute",
+                        bottom: "16px",
+                        left: "16px",
+                        background: "rgba(18,54,83,0.9)",
+                        backdropFilter: "blur(4px)",
+                        padding: "5px 14px",
+                        borderRadius: "20px",
+                        color: "var(--gold)",
+                        fontSize: "12px",
+                        fontWeight: 600,
                       }}
                     >
-                      <div
-                        style={{
-                          width: "88px",
-                          height: "88px",
-                          borderRadius: "50%",
-                          background: "rgba(201,162,74,0.15)",
-                          border: "2px solid #C9A24A",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          fontFamily: "var(--serif), serif",
-                          fontSize: "32px",
-                          fontWeight: 700,
-                          color: "#C9A24A",
-                          marginBottom: "14px",
-                        }}
-                      >
-                        {doctor.name.split(" ").map((w: string) => w[0]).filter(Boolean).slice(0, 2).join("") || "DR"}
-                      </div>
-                      <div style={{ fontFamily: "var(--serif), serif", fontSize: "20px", fontWeight: 700, color: "#ffffff" }}>
-                        {doctor.name}
-                      </div>
-                      <div style={{ fontSize: "13px", color: "var(--gold)", marginTop: "4px" }}>
-                        {doctor.role || "ENT Specialist"}
-                      </div>
+                      {doctor.title}
                     </div>
-                  )}
-                  <div
-                    style={{
-                      position: "absolute",
-                      bottom: "16px",
-                      left: "16px",
-                      background: "rgba(18,54,83,0.9)",
-                      backdropFilter: "blur(4px)",
-                      padding: "5px 14px",
-                      borderRadius: "20px",
-                      color: "var(--gold)",
-                      fontSize: "12px",
-                      fontWeight: 600,
-                    }}
-                  >
-                    {doctor.title}
                   </div>
-                </div>
+                ) : null}
 
                 <div style={{ padding: "32px 28px 20px" }}>
+                  {(!doctor.image || doctor.image.trim() === "") && (
+                    <div style={{ marginBottom: "12px" }}>
+                      <span style={{ background: "rgba(18,54,83,0.08)", color: "var(--navy)", padding: "4px 12px", borderRadius: "16px", fontSize: "11px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.05em" }}>
+                        {doctor.title}
+                      </span>
+                    </div>
+                  )}
                   <h2 style={{ fontFamily: "var(--serif)", fontSize: "24px", color: "var(--navy)", marginBottom: "4px" }}>
                     {doctor.name}
                   </h2>

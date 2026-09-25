@@ -17,6 +17,7 @@ export interface ImageFieldControlProps {
   onRefreshMedia?: () => Promise<void>;
   sectionName?: string;
   pageName?: string;
+  isRequired?: boolean;
 }
 
 export default function ImageFieldControl({
@@ -32,6 +33,7 @@ export default function ImageFieldControl({
   onRefreshMedia,
   sectionName = 'This Section',
   pageName = 'Website',
+  isRequired = false,
 }: ImageFieldControlProps) {
   const [pickerOpen, setPickerOpen] = useState(false);
   const [uploading, setUploading] = useState(false);
@@ -64,9 +66,14 @@ export default function ImageFieldControl({
   };
 
   const handleRemoveFromSection = () => {
-    if (isProtected) {
+    if (isRequired) {
+      const confirmReq = window.confirm(
+        `This image field is marked as Required. If you remove it, the section image block will collapse on the website until a replacement is selected. Are you sure you want to remove it?`
+      );
+      if (!confirmReq) return;
+    } else if (isProtected) {
       const confirmRemove = window.confirm(
-        `"${filename}" is the default protected image for this section. Removing it will display the clean section fallback layout on the live website. Continue?`
+        `"${filename}" is the default protected image for this section. Removing it will collapse the image container on the live website and automatically expand the text. Continue?`
       );
       if (!confirmRemove) return;
     }
@@ -167,8 +174,37 @@ export default function ImageFieldControl({
     <div style={{ marginBottom: '22px' }}>
       <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
         <div>
-          <label style={{ fontSize: '13px', fontWeight: 700, color: '#123653', display: 'flex', alignItems: 'center', gap: '8px' }}>
+          <label style={{ fontSize: '13px', fontWeight: 700, color: '#123653', display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
             <span>{label}</span>
+            {isRequired ? (
+              <span
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 700,
+                  background: '#fee2e2',
+                  color: '#991b1b',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  border: '1px solid #fecaca',
+                }}
+              >
+                Required Image
+              </span>
+            ) : (
+              <span
+                style={{
+                  fontSize: '10px',
+                  fontWeight: 600,
+                  background: '#f1f5f9',
+                  color: '#475569',
+                  padding: '2px 8px',
+                  borderRadius: '12px',
+                  border: '1px solid #e2e8f0',
+                }}
+              >
+                Optional · Section auto-collapses on website
+              </span>
+            )}
             {isProtected && (
               <span
                 style={{
@@ -206,6 +242,27 @@ export default function ImageFieldControl({
           </label>
           {description && (
             <p style={{ fontSize: '12px', color: '#64748b', margin: '2px 0 0' }}>{description}</p>
+          )}
+          {isRequired && !hasImage && (
+            <div
+              style={{
+                marginTop: '8px',
+                padding: '6px 10px',
+                background: '#fef2f2',
+                border: '1px solid #fecaca',
+                borderRadius: '6px',
+                fontSize: '11px',
+                color: '#991b1b',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+              }}
+            >
+              <span>⚠️</span>
+              <span>
+                <strong>Action Needed:</strong> This image is required. The section image container will remain collapsed on the website until an image is published.
+              </span>
+            </div>
           )}
         </div>
 
@@ -307,7 +364,7 @@ export default function ImageFieldControl({
                 </code>
               ) : (
                 <span style={{ fontSize: '12px', color: '#e11d48', fontStyle: 'italic', fontWeight: 500 }}>
-                  [Empty - Section using clean clinical fallback]
+                  [Empty - Image block completely collapses on live website]
                 </span>
               )}
 

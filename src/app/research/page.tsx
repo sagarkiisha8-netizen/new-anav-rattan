@@ -87,96 +87,94 @@ export default async function ResearchPage() {
       </section>
 
       {/* Featured Milestone 1: IAOHNS Conference */}
-      <section style={{ padding: "5rem 2rem", background: "#fff" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "48px", alignItems: "center" }}>
-            <div>
-              <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", background: "rgba(201,162,74,0.12)", padding: "4px 10px", borderRadius: "16px", display: "inline-block", marginBottom: "1rem" }}>
-                {m1.badge}
-              </span>
-              <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 34px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.3 }}>
-                {m1.title}
-              </h2>
-              <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.8, marginBottom: "1.2rem" }}>
-                {m1.desc1}
-              </p>
-              <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.75, marginBottom: "1.5rem" }}>
-                {m1.desc2}
-              </p>
-              <div style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "16px" }}>
-                <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--navy)" }}>{m1.focusTitle}</div>
-                <div style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "4px" }}>
-                  {m1.focusDesc}
+      {(() => {
+        const hasM1Image = Boolean(m1.image && m1.image.trim());
+        return (
+          <section style={{ padding: "5rem 2rem", background: "#fff" }}>
+            <div style={{ maxWidth: hasM1Image ? "1200px" : "840px", margin: "0 auto" }}>
+              <div style={{
+                display: hasM1Image ? "grid" : "block",
+                gridTemplateColumns: hasM1Image ? "repeat(auto-fit, minmax(320px, 1fr))" : undefined,
+                gap: hasM1Image ? "48px" : undefined,
+                alignItems: "center"
+              }}>
+                <div>
+                  <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", background: "rgba(201,162,74,0.12)", padding: "4px 10px", borderRadius: "16px", display: "inline-block", marginBottom: "1rem" }}>
+                    {m1.badge}
+                  </span>
+                  <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 34px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.3 }}>
+                    {m1.title}
+                  </h2>
+                  <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.8, marginBottom: "1.2rem" }}>
+                    {m1.desc1}
+                  </p>
+                  <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.75, marginBottom: "1.5rem" }}>
+                    {m1.desc2}
+                  </p>
+                  <div style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "16px" }}>
+                    <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--navy)" }}>{m1.focusTitle}</div>
+                    <div style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "4px" }}>
+                      {m1.focusDesc}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
 
-            <div style={{ borderRadius: "16px", overflow: "hidden", boxShadow: "0 12px 36px rgba(18,54,83,0.1)", border: "1px solid rgba(18,54,83,0.1)", background: "var(--cream)" }}>
-              <div style={{ position: "relative", height: "380px" }}>
-                {m1.image ? (
-                  <Image 
-                    src={m1.image}
-                    alt={m1.caption || "Dr. Anav Rattan at IAOHNS 2023 Conference in Jammu"}
-                    fill
-                    style={{ objectFit: "cover", objectPosition: "center" }}
-                  />
-                ) : (
-                  <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, var(--navy) 0%, #0d283e 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", color: "#fff", textAlign: "center" }}>
-                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(201,162,74,0.15)", border: "2px solid #C9A24A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px", color: "#C9A24A", marginBottom: "12px" }}>
-                      🎓
+                {hasM1Image && (
+                  <div style={{ borderRadius: "16px", overflow: "hidden", boxShadow: "0 12px 36px rgba(18,54,83,0.1)", border: "1px solid rgba(18,54,83,0.1)", background: "var(--cream)" }}>
+                    <div style={{ position: "relative", height: "380px" }}>
+                      <Image 
+                        src={m1.image}
+                        alt={m1.caption || "Dr. Anav Rattan at IAOHNS 2023 Conference in Jammu"}
+                        fill
+                        style={{ objectFit: "cover", objectPosition: "center" }}
+                      />
                     </div>
-                    <div style={{ fontFamily: "var(--serif), serif", fontSize: "18px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
-                      {m1.title}
-                    </div>
-                    <div style={{ fontSize: "12px", color: "var(--gold)" }}>
-                      National Scientific Forum
-                    </div>
+                    {m1.caption && (
+                      <div style={{ padding: "14px 18px", background: "var(--navy)", color: "#fff", fontSize: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span>{m1.caption}</span>
+                        <span style={{ color: "var(--gold)" }}>{m1.subType || "Academic Forum"}</span>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
-              <div style={{ padding: "14px 18px", background: "var(--navy)", color: "#fff", fontSize: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span>{m1.caption}</span>
-                <span style={{ color: "var(--gold)" }}>{m1.subType || "Academic Forum"}</span>
-              </div>
             </div>
-          </div>
-        </div>
-      </section>
+          </section>
+        );
+      })()}
 
       {/* Featured Milestone 2: Cochlear Implant Certification at KEM Hospital Mumbai */}
-      <section style={{ padding: "5rem 2rem", background: "var(--cream)" }}>
-        <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "48px", alignItems: "center" }}>
-            <div style={{ order: 2, borderRadius: "16px", overflow: "hidden", boxShadow: "0 12px 36px rgba(18,54,83,0.1)", border: "1px solid rgba(18,54,83,0.1)", background: "#fff" }}>
-              <div style={{ position: "relative", height: "420px" }}>
-                {m2.image ? (
-                  <Image 
-                    src={m2.image}
-                    alt={m2.caption || "Cochlear Implant Programme Certificate at Seth G.S. Medical College & KEM Hospital Mumbai"}
-                    fill
-                    style={{ objectFit: "contain", background: "#fdfdfd" }}
-                  />
-                ) : (
-                  <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, var(--navy) 0%, #0d283e 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", color: "#fff", textAlign: "center" }}>
-                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(201,162,74,0.15)", border: "2px solid #C9A24A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px", color: "#C9A24A", marginBottom: "12px" }}>
-                      📜
+      {(() => {
+        const hasM2Image = Boolean(m2.image && m2.image.trim());
+        return (
+          <section style={{ padding: "5rem 2rem", background: "var(--cream)" }}>
+            <div style={{ maxWidth: hasM2Image ? "1200px" : "840px", margin: "0 auto" }}>
+              <div style={{
+                display: hasM2Image ? "grid" : "block",
+                gridTemplateColumns: hasM2Image ? "repeat(auto-fit, minmax(320px, 1fr))" : undefined,
+                gap: hasM2Image ? "48px" : undefined,
+                alignItems: "center"
+              }}>
+                {hasM2Image && (
+                  <div style={{ order: 2, borderRadius: "16px", overflow: "hidden", boxShadow: "0 12px 36px rgba(18,54,83,0.1)", border: "1px solid rgba(18,54,83,0.1)", background: "#fff" }}>
+                    <div style={{ position: "relative", height: "420px" }}>
+                      <Image 
+                        src={m2.image}
+                        alt={m2.caption || "Cochlear Implant Programme Certificate at Seth G.S. Medical College & KEM Hospital Mumbai"}
+                        fill
+                        style={{ objectFit: "contain", background: "#fdfdfd" }}
+                      />
                     </div>
-                    <div style={{ fontFamily: "var(--serif), serif", fontSize: "18px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
-                      {m2.title}
-                    </div>
-                    <div style={{ fontSize: "12px", color: "var(--gold)" }}>
-                      Institutional Fellowship Certification
-                    </div>
+                    {m2.caption && (
+                      <div style={{ padding: "14px 18px", background: "var(--navy)", color: "#fff", fontSize: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                        <span>{m2.caption}</span>
+                        <span style={{ color: "var(--gold)" }}>{m2.subType || "Certification"}</span>
+                      </div>
+                    )}
                   </div>
                 )}
-              </div>
-              <div style={{ padding: "14px 18px", background: "var(--navy)", color: "#fff", fontSize: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <span>{m2.caption}</span>
-                <span style={{ color: "var(--gold)" }}>{m2.subType || "Certification"}</span>
-              </div>
-            </div>
 
-            <div style={{ order: 1 }}>
+                <div style={{ order: hasM2Image ? 1 : undefined }}>
               <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", background: "rgba(201,162,74,0.15)", padding: "4px 10px", borderRadius: "16px", display: "inline-block", marginBottom: "1rem" }}>
                 {m2.badge}
               </span>
@@ -199,6 +197,8 @@ export default async function ResearchPage() {
           </div>
         </div>
       </section>
+    );
+  })()}
 
       {/* Institutional Foundations: KEM & PGI Gallery */}
       <section style={{ padding: "5rem 2rem", background: "#fff" }}>

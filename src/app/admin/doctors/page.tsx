@@ -467,6 +467,7 @@ export default function AdminDoctorsPage() {
                   mediaList={mediaList}
                   sectionName={`Doctor Profile: ${editingDoctor.name || 'New Doctor'}`}
                   pageName="Doctors"
+                  isRequired={true}
                   onRefreshMedia={async () => {
                     const res = await fetch('/api/admin/media', { cache: 'no-store' });
                     const data = await res.json();
