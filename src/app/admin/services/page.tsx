@@ -2,6 +2,7 @@
 
 import React, { useEffect, useState } from 'react';
 import { ServiceItem, SiteContent } from '@/lib/types';
+import ImageFieldControl from '@/components/admin/ImageFieldControl';
 
 export default function AdminServicesPage() {
   const [content, setContent] = useState<SiteContent | null>(null);
@@ -428,6 +429,19 @@ export default function AdminServicesPage() {
                   rows={3}
                   value={editingService.desc}
                   onChange={(e) => setEditingService({ ...editingService, desc: e.target.value })}
+                />
+              </div>
+
+              {/* Service Featured Image */}
+              <div style={{ marginBottom: '20px' }}>
+                <ImageFieldControl
+                  label="Service Featured / Card Image"
+                  description="Optional image for this clinical specialty. If removed, the specialty card displays its primary clinical icon and typography."
+                  currentUrl={editingService.image || ''}
+                  onChange={(newUrl) => setEditingService({ ...editingService, image: newUrl })}
+                  previewLink={editingService.slug ? `/services/${editingService.slug}` : '/services'}
+                  sectionName={`Service: ${editingService.name || 'Specialty'}`}
+                  pageName="Services"
                 />
               </div>
 

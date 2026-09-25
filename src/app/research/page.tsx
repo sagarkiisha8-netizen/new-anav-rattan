@@ -113,12 +113,26 @@ export default async function ResearchPage() {
 
             <div style={{ borderRadius: "16px", overflow: "hidden", boxShadow: "0 12px 36px rgba(18,54,83,0.1)", border: "1px solid rgba(18,54,83,0.1)", background: "var(--cream)" }}>
               <div style={{ position: "relative", height: "380px" }}>
-                <Image 
-                  src={m1.image || "/images/dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg"}
-                  alt={m1.caption || "Dr. Anav Rattan at IAOHNS 2023 Conference in Jammu"}
-                  fill
-                  style={{ objectFit: "cover", objectPosition: "center" }}
-                />
+                {m1.image ? (
+                  <Image 
+                    src={m1.image}
+                    alt={m1.caption || "Dr. Anav Rattan at IAOHNS 2023 Conference in Jammu"}
+                    fill
+                    style={{ objectFit: "cover", objectPosition: "center" }}
+                  />
+                ) : (
+                  <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, var(--navy) 0%, #0d283e 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", color: "#fff", textAlign: "center" }}>
+                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(201,162,74,0.15)", border: "2px solid #C9A24A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px", color: "#C9A24A", marginBottom: "12px" }}>
+                      🎓
+                    </div>
+                    <div style={{ fontFamily: "var(--serif), serif", fontSize: "18px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+                      {m1.title}
+                    </div>
+                    <div style={{ fontSize: "12px", color: "var(--gold)" }}>
+                      National Scientific Forum
+                    </div>
+                  </div>
+                )}
               </div>
               <div style={{ padding: "14px 18px", background: "var(--navy)", color: "#fff", fontSize: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span>{m1.caption}</span>
@@ -135,12 +149,26 @@ export default async function ResearchPage() {
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "48px", alignItems: "center" }}>
             <div style={{ order: 2, borderRadius: "16px", overflow: "hidden", boxShadow: "0 12px 36px rgba(18,54,83,0.1)", border: "1px solid rgba(18,54,83,0.1)", background: "#fff" }}>
               <div style={{ position: "relative", height: "420px" }}>
-                <Image 
-                  src={m2.image || "/images/cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg"}
-                  alt={m2.caption || "Cochlear Implant Programme Certificate at Seth G.S. Medical College & KEM Hospital Mumbai"}
-                  fill
-                  style={{ objectFit: "contain", background: "#fdfdfd" }}
-                />
+                {m2.image ? (
+                  <Image 
+                    src={m2.image}
+                    alt={m2.caption || "Cochlear Implant Programme Certificate at Seth G.S. Medical College & KEM Hospital Mumbai"}
+                    fill
+                    style={{ objectFit: "contain", background: "#fdfdfd" }}
+                  />
+                ) : (
+                  <div style={{ width: "100%", height: "100%", background: "linear-gradient(135deg, var(--navy) 0%, #0d283e 100%)", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: "24px", color: "#fff", textAlign: "center" }}>
+                    <div style={{ width: "64px", height: "64px", borderRadius: "50%", background: "rgba(201,162,74,0.15)", border: "2px solid #C9A24A", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "24px", color: "#C9A24A", marginBottom: "12px" }}>
+                      📜
+                    </div>
+                    <div style={{ fontFamily: "var(--serif), serif", fontSize: "18px", fontWeight: 700, color: "#fff", marginBottom: "4px" }}>
+                      {m2.title}
+                    </div>
+                    <div style={{ fontSize: "12px", color: "var(--gold)" }}>
+                      Institutional Fellowship Certification
+                    </div>
+                  </div>
+                )}
               </div>
               <div style={{ padding: "14px 18px", background: "var(--navy)", color: "#fff", fontSize: "12px", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                 <span>{m2.caption}</span>

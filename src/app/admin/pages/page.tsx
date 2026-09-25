@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { SiteContent, MediaItem } from '@/lib/types';
+import ImageFieldControl from '@/components/admin/ImageFieldControl';
 
 type PageKey =
   | 'home'
@@ -495,57 +496,28 @@ export default function AdminPagesEditor() {
 
               {/* Hero Image Management */}
               <div style={{ marginTop: '20px' }}>
-                <label className="admin-label">Hero Featured Image (Real Doctors Portrait)</label>
-                <div className="admin-image-control-box">
-                  <div className="admin-thumb-wrapper">
-                    <img src={content.home.hero.image || '/images/dr-rattan-and-dr-anav-rattan-hero2.png'} alt="Hero doctors portrait preview" />
-                  </div>
-                  <div className="admin-image-meta-info">
-                    <div>
-                      <span style={{ fontSize: '12px', fontWeight: 600, color: '#1e293b' }}>Current Image Path: </span>
-                      <span className="admin-image-path-badge">{content.home.hero.image}</span>
-                    </div>
-                    <div style={{ fontSize: '11px', color: '#64748b' }}>
-                      Shows Dr. Ganesh Dutt Rattan & Dr. Anav Rattan together on the navy hero background.
-                    </div>
-                    <div className="admin-image-actions">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleOpenMediaPicker((newUrl) => {
-                            setContent({
-                              ...content,
-                              home: { ...content.home, hero: { ...content.home.hero, image: newUrl } },
-                            });
-                          })
-                        }
-                        className="admin-btn admin-btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '12px' }}
-                      >
-                        Choose from Media Library
-                      </button>
-                      <label
-                        className="admin-btn admin-btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}
-                      >
-                        <span>{uploadingImage ? 'Uploading...' : 'Upload Replacement'}</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          style={{ display: 'none' }}
-                          onChange={(e) =>
-                            handleDirectUpload(e, (newUrl) => {
-                              setContent({
-                                ...content,
-                                home: { ...content.home, hero: { ...content.home.hero, image: newUrl } },
-                              });
-                            })
-                          }
-                        />
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                <ImageFieldControl
+                  label="Hero Featured Image (Real Doctors Portrait)"
+                  description="Shows Dr. Ganesh Dutt Rattan & Dr. Anav Rattan together on the navy hero background."
+                  currentUrl={content.home.hero.image}
+                  defaultUrl="/images/dr-rattan-and-dr-anav-rattan-hero2.png"
+                  defaultAlt="Dr. Ganesh Dutt Rattan & Dr. Anav Rattan - Senior ENT Specialists"
+                  previewLink="/#hero"
+                  mediaList={mediaList}
+                  sectionName="Hero Banner Section"
+                  pageName="Home"
+                  onRefreshMedia={async () => {
+                    const res = await fetch('/api/admin/media', { cache: 'no-store' });
+                    const data = await res.json();
+                    if (data.media) setMediaList(data.media);
+                  }}
+                  onChange={(newUrl) => {
+                    setContent({
+                      ...content,
+                      home: { ...content.home, hero: { ...content.home.hero, image: newUrl } },
+                    });
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -1296,54 +1268,28 @@ export default function AdminPagesEditor() {
 
               {/* Legacy Image */}
               <div style={{ marginTop: '16px' }}>
-                <label className="admin-label">Heritage Section Featured Image</label>
-                <div className="admin-image-control-box">
-                  <div className="admin-thumb-wrapper">
-                    <img src={content.about.legacyImage || '/images/dr-rattan-and-dr-anav-rattan-hero2.png'} alt="About legacy image preview" />
-                  </div>
-                  <div className="admin-image-meta-info">
-                    <div>
-                      <span style={{ fontSize: '12px', fontWeight: 600, color: '#1e293b' }}>Image Path: </span>
-                      <span className="admin-image-path-badge">{content.about.legacyImage}</span>
-                    </div>
-                    <div className="admin-image-actions">
-                      <button
-                        type="button"
-                        onClick={() =>
-                          handleOpenMediaPicker((newUrl) => {
-                            setContent({
-                              ...content,
-                              about: { ...content.about, legacyImage: newUrl },
-                            });
-                          })
-                        }
-                        className="admin-btn admin-btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '12px' }}
-                      >
-                        Choose from Media Library
-                      </button>
-                      <label
-                        className="admin-btn admin-btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}
-                      >
-                        <span>Upload Replacement</span>
-                        <input
-                          type="file"
-                          accept="image/*"
-                          style={{ display: 'none' }}
-                          onChange={(e) =>
-                            handleDirectUpload(e, (newUrl) => {
-                              setContent({
-                                ...content,
-                                about: { ...content.about, legacyImage: newUrl },
-                              });
-                            })
-                          }
-                        />
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                <ImageFieldControl
+                  label="Heritage Section Featured Image"
+                  description="Senior ENT leadership and institutional legacy photo on /about."
+                  currentUrl={content.about.legacyImage}
+                  defaultUrl="/images/dr-rattan-and-dr-anav-rattan-hero2.png"
+                  defaultAlt="Dr. Ganesh Dutt Rattan and Dr. Anav Rattan at Dr. Rattan ENT Clinic"
+                  previewLink="/about"
+                  mediaList={mediaList}
+                  sectionName="Heritage Legacy Section"
+                  pageName="About"
+                  onRefreshMedia={async () => {
+                    const res = await fetch('/api/admin/media', { cache: 'no-store' });
+                    const data = await res.json();
+                    if (data.media) setMediaList(data.media);
+                  }}
+                  onChange={(newUrl) => {
+                    setContent({
+                      ...content,
+                      about: { ...content.about, legacyImage: newUrl },
+                    });
+                  }}
+                />
               </div>
             </div>
           </div>
@@ -1512,59 +1458,31 @@ export default function AdminPagesEditor() {
                   </div>
 
                   {/* Milestone Image */}
-                  <div style={{ marginTop: '10px' }}>
-                    <label className="admin-label">Milestone Photo</label>
-                    <div className="admin-image-control-box">
-                      <div className="admin-thumb-wrapper">
-                        <img src={m.image} alt={m.caption || m.title} />
-                      </div>
-                      <div className="admin-image-meta-info">
-                        <div>
-                          <span style={{ fontSize: '12px', fontWeight: 600 }}>Path: </span>
-                          <span className="admin-image-path-badge">{m.image}</span>
-                        </div>
-                        <div className="admin-image-actions">
-                          <button
-                            type="button"
-                            onClick={() =>
-                              handleOpenMediaPicker((newUrl) => {
-                                const newM = [...content.research.milestones];
-                                newM[mIdx].image = newUrl;
-                                setContent({
-                                  ...content,
-                                  research: { ...content.research, milestones: newM },
-                                });
-                              })
-                            }
-                            className="admin-btn admin-btn-secondary"
-                            style={{ padding: '6px 12px', fontSize: '12px' }}
-                          >
-                            Choose from Media Library
-                          </button>
-                          <label
-                            className="admin-btn admin-btn-secondary"
-                            style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}
-                          >
-                            <span>Upload Replacement</span>
-                            <input
-                              type="file"
-                              accept="image/*"
-                              style={{ display: 'none' }}
-                              onChange={(e) =>
-                                handleDirectUpload(e, (newUrl) => {
-                                  const newM = [...content.research.milestones];
-                                  newM[mIdx].image = newUrl;
-                                  setContent({
-                                    ...content,
-                                    research: { ...content.research, milestones: newM },
-                                  });
-                                })
-                              }
-                            />
-                          </label>
-                        </div>
-                      </div>
-                    </div>
+                  <div style={{ marginTop: '14px' }}>
+                    <ImageFieldControl
+                      label="Milestone Photo"
+                      description="Featured document or photo on /research."
+                      currentUrl={m.image}
+                      currentAlt={m.caption || m.title}
+                      previewLink="/research"
+                      mediaList={mediaList}
+                      sectionName={`Milestone: ${m.title}`}
+                      pageName="Research"
+                      onRefreshMedia={async () => {
+                        const res = await fetch('/api/admin/media', { cache: 'no-store' });
+                        const data = await res.json();
+                        if (data.media) setMediaList(data.media);
+                      }}
+                      onChange={(newUrl, newAlt) => {
+                        const newM = [...content.research.milestones];
+                        newM[mIdx].image = newUrl;
+                        if (newAlt) newM[mIdx].caption = newAlt;
+                        setContent({
+                          ...content,
+                          research: { ...content.research, milestones: newM },
+                        });
+                      }}
+                    />
                   </div>
                 </div>
               ))}
@@ -1670,67 +1588,175 @@ export default function AdminPagesEditor() {
       {/* PAGE 5: GALLERY */}
       {activePage === 'gallery' && (
         <div className="admin-section-block">
-          <div className="admin-section-header">
-            <h3 className="admin-section-title">
-              <span>All 15 Verified Gallery Photos</span>
-            </h3>
-            <span style={{ fontSize: '12px', color: '#64748b' }}>Appears on /gallery with interactive full-screen lightbox</span>
+          <div className="admin-section-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div>
+              <h3 className="admin-section-title">
+                <span>Verified Gallery Photos ({content.gallery.length})</span>
+              </h3>
+              <span style={{ fontSize: '12px', color: '#64748b' }}>Appears on /gallery with interactive full-screen lightbox, category filters, and captions.</span>
+            </div>
+            <button
+              type="button"
+              onClick={() => {
+                const newId = `g-${Date.now()}`;
+                const newPhoto = {
+                  id: newId,
+                  src: '/images/operating-theatre-pgi-chandigarh-10.jpeg',
+                  title: 'New Clinic Photograph',
+                  alt: 'Dr. Rattan ENT Clinic facility photo',
+                  category: 'clinic' as const,
+                  categoryLabel: 'Clinic & Facility',
+                  order: content.gallery.length + 1,
+                };
+                setContent({ ...content, gallery: [...content.gallery, newPhoto] });
+              }}
+              className="admin-btn admin-btn-primary"
+              style={{ fontSize: '12px', padding: '6px 14px', fontWeight: 700 }}
+            >
+              + Add Gallery Photo
+            </button>
           </div>
           <div className="admin-section-body">
             <div className="admin-grid-3">
               {content.gallery.map((g, gIdx) => (
-                <div key={g.id || gIdx} style={{ background: '#f8fafc', padding: '14px', borderRadius: '12px', border: '1px solid #e2e8f0' }}>
-                  <div style={{ height: '140px', borderRadius: '8px', overflow: 'hidden', background: '#e2e8f0', marginBottom: '10px' }}>
-                    <img src={g.src} alt={g.alt || g.title} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                  </div>
+                <div
+                  key={g.id || gIdx}
+                  style={{
+                    background: '#f8fafc',
+                    padding: '16px',
+                    borderRadius: '14px',
+                    border: '1px solid #e2e8f0',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <div>
+                    {/* Header with Ordering & Delete Item */}
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '10px' }}>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#0f766e', background: '#ccfbf1', padding: '2px 8px', borderRadius: '10px' }}>
+                        #{gIdx + 1}
+                      </span>
+                      <div style={{ display: 'flex', gap: '4px' }}>
+                        <button
+                          type="button"
+                          disabled={gIdx === 0}
+                          onClick={() => {
+                            if (gIdx === 0) return;
+                            const newG = [...content.gallery];
+                            const temp = newG[gIdx - 1];
+                            newG[gIdx - 1] = newG[gIdx];
+                            newG[gIdx] = temp;
+                            setContent({ ...content, gallery: newG });
+                          }}
+                          className="admin-btn admin-btn-secondary"
+                          style={{ padding: '2px 6px', fontSize: '10px' }}
+                          title="Move Up"
+                        >
+                          ▲
+                        </button>
+                        <button
+                          type="button"
+                          disabled={gIdx === content.gallery.length - 1}
+                          onClick={() => {
+                            if (gIdx === content.gallery.length - 1) return;
+                            const newG = [...content.gallery];
+                            const temp = newG[gIdx + 1];
+                            newG[gIdx + 1] = newG[gIdx];
+                            newG[gIdx] = temp;
+                            setContent({ ...content, gallery: newG });
+                          }}
+                          className="admin-btn admin-btn-secondary"
+                          style={{ padding: '2px 6px', fontSize: '10px' }}
+                          title="Move Down"
+                        >
+                          ▼
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            if (!window.confirm(`Remove photo "${g.title}" from gallery?`)) return;
+                            const newG = content.gallery.filter((_, idx) => idx !== gIdx);
+                            setContent({ ...content, gallery: newG });
+                          }}
+                          className="admin-btn admin-btn-danger"
+                          style={{ padding: '2px 6px', fontSize: '10px' }}
+                          title="Delete Gallery Card"
+                        >
+                          ✕
+                        </button>
+                      </div>
+                    </div>
 
-                  <div className="admin-form-group">
-                    <label className="admin-label">Title / Caption</label>
-                    <input
-                      type="text"
-                      className="admin-input"
-                      value={g.title}
-                      onChange={(e) => {
+                    {/* Image Field Control */}
+                    <ImageFieldControl
+                      label="Photograph"
+                      currentUrl={g.src}
+                      currentAlt={g.alt || g.title}
+                      previewLink="/gallery"
+                      mediaList={mediaList}
+                      sectionName={`Gallery Item #${gIdx + 1}: ${g.title}`}
+                      pageName="Gallery"
+                      onRefreshMedia={async () => {
+                        const res = await fetch('/api/admin/media', { cache: 'no-store' });
+                        const data = await res.json();
+                        if (data.media) setMediaList(data.media);
+                      }}
+                      onChange={(newUrl, newAlt) => {
                         const newG = [...content.gallery];
-                        newG[gIdx].title = e.target.value;
+                        newG[gIdx].src = newUrl;
+                        if (newAlt) newG[gIdx].alt = newAlt;
                         setContent({ ...content, gallery: newG });
                       }}
                     />
-                  </div>
 
-                  <div className="admin-form-group">
-                    <label className="admin-label">Category</label>
-                    <select
-                      className="admin-select"
-                      value={g.category}
-                      onChange={(e) => {
-                        const newG = [...content.gallery];
-                        newG[gIdx].category = e.target.value as 'surgical' | 'clinic';
-                        newG[gIdx].categoryLabel = e.target.value === 'surgical' ? 'Academic & Surgical' : 'Clinic & Facility';
-                        setContent({ ...content, gallery: newG });
-                      }}
-                    >
-                      <option value="surgical">Academic & Surgical</option>
-                      <option value="clinic">Clinic & Facility</option>
-                    </select>
-                  </div>
-
-                  <div className="admin-image-actions" style={{ marginTop: '8px' }}>
-                    <button
-                      type="button"
-                      onClick={() =>
-                        handleOpenMediaPicker((newUrl, altText) => {
+                    {/* Title / Caption */}
+                    <div className="admin-form-group" style={{ marginTop: '8px' }}>
+                      <label className="admin-label">Title / Caption</label>
+                      <input
+                        type="text"
+                        className="admin-input"
+                        value={g.title}
+                        onChange={(e) => {
                           const newG = [...content.gallery];
-                          newG[gIdx].src = newUrl;
-                          if (altText) newG[gIdx].alt = altText;
+                          newG[gIdx].title = e.target.value;
                           setContent({ ...content, gallery: newG });
-                        })
-                      }
-                      className="admin-btn admin-btn-secondary"
-                      style={{ padding: '6px 10px', fontSize: '11px', width: '100%' }}
-                    >
-                      Change Photo
-                    </button>
+                        }}
+                      />
+                    </div>
+
+                    {/* Alt Text */}
+                    <div className="admin-form-group">
+                      <label className="admin-label">Alt Text (Screen Readers & SEO)</label>
+                      <input
+                        type="text"
+                        className="admin-input"
+                        value={g.alt || ''}
+                        onChange={(e) => {
+                          const newG = [...content.gallery];
+                          newG[gIdx].alt = e.target.value;
+                          setContent({ ...content, gallery: newG });
+                        }}
+                      />
+                    </div>
+
+                    {/* Category */}
+                    <div className="admin-form-group">
+                      <label className="admin-label">Category Filter Tab</label>
+                      <select
+                        className="admin-select"
+                        value={g.category}
+                        onChange={(e) => {
+                          const newG = [...content.gallery];
+                          newG[gIdx].category = e.target.value as 'surgical' | 'clinic';
+                          newG[gIdx].categoryLabel = e.target.value === 'surgical' ? 'Academic & Surgical' : 'Clinic & Facility';
+                          setContent({ ...content, gallery: newG });
+                        }}
+                      >
+                        <option value="surgical">Academic & Surgical</option>
+                        <option value="clinic">Clinic & Facility</option>
+                      </select>
+                    </div>
                   </div>
                 </div>
               ))}

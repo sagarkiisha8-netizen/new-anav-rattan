@@ -119,6 +119,7 @@ export interface ServiceItem {
   treatmentProcedures?: { name: string; details: string }[];
   redFlags?: string[];
   faqs?: { q: string; a: string }[];
+  image?: string;
   isPublished: boolean;
   order: number;
 }

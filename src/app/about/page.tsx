@@ -70,14 +70,56 @@ export default async function AboutPage() {
           </div>
 
           <div style={{ position: "relative", borderRadius: "16px", overflow: "hidden", boxShadow: "0 16px 40px rgba(18,54,83,0.12)", border: "1px solid rgba(18,54,83,0.1)" }}>
-            <Image 
-              src={about.legacyImage || "/images/dr-rattan-and-dr-anav-rattan-hero2.png"} 
-              alt="Dr. Ganesh Dutt Rattan and Dr. Anav Rattan at Dr. Rattan ENT Clinic Chandigarh"
-              width={700}
-              height={550}
-              style={{ width: "100%", height: "auto", objectFit: "cover", display: "block" }}
-              priority
-            />
+            {about.legacyImage ? (
+              <Image 
+                src={about.legacyImage} 
+                alt="Dr. Ganesh Dutt Rattan and Dr. Anav Rattan at Dr. Rattan ENT Clinic Chandigarh"
+                width={700}
+                height={550}
+                style={{ width: "100%", height: "auto", objectFit: "cover", display: "block" }}
+                priority
+              />
+            ) : (
+              <div
+                style={{
+                  minHeight: "360px",
+                  background: "linear-gradient(135deg, #123653 0%, #0d283e 100%)",
+                  display: "flex",
+                  flexDirection: "column",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  padding: "40px",
+                  textAlign: "center",
+                  color: "#ffffff",
+                }}
+              >
+                <div
+                  style={{
+                    width: "74px",
+                    height: "74px",
+                    borderRadius: "50%",
+                    background: "rgba(201,162,74,0.15)",
+                    border: "2px solid #C9A24A",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    fontFamily: "var(--serif), serif",
+                    fontSize: "26px",
+                    fontWeight: 700,
+                    color: "#C9A24A",
+                    marginBottom: "16px",
+                  }}
+                >
+                  35+
+                </div>
+                <div style={{ fontFamily: "var(--serif), serif", fontSize: "22px", fontWeight: 700, color: "#ffffff", marginBottom: "8px" }}>
+                  Institutional Heritage & Care
+                </div>
+                <div style={{ fontSize: "13px", color: "rgba(255,255,255,0.75)", maxWidth: "340px", lineHeight: 1.6 }}>
+                  Serving patients across Chandigarh, Punjab, Haryana & Himachal Pradesh with conservative ethics and microscopic precision.
+                </div>
+              </div>
+            )}
             <div style={{ padding: "16px 20px", background: "var(--navy)", color: "#fff", display: "flex", justifyContent: "space-between", alignItems: "center" }}>
               <div>
                 <div style={{ fontSize: "14px", fontWeight: 600, color: "var(--gold)" }}>Dr. Ganesh Dutt Rattan & Dr. Anav Rattan</div>

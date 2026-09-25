@@ -3,6 +3,7 @@
 import React, { useEffect, useState, useRef } from 'react';
 import Link from 'next/link';
 import { DoctorProfile, SiteContent, MediaItem } from '@/lib/types';
+import ImageFieldControl from '@/components/admin/ImageFieldControl';
 
 export default function AdminDoctorsPage() {
   const [content, setContent] = useState<SiteContent | null>(null);
@@ -456,44 +457,25 @@ export default function AdminDoctorsPage() {
             <form onSubmit={handleSaveModal}>
               {/* Doctor Portrait Section */}
               <div style={{ marginBottom: '20px' }}>
-                <label className="admin-label">Doctor Portrait Photo</label>
-                <div className="admin-image-control-box">
-                  <div className="admin-thumb-wrapper" style={{ width: '100px', height: '115px' }}>
-                    <img src={editingDoctor.image} alt={editingDoctor.name} />
-                  </div>
-                  <div className="admin-image-meta-info">
-                    <div>
-                      <span style={{ fontSize: '12px', fontWeight: 600 }}>Image Path: </span>
-                      <span className="admin-image-path-badge">{editingDoctor.image}</span>
-                    </div>
-                    <div style={{ fontSize: '11px', color: '#64748b' }}>
-                      Recommended: High resolution formal medical portrait with clean background.
-                    </div>
-                    <div className="admin-image-actions">
-                      <button
-                        type="button"
-                        onClick={() => setPickerOpen(true)}
-                        className="admin-btn admin-btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '12px' }}
-                      >
-                        Choose from Media Library
-                      </button>
-                      <label
-                        className="admin-btn admin-btn-secondary"
-                        style={{ padding: '6px 12px', fontSize: '12px', cursor: 'pointer' }}
-                      >
-                        <span>{uploadingImage ? 'Uploading...' : 'Upload Replacement'}</span>
-                        <input
-                          type="file"
-                          ref={fileInputRef}
-                          accept="image/*"
-                          style={{ display: 'none' }}
-                          onChange={handleUploadDoctorImage}
-                        />
-                      </label>
-                    </div>
-                  </div>
-                </div>
+                <ImageFieldControl
+                  label="Doctor Portrait Photo"
+                  description="High resolution formal medical portrait with clean background."
+                  currentUrl={editingDoctor.image}
+                  defaultUrl={editingDoctor.slug === 'dr-ganesh-dutt-rattan' ? '/images/dr-ganesh-dutt-rattan-0.jpeg' : editingDoctor.slug === 'dr-anav-rattan' ? '/images/dr-anav-rattan-1.jpeg' : '/images/dr-rattan-and-dr-anav-rattan-hero2.png'}
+                  defaultAlt={editingDoctor.name}
+                  previewLink={`/doctors/${editingDoctor.slug || ''}`}
+                  mediaList={mediaList}
+                  sectionName={`Doctor Profile: ${editingDoctor.name || 'New Doctor'}`}
+                  pageName="Doctors"
+                  onRefreshMedia={async () => {
+                    const res = await fetch('/api/admin/media', { cache: 'no-store' });
+                    const data = await res.json();
+                    if (data.media) setMediaList(data.media);
+                  }}
+                  onChange={(newUrl) => {
+                    setEditingDoctor({ ...editingDoctor, image: newUrl });
+                  }}
+                />
               </div>
 
               {/* Basic Info */}

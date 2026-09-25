@@ -785,14 +785,26 @@ export const defaultSiteContent: SiteContent = {
   }
 };
 
-// Initial media items seeded from existing public/images
+// Initial media items seeded from all 18 existing public/images
 const defaultMediaItems: MediaItem[] = [
-  { id: "m-1", url: "/images/dr-rattan-and-dr-anav-rattan-hero2.png", filename: "dr-rattan-and-dr-anav-rattan-hero2.png", title: "Doctors Joint Portrait", alt: "Dr. Ganesh Dutt Rattan and Dr. Anav Rattan", sizeBytes: 1688023, uploadedAt: new Date().toISOString() },
-  { id: "m-2", url: "/images/dr-ganesh-dutt-rattan-0.jpeg", filename: "dr-ganesh-dutt-rattan-0.jpeg", title: "Dr. Ganesh Dutt Rattan Portrait", alt: "Dr. Ganesh Dutt Rattan Senior ENT Surgeon", sizeBytes: 62351, uploadedAt: new Date().toISOString() },
-  { id: "m-3", url: "/images/dr-anav-rattan-1.jpeg", filename: "dr-anav-rattan-1.jpeg", title: "Dr. Anav Rattan Portrait", alt: "Dr. Anav Rattan Otologist and Skull Base Surgeon", sizeBytes: 70124, uploadedAt: new Date().toISOString() },
-  { id: "m-4", url: "/images/operating-theatre-pgi-chandigarh-10.jpeg", filename: "operating-theatre-pgi-chandigarh-10.jpeg", title: "PGI Operating Theatre", alt: "Advanced surgical operating theatre at PGI Chandigarh", sizeBytes: 64754, uploadedAt: new Date().toISOString() },
-  { id: "m-5", url: "/images/cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg", filename: "cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg", title: "Cochlear Implant Certificate", alt: "Cochlear Implant Certificate from KEM Hospital Mumbai", sizeBytes: 49041, uploadedAt: new Date().toISOString() },
-  { id: "m-6", url: "/images/dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg", filename: "dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg", title: "IAOHNS Jammu Conference", alt: "Dr. Anav Rattan at IAOHNS 2023 conference in Jammu", sizeBytes: 115655, uploadedAt: new Date().toISOString() }
+  { id: "m-1", url: "/images/dr-rattan-and-dr-anav-rattan-hero2.png", filename: "dr-rattan-and-dr-anav-rattan-hero2.png", title: "Dr. Ganesh Dutt Rattan & Dr. Anav Rattan Joint Hero", alt: "Dr. Ganesh Dutt Rattan and Dr. Anav Rattan - Senior ENT Specialists", sizeBytes: 1688023, mimeType: "image/png", uploadedAt: new Date().toISOString() },
+  { id: "m-2", url: "/images/dr-ganesh-dutt-rattan-0.jpeg", filename: "dr-ganesh-dutt-rattan-0.jpeg", title: "Dr. Ganesh Dutt Rattan Portrait", alt: "Dr. Ganesh Dutt Rattan Senior ENT Surgeon", sizeBytes: 62351, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-3", url: "/images/dr-anav-rattan-1.jpeg", filename: "dr-anav-rattan-1.jpeg", title: "Dr. Anav Rattan Portrait", alt: "Dr. Anav Rattan Otologist and Skull Base Surgeon", sizeBytes: 70124, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-4", url: "/images/operating-theatre-pgi-chandigarh-10.jpeg", filename: "operating-theatre-pgi-chandigarh-10.jpeg", title: "PGI Advanced Operating Theatre", alt: "Advanced surgical operating theatre at PGI Chandigarh", sizeBytes: 64754, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-5", url: "/images/cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg", filename: "cochlear-implant-programme-certificate-kem-hospital-mumbai-12.jpeg", title: "Cochlear Implant Fellowship Certificate", alt: "Cochlear Implant Certificate from KEM Hospital Mumbai", sizeBytes: 49041, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-6", url: "/images/dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg", filename: "dr-anav-rattan-at-iaohns-2023-conference-jammu-16.jpeg", title: "IAOHNS 2023 Jammu Conference Presentation", alt: "Dr. Anav Rattan at IAOHNS 2023 conference in Jammu", sizeBytes: 115655, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-7", url: "/images/surgical-team-pgi-chandigarh-8.jpeg", filename: "surgical-team-pgi-chandigarh-8.jpeg", title: "Surgical Team at PGI Chandigarh", alt: "Surgical team and faculty in scrub attire at PGI Chandigarh", sizeBytes: 74916, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-8", url: "/images/ent-team-pgi-chandigarh-9.jpeg", filename: "ent-team-pgi-chandigarh-9.jpeg", title: "ENT Department Faculty & Residents", alt: "ENT department colleagues and surgical residents at PGI Chandigarh", sizeBytes: 60380, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-9", url: "/images/gallery-15.jpeg", filename: "gallery-15.jpeg", title: "Guest Speaker Felicitation & Presentation", alt: "Guest speaker presentation and felicitation at medical conference", sizeBytes: 37301, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-10", url: "/images/kem-hospital-auditorium-department-gathering-13.jpeg", filename: "kem-hospital-auditorium-department-gathering-13.jpeg", title: "Academic Lecture at KEM Hospital Auditorium", alt: "Department gathering and clinical lecture in the historic KEM Hospital auditorium", sizeBytes: 76423, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-11", url: "/images/seth-g-s-medical-college-kem-hospital-mumbai-14.jpeg", filename: "seth-g-s-medical-college-kem-hospital-mumbai-14.jpeg", title: "Seth G.S. Medical College & KEM Hospital Heritage", alt: "Historic quadrangle and heritage facade of Seth G.S. Medical College, Mumbai", sizeBytes: 61232, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-12", url: "/images/surgery-in-progress-11.jpeg", filename: "surgery-in-progress-11.jpeg", title: "Precision Microsurgery in Progress", alt: "Surgeons performing delicate ENT microsurgery under theatre lighting", sizeBytes: 28563, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-13", url: "/images/full-waiting-room-2.jpeg", filename: "full-waiting-room-2.jpeg", title: "Patient Waiting Lounge", alt: "Spacious and comfortable patient waiting lounge at Dr. Rattan ENT Clinic", sizeBytes: 35713, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-14", url: "/images/consultation-room-with-instruments-3.jpeg", filename: "consultation-room-with-instruments-3.jpeg", title: "Diagnostic & Consultation Suite", alt: "ENT examination unit with specialized diagnostic endoscopy and microscopic equipment", sizeBytes: 51281, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-15", url: "/images/waiting-area-notice-board-4.jpeg", filename: "waiting-area-notice-board-4.jpeg", title: "Clinic Accreditation & Patient Guidelines", alt: "Accreditations, registrations, and patient health guidelines notice board", sizeBytes: 38469, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-16", url: "/images/clinic-seating-area-6.jpeg", filename: "clinic-seating-area-6.jpeg", title: "Air-Conditioned Patient Seating Area", alt: "Air-conditioned patient seating area and consultation corridor", sizeBytes: 32415, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-17", url: "/images/clinic-entrance-area-7.jpeg", filename: "clinic-entrance-area-7.jpeg", title: "Clinic Entrance & Handcrafted Teak Chambers", alt: "Clinic main entrance with handcrafted teak consultation chamber doors", sizeBytes: 28956, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
+  { id: "m-18", url: "/images/dr-g-d-rattan-nameplate-5.jpeg", filename: "dr-g-d-rattan-nameplate-5.jpeg", title: "Senior Consultant Chambers Nameplate", alt: "Consultation chamber entrance for Senior ENT Surgeon Dr. Ganesh Dutt Rattan", sizeBytes: 36127, mimeType: "image/jpeg", uploadedAt: new Date().toISOString() },
 ];
 
 // Content Accessors
@@ -879,20 +891,38 @@ export async function deleteSubmission(id: string): Promise<boolean> {
 // Media Accessors
 export async function getMediaList(): Promise<MediaItem[]> {
   const data = await readPersistentJson<MediaItem[]>("media", MEDIA_FILE);
+  let list: MediaItem[] = [];
+
   if (data && Array.isArray(data) && data.length > 0) {
-    memoryMedia = data;
-    return data;
+    list = [...data];
+  } else if (memoryMedia && memoryMedia.length > 0) {
+    list = [...memoryMedia];
+  } else {
+    list = [...defaultMediaItems];
   }
-  if (memoryMedia && memoryMedia.length > 0) return memoryMedia;
-  memoryMedia = defaultMediaItems;
-  return defaultMediaItems;
+
+  // Ensure all 18 default media items exist in the catalog
+  defaultMediaItems.forEach((def) => {
+    if (!list.some((item) => item.url === def.url || item.filename === def.filename)) {
+      list.push(def);
+    }
+  });
+
+  memoryMedia = list;
+  return list;
 }
 
 export const getMediaItems = getMediaList;
 
 export async function addMediaItem(item: MediaItem): Promise<MediaItem> {
   const list = await getMediaList();
-  list.unshift(item);
+  // If item with same url or filename already exists, update it
+  const existingIdx = list.findIndex((m) => m.url === item.url || (m.filename && m.filename === item.filename));
+  if (existingIdx >= 0) {
+    list[existingIdx] = { ...list[existingIdx], ...item };
+  } else {
+    list.unshift(item);
+  }
   memoryMedia = list;
   await writePersistentJson("media", list, MEDIA_FILE);
   return item;
@@ -900,7 +930,7 @@ export async function addMediaItem(item: MediaItem): Promise<MediaItem> {
 
 export async function updateMediaItem(id: string, updates: Partial<MediaItem>): Promise<MediaItem | null> {
   const list = await getMediaList();
-  const index = list.findIndex(m => m.id === id);
+  const index = list.findIndex(m => m.id === id || m.url === id || m.filename === id);
   if (index === -1) return null;
 
   list[index] = { ...list[index], ...updates };
@@ -909,16 +939,31 @@ export async function updateMediaItem(id: string, updates: Partial<MediaItem>): 
   return list[index];
 }
 
-export async function deleteMediaItem(id: string): Promise<boolean> {
+export async function deleteMediaItem(
+  idOrUrl: string,
+  options?: { unlinkFromContent?: boolean }
+): Promise<{ success: boolean; deletedItem?: MediaItem }> {
   const list = await getMediaList();
-  const item = list.find(m => m.id === id);
-  if (!item) return false;
+  const item = list.find(m => m.id === idOrUrl || m.url === idOrUrl || m.filename === idOrUrl);
+  if (!item) return { success: false };
 
-  const filtered = list.filter(m => m.id !== id);
+  const filtered = list.filter(m => m.id !== item.id && m.url !== item.url);
   memoryMedia = filtered;
   await writePersistentJson("media", filtered, MEDIA_FILE);
 
-  // If stored in /uploads/, delete from disk and Netlify Blobs
+  // If unlinkFromContent is requested, remove all references to this image in site-content
+  if (options?.unlinkFromContent) {
+    try {
+      const { unlinkImageFromContent } = await import("./imageUsage");
+      const currentContent = await getSiteContent();
+      const updatedContent = unlinkImageFromContent(item.url, currentContent);
+      await updateSiteContent(updatedContent);
+    } catch (err) {
+      console.error("Failed to unlink deleted image from site content:", err);
+    }
+  }
+
+  // Delete underlying file storage if in /uploads/
   if (item.url.startsWith("/uploads/")) {
     const filename = item.filename || path.basename(item.url);
     await deleteMediaBlob(filename);
@@ -927,10 +972,11 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
       const diskPath = path.join(uploadBasePath, filename);
       await fs.unlink(diskPath);
     } catch {
-      // Ignore
+      // Ignore if file was already removed
     }
   }
-  return true;
+
+  return { success: true, deletedItem: item };
 }
 
 // Admin User Accessors

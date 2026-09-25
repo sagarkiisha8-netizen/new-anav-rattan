@@ -45,8 +45,8 @@ export default function HomeContent({ initialContent }: { initialContent?: SiteC
 
   const heroBadge = hero?.badge || home?.heroBadge || "Specialist ENT Clinic · Sector 33C, Chandigarh";
   const heroTitle = hero?.title || home?.heroTitle || "Complete Ear, Nose & Throat Care in Chandigarh";
-  const heroDescription = hero?.description || home?.heroDescription || "Providing comprehensive ear, nose, throat, sinus, allergy, voice, hearing, and head-and-neck care with institution-level expertise and compassionate patient care.";
-  const heroImage = hero?.image || home?.heroImage || "/images/dr-rattan-and-dr-anav-rattan-hero2.png";
+  const heroDescription = hero?.description || "From routine consultations to advanced surgical procedures, Dr. Rattan ENT Clinic provides compassionate, evidence-based ear, nose, and throat care for patients of all ages in Chandigarh.";
+  const heroImage = hero?.image !== undefined ? hero.image : (home?.heroImage !== undefined ? home.heroImage : "/images/dr-rattan-and-dr-anav-rattan-hero2.png");
   const primaryBtn = hero?.primaryButton || { label: "Book Appointment", link: "/book-appointment", variant: "primary" };
   const secondaryBtn = hero?.secondaryButton || { label: "Explore Our Services", link: "/services", variant: "secondary" };
   const doctorName = hero?.doctorCardName || "Dr. Ganesh Dutt Rattan & Dr. Anav Rattan";
@@ -141,16 +141,64 @@ export default function HomeContent({ initialContent }: { initialContent?: SiteC
             <div className="hero-right" style={{ position: "relative" }}>
               <div className="hero-panel">
                 <div className="hero-img-frame">
-                  <Image 
-                    src={heroImage || "/images/dr-rattan-and-dr-anav-rattan-hero2.png"} 
-                    alt="Dr. Ganesh Dutt Rattan & Dr. Anav Rattan - ENT Specialists at Dr. Rattan ENT Clinic" 
-                    fill 
-                    sizes="(max-width: 480px) 320px, (max-width: 960px) 380px, 430px"
-                    style={{ objectFit: "cover", objectPosition: "center 28%" }} 
-                    className="hero-photo-img"
-                    priority 
-                  />
-                  <div className="hero-img-gradient" />
+                  {heroImage ? (
+                    <>
+                      <Image 
+                        src={heroImage} 
+                        alt="Dr. Ganesh Dutt Rattan & Dr. Anav Rattan - ENT Specialists at Dr. Rattan ENT Clinic" 
+                        fill 
+                        sizes="(max-width: 480px) 320px, (max-width: 960px) 380px, 430px"
+                        style={{ objectFit: "cover", objectPosition: "center 28%" }} 
+                        className="hero-photo-img"
+                        priority 
+                      />
+                      <div className="hero-img-gradient" />
+                    </>
+                  ) : (
+                    <div
+                      style={{
+                        width: "100%",
+                        height: "100%",
+                        background: "linear-gradient(145deg, #123653 0%, #0a2033 100%)",
+                        display: "flex",
+                        flexDirection: "column",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        padding: "24px",
+                        textAlign: "center",
+                        color: "#ffffff",
+                      }}
+                    >
+                      <div
+                        style={{
+                          width: "72px",
+                          height: "72px",
+                          borderRadius: "50%",
+                          background: "rgba(201,162,74,0.15)",
+                          border: "2px solid #C9A24A",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center",
+                          fontFamily: "var(--serif), serif",
+                          fontSize: "26px",
+                          fontWeight: 700,
+                          color: "#C9A24A",
+                          marginBottom: "14px",
+                        }}
+                      >
+                        DR
+                      </div>
+                      <div style={{ fontFamily: "var(--serif), serif", fontSize: "20px", fontWeight: 700, color: "#ffffff", marginBottom: "6px" }}>
+                        Dr. Rattan ENT Clinic
+                      </div>
+                      <div style={{ fontSize: "12px", color: "rgba(255,255,255,0.7)", maxWidth: "260px", lineHeight: 1.5 }}>
+                        PGI-Trained ENT & Head-Neck Surgical Excellence in Chandigarh
+                      </div>
+                      <div style={{ marginTop: "16px", display: "inline-flex", alignItems: "center", gap: "6px", background: "rgba(201,162,74,0.2)", padding: "4px 14px", borderRadius: "16px", fontSize: "11px", color: "#fef08a", fontWeight: 600 }}>
+                        <span>Sector 33C, Chandigarh</span>
+                      </div>
+                    </div>
+                  )}
                 </div>
                 <div className="hero-nameplate">
                   <div className="hero-nameplate-title">{doctorName}</div>

@@ -20,7 +20,9 @@ export default function GalleryClientView({ initialGallery }: { initialGallery?:
   const [filter, setFilter] = useState<CategoryFilter>("all");
   const [selectedIndex, setSelectedIndex] = useState<number | null>(null);
 
-  const allGalleryImages = initialGallery && initialGallery.length > 0 ? initialGallery : [];
+  const allGalleryImages = (initialGallery && initialGallery.length > 0 ? initialGallery : []).filter(
+    (img) => Boolean(img.src && img.src.trim())
+  );
 
   const filteredImages = filter === "all" 
     ? allGalleryImages 
