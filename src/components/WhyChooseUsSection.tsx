@@ -91,11 +91,42 @@ const benefits: Benefit[] = [
   }
 ];
 
-export default function WhyChooseUsSection() {
+interface WhyChooseUsData {
+  label?: string;
+  title?: string;
+  benefits?: Array<{
+    id?: string;
+    num?: string;
+    title: string;
+    desc: string;
+    subPoints?: string[];
+  }>;
+}
+
+interface WhyChooseUsProps {
+  data?: WhyChooseUsData;
+}
+
+export default function WhyChooseUsSection({ data }: WhyChooseUsProps = {}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  const displayBenefits: Benefit[] = data?.benefits && data.benefits.length > 0
+    ? data.benefits.map((b, i) => {
+        const fallback = benefits[i] || benefits[0];
+        return {
+          id: b.id || fallback.id || `benefit-${i}`,
+          number: b.num || fallback.number || `0${i + 1}`,
+          title: b.title || fallback.title,
+          description: b.desc || fallback.description,
+          tag: fallback.tag,
+          highlights: b.subPoints || fallback.highlights,
+          icon: fallback.icon,
+        };
+      })
+    : benefits;
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -215,7 +246,7 @@ export default function WhyChooseUsSection() {
             }}
           >
             <span style={{ display: "inline-block", width: "20px", height: "1.5px", background: "var(--gold)" }}></span>
-            WHY CHOOSE US
+            {data?.label || "WHY CHOOSE US"}
             <span style={{ display: "inline-block", width: "20px", height: "1.5px", background: "var(--gold)" }}></span>
           </div>
 
@@ -229,7 +260,11 @@ export default function WhyChooseUsSection() {
               marginBottom: "0.85rem"
             }}
           >
-            A legacy of expert <em style={{ color: "var(--gold)", fontStyle: "italic" }}>surgical care</em>
+            {data?.title || (
+              <>
+                A legacy of expert <em style={{ color: "var(--gold)", fontStyle: "italic" }}>surgical care</em>
+              </>
+            )}
           </h2>
 
           <p style={{ fontSize: "15.5px", color: "var(--muted)", lineHeight: 1.7, margin: "0 auto", maxWidth: "620px" }}>
@@ -252,22 +287,22 @@ export default function WhyChooseUsSection() {
               <div className="why-featured-left">
                 <div className="why-card-top">
                   <div className="why-icon-box why-icon-box-gold">
-                    {benefits[0].icon}
+                    {displayBenefits[0]?.icon}
                   </div>
                   <div className="why-num-badge">01 · Featured Focus</div>
                 </div>
 
                 <div className="why-title-wrap">
-                  <h3 className="why-title why-title-lg">{benefits[0].title}</h3>
+                  <h3 className="why-title why-title-lg">{displayBenefits[0]?.title}</h3>
                   <div className="why-gold-accent-line" />
                 </div>
-                <p className="why-desc why-desc-lg">{benefits[0].description}</p>
+                <p className="why-desc why-desc-lg">{displayBenefits[0]?.description}</p>
               </div>
 
               <div className="why-featured-right">
                 <div className="why-highlights-title">Institutional Highlights</div>
                 <ul className="why-highlights-list">
-                  {benefits[0].highlights?.map((hl, i) => (
+                  {displayBenefits[0]?.highlights?.map((hl, i) => (
                     <li key={i}>
                       <span className="why-check">✓</span>
                       <span>{hl}</span>
@@ -276,7 +311,7 @@ export default function WhyChooseUsSection() {
                 </ul>
 
                 <div className="why-featured-footer">
-                  <span className="why-tag">{benefits[0].tag}</span>
+                  {displayBenefits[0]?.tag && <span className="why-tag">{displayBenefits[0]?.tag}</span>}
                   <span className="why-action-indicator">
                     Learn more <span className="why-arrow">→</span>
                   </span>
@@ -296,17 +331,17 @@ export default function WhyChooseUsSection() {
           >
             <div className="why-card-top">
               <div className="why-icon-box">
-                {benefits[1].icon}
+                {displayBenefits[1]?.icon}
               </div>
-              <span className="why-num-plain">{benefits[1].number}</span>
+              <span className="why-num-plain">{displayBenefits[1]?.number}</span>
             </div>
 
             <div className="why-card-body">
               <div className="why-title-wrap">
-                <h3 className="why-title">{benefits[1].title}</h3>
+                <h3 className="why-title">{displayBenefits[1]?.title}</h3>
                 <div className="why-gold-accent-line" />
               </div>
-              <p className="why-desc">{benefits[1].description}</p>
+              <p className="why-desc">{displayBenefits[1]?.description}</p>
             </div>
 
             <div className="why-card-footer">
@@ -327,17 +362,17 @@ export default function WhyChooseUsSection() {
           >
             <div className="why-card-top">
               <div className="why-icon-box">
-                {benefits[2].icon}
+                {displayBenefits[2]?.icon}
               </div>
-              <span className="why-num-plain">{benefits[2].number}</span>
+              <span className="why-num-plain">{displayBenefits[2]?.number}</span>
             </div>
 
             <div className="why-card-body">
               <div className="why-title-wrap">
-                <h3 className="why-title">{benefits[2].title}</h3>
+                <h3 className="why-title">{displayBenefits[2]?.title}</h3>
                 <div className="why-gold-accent-line" />
               </div>
-              <p className="why-desc">{benefits[2].description}</p>
+              <p className="why-desc">{displayBenefits[2]?.description}</p>
             </div>
 
             <div className="why-card-footer">
@@ -358,17 +393,17 @@ export default function WhyChooseUsSection() {
           >
             <div className="why-card-top">
               <div className="why-icon-box">
-                {benefits[3].icon}
+                {displayBenefits[3]?.icon}
               </div>
-              <span className="why-num-plain">{benefits[3].number}</span>
+              <span className="why-num-plain">{displayBenefits[3]?.number}</span>
             </div>
 
             <div className="why-card-body">
               <div className="why-title-wrap">
-                <h3 className="why-title">{benefits[3].title}</h3>
+                <h3 className="why-title">{displayBenefits[3]?.title}</h3>
                 <div className="why-gold-accent-line" />
               </div>
-              <p className="why-desc">{benefits[3].description}</p>
+              <p className="why-desc">{displayBenefits[3]?.description}</p>
             </div>
 
             <div className="why-card-footer">
@@ -389,17 +424,17 @@ export default function WhyChooseUsSection() {
           >
             <div className="why-card-top">
               <div className="why-icon-box">
-                {benefits[4].icon}
+                {displayBenefits[4]?.icon}
               </div>
-              <span className="why-num-plain">{benefits[4].number}</span>
+              <span className="why-num-plain">{displayBenefits[4]?.number}</span>
             </div>
 
             <div className="why-card-body">
               <div className="why-title-wrap">
-                <h3 className="why-title">{benefits[4].title}</h3>
+                <h3 className="why-title">{displayBenefits[4]?.title}</h3>
                 <div className="why-gold-accent-line" />
               </div>
-              <p className="why-desc">{benefits[4].description}</p>
+              <p className="why-desc">{displayBenefits[4]?.description}</p>
             </div>
 
             <div className="why-card-footer">
@@ -419,7 +454,7 @@ export default function WhyChooseUsSection() {
             role="region"
             aria-label="Why Choose Us Benefits"
           >
-            {benefits.map((benefit, idx) => (
+            {displayBenefits.map((benefit, idx) => (
               <div 
                 key={benefit.id}
                 className={`why-card why-mobile-card ${idx === 0 ? "why-mobile-card-featured" : ""}`}
@@ -475,7 +510,7 @@ export default function WhyChooseUsSection() {
             </button>
 
             <div className="why-dots-container" role="tablist" aria-label="Carousel pagination">
-              {benefits.map((_, i) => (
+              {displayBenefits.map((_, i) => (
                 <button
                   key={i}
                   role="tab"

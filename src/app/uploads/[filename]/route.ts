@@ -47,5 +47,21 @@ export async function GET(
     }
   }
 
+  // Fallback to persistent blob storage (Netlify Blobs)
+  try {
+    const { getMediaBlob } = await import("@/lib/db");
+    const blob = await getMediaBlob(sanitized);
+    if (blob && blob.buffer) {
+      return new NextResponse(blob.buffer, {
+        headers: {
+          "Content-Type": blob.contentType || "application/octet-stream",
+          "Cache-Control": "public, max-age=31536000, immutable",
+        },
+      });
+    }
+  } catch {
+    // Ignore and proceed to 404
+  }
+
   return NextResponse.json({ error: "File not found" }, { status: 404 });
 }

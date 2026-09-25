@@ -54,6 +54,10 @@ export async function POST(request: Request) {
       await fs.writeFile(path.join(uploadDir, uniqueName), buffer);
     }
 
+    // Persist to Netlify Blobs for cross-container serverless durability
+    const { saveMediaBlob } = await import("@/lib/db");
+    await saveMediaBlob(uniqueName, buffer, file.type || 'image/jpeg');
+
     const relativeUrl = `/uploads/${uniqueName}`;
 
     const mediaItem: MediaItem = {

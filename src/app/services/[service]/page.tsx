@@ -2,6 +2,10 @@ import { notFound } from "next/navigation";
 import { Metadata } from "next";
 import Link from "next/link";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import { getSiteContent } from "@/lib/db";
+
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 interface ServiceDetail {
   slug: string;
@@ -498,11 +502,26 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function ServiceDetailPage({ params }: Props) {
   const { service: serviceSlug } = await params;
-  const service = serviceCatalog[serviceSlug];
+  const siteContent = await getSiteContent();
+  const cmsService = (siteContent.services || []).find((s) => s.slug === serviceSlug);
+  const baseService = serviceCatalog[serviceSlug];
 
-  if (!service) {
+  if (!baseService && !cmsService) {
     notFound();
   }
+
+  const service: ServiceDetail = {
+    slug: serviceSlug,
+    title: cmsService?.name || baseService?.title || "Clinical Service",
+    badge: baseService?.badge || cmsService?.category || "Specialized ENT",
+    intro: cmsService?.desc || baseService?.intro || "",
+    symptoms: baseService?.symptoms || [],
+    conditions: baseService?.conditions || [],
+    diagnosis: baseService?.diagnosis || [],
+    treatments: cmsService?.highlights && cmsService.highlights.length > 0 ? cmsService.highlights : (baseService?.treatments || []),
+    whenToConsult: baseService?.whenToConsult || [],
+    faqs: baseService?.faqs || [],
+  };
 
   return (
     <main>

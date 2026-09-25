@@ -6,6 +6,32 @@ import Link from "next/link";
 export default function Footer() {
   const footerRef = useRef<HTMLElement>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const [contact, setContact] = useState<{
+    phone?: string;
+    whatsapp?: string;
+    email?: string;
+    address?: string;
+    morningOpd?: string;
+    eveningOpd?: string;
+  }>({
+    phone: "0172-2610806",
+    whatsapp: "+91 9988004806",
+    email: "rattananav@gmail.com",
+    address: "SCO 123, Sector 33C, Chandigarh",
+    morningOpd: "10AM–2PM",
+    eveningOpd: "5:30–8PM",
+  });
+
+  useEffect(() => {
+    fetch("/api/admin/content")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.content?.contact) {
+          setContact((prev) => ({ ...prev, ...d.content.contact }));
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   useEffect(() => {
     const node = footerRef.current;
@@ -32,6 +58,7 @@ export default function Footer() {
   }, []);
 
   const currentYear = new Date().getFullYear();
+  const phoneClean = (contact.phone || "0172-2610806").replace(/[^0-9]/g, "");
 
   return (
     <footer
@@ -90,23 +117,23 @@ export default function Footer() {
             <ul className="footer-contact-list">
               <li>
                 <span className="contact-icon" aria-hidden="true">📍</span>
-                <span>SCO 123, Sector 33C, Chandigarh</span>
+                <span>{contact.address || "SCO 123, Sector 33C, Chandigarh"}</span>
               </li>
               <li>
                 <span className="contact-icon" aria-hidden="true">📞</span>
-                <a href="tel:01722610806" aria-label="Call clinic at 0172-2610806">
-                  0172-2610806
+                <a href={`tel:${phoneClean}`} aria-label={`Call clinic at ${contact.phone}`}>
+                  {contact.phone || "0172-2610806"}
                 </a>
               </li>
               <li>
                 <span className="contact-icon" aria-hidden="true">✉️</span>
-                <a href="mailto:rattananav@gmail.com" aria-label="Email clinic at rattananav@gmail.com">
-                  rattananav@gmail.com
+                <a href={`mailto:${contact.email || "rattananav@gmail.com"}`} aria-label={`Email clinic at ${contact.email}`}>
+                  {contact.email || "rattananav@gmail.com"}
                 </a>
               </li>
               <li className="footer-hours-item">
                 <span className="contact-icon" aria-hidden="true">🕒</span>
-                <span>Mon–Sat: 10AM–2PM &amp; 5:30–8PM</span>
+                <span>Mon–Sat: {contact.morningOpd || "10AM–2PM"} &amp; {contact.eveningOpd || "5:30–8PM"}</span>
               </li>
             </ul>
             <div className="footer-cta-wrapper">

@@ -2,6 +2,9 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getAdminSession } from '@/lib/auth';
 import { getMediaItems, deleteMediaItem } from '@/lib/db';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET() {
   const session = await getAdminSession();
   if (!session) {
@@ -9,7 +12,14 @@ export async function GET() {
   }
 
   const media = await getMediaItems();
-  return NextResponse.json({ media, images: media });
+  return NextResponse.json(
+    { media, images: media },
+    {
+      headers: {
+        "Cache-Control": "no-store, no-cache, must-revalidate",
+      },
+    }
+  );
 }
 
 export async function DELETE(request: NextRequest) {

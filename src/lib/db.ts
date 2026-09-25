@@ -1,5 +1,6 @@
 import fs from "fs/promises";
 import path from "path";
+import { getStore } from "@netlify/blobs";
 import { SiteContent, Submission, MediaItem, AdminUser } from "./types";
 import { hashPassword } from "./auth";
 
@@ -13,7 +14,7 @@ const SUBMISSIONS_FILE = path.join(DATA_DIR, "submissions.json");
 const MEDIA_FILE = path.join(DATA_DIR, "media.json");
 const ADMIN_FILE = path.join(DATA_DIR, "admin.json");
 
-// In-memory runtime fallbacks for serverless environments
+// In-memory runtime fallbacks for single-process caching
 let memoryContent: SiteContent | null = null;
 let memorySubmissions: Submission[] | null = null;
 let memoryMedia: MediaItem[] | null = null;
@@ -30,17 +31,259 @@ async function ensureDir() {
 }
 
 // Atomic file write using temporary file + rename with memory fallback
-async function atomicWriteJson(filePath: string, data: unknown) {
+async function atomicWriteJson(filePath: string, data: unknown): Promise<boolean> {
   try {
     await ensureDir();
     const tmpPath = `${filePath}.tmp.${Date.now()}.${Math.random().toString(36).substring(2)}`;
-    const content = JSON.stringify(data, null, 2);
-    await fs.writeFile(tmpPath, content, "utf-8");
+    const jsonStr = JSON.stringify(data, null, 2);
+    await fs.writeFile(tmpPath, jsonStr, "utf-8");
     await fs.rename(tmpPath, filePath);
+    return true;
   } catch {
-    // In read-only serverless environments, retain updates in-memory
+    try {
+      await fs.writeFile(filePath, JSON.stringify(data, null, 2), "utf-8");
+      return true;
+    } catch {
+      return false;
+    }
   }
 }
+
+// -------------------------------------------------------------
+// Multi-Tier Persistent Storage Helpers (Netlify Blobs, Upstash, GitHub, Disk)
+// -------------------------------------------------------------
+
+function getNetlifyStore(storeName: string = "dr-rattan-cms") {
+  try {
+    const siteID = process.env.NETLIFY_SITE_ID || process.env.SITE_ID;
+    const token = process.env.NETLIFY_AUTH_TOKEN || process.env.NETLIFY_TOKEN;
+    if (siteID && token) {
+      return getStore({ name: storeName, siteID, token, consistency: "strong" });
+    }
+    return getStore({ name: storeName, consistency: "strong" });
+  } catch {
+    return null;
+  }
+}
+
+async function getUpstashJson<T>(key: string): Promise<T | null> {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return null;
+  try {
+    const res = await fetch(`${url}/get/${key}`, {
+      headers: { Authorization: `Bearer ${token}` },
+      cache: "no-store",
+    });
+    if (!res.ok) return null;
+    const data = await res.json();
+    if (!data || data.result === null || data.result === undefined) return null;
+    return typeof data.result === "string" ? JSON.parse(data.result) : (data.result as T);
+  } catch {
+    return null;
+  }
+}
+
+async function setUpstashJson(key: string, data: unknown): Promise<boolean> {
+  const url = process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL;
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN;
+  if (!url || !token) return false;
+  try {
+    const res = await fetch(`${url}/set/${key}`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(typeof data === "string" ? data : JSON.stringify(data)),
+    });
+    return res.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function commitJsonToGitHub(filePathInRepo: string, data: unknown): Promise<boolean> {
+  const token = process.env.GITHUB_TOKEN || process.env.GITHUB_PAT;
+  const repo = process.env.GITHUB_REPO || process.env.GITHUB_REPOSITORY || "sagarkiisha8-netizen/new-anav-rattan";
+  if (!token || !repo) return false;
+  try {
+    let sha;
+    const getRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filePathInRepo}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "User-Agent": "DrRattanCMS",
+      },
+      cache: "no-store",
+    });
+    if (getRes.ok) {
+      const getJson = await getRes.json();
+      sha = getJson.sha;
+    }
+
+    const contentBase64 = Buffer.from(JSON.stringify(data, null, 2), "utf-8").toString("base64");
+    const putRes = await fetch(`https://api.github.com/repos/${repo}/contents/${filePathInRepo}`, {
+      method: "PUT",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        Accept: "application/vnd.github+json",
+        "Content-Type": "application/json",
+        "User-Agent": "DrRattanCMS",
+      },
+      body: JSON.stringify({
+        message: `CMS Update: ${filePathInRepo} [skip ci]`,
+        content: contentBase64,
+        sha,
+      }),
+    });
+    return putRes.ok;
+  } catch {
+    return false;
+  }
+}
+
+async function readPersistentJson<T>(
+  key: string,
+  localFilePath: string,
+  fallbackBundledPath?: string
+): Promise<T | null> {
+  // 1. Netlify Blobs (Primary on Netlify serverless)
+  const store = getNetlifyStore("dr-rattan-cms");
+  if (store) {
+    try {
+      const blobData = await store.get(key, { type: "json" });
+      if (blobData) return blobData as T;
+    } catch {
+      // Ignore
+    }
+  }
+
+  // 2. Upstash KV / Redis
+  const kvData = await getUpstashJson<T>(key);
+  if (kvData) return kvData;
+
+  // 3. Local writable file
+  try {
+    const raw = await fs.readFile(localFilePath, "utf-8");
+    return JSON.parse(raw) as T;
+  } catch {
+    // Ignore
+  }
+
+  // 4. Bundled file fallback
+  if (fallbackBundledPath) {
+    try {
+      const raw = await fs.readFile(fallbackBundledPath, "utf-8");
+      return JSON.parse(raw) as T;
+    } catch {
+      // Ignore
+    }
+  }
+
+  return null;
+}
+
+async function writePersistentJson(
+  key: string,
+  data: unknown,
+  localFilePath: string
+): Promise<{ success: boolean; persistedTo: string[] }> {
+  const persistedTo: string[] = [];
+
+  // 1. Netlify Blobs
+  const store = getNetlifyStore("dr-rattan-cms");
+  if (store) {
+    try {
+      await store.setJSON(key, data);
+      persistedTo.push("Netlify Blobs");
+    } catch (err) {
+      console.warn(`Netlify Blobs write failed for ${key}:`, err);
+    }
+  }
+
+  // 2. Upstash Redis / KV
+  const upstashOk = await setUpstashJson(key, data);
+  if (upstashOk) {
+    persistedTo.push("Upstash KV");
+  }
+
+  // 3. GitHub repository commit (if configured)
+  if (key === "site-content") {
+    const ghOk = await commitJsonToGitHub("data/content.json", data);
+    if (ghOk) {
+      persistedTo.push("GitHub Repo");
+    }
+  }
+
+  // 4. Local filesystem write
+  const fileOk = await atomicWriteJson(localFilePath, data);
+  if (fileOk) {
+    persistedTo.push("Local Filesystem");
+  }
+
+  return {
+    success: persistedTo.length > 0 || !isServerless,
+    persistedTo,
+  };
+}
+
+export async function saveMediaBlob(filename: string, buffer: Buffer | ArrayBuffer, contentType: string): Promise<boolean> {
+  const store = getNetlifyStore("dr-rattan-uploads");
+  if (!store) return false;
+  try {
+    const arrayBuffer: ArrayBuffer = Buffer.isBuffer(buffer)
+      ? (buffer.buffer.slice(buffer.byteOffset, buffer.byteOffset + buffer.byteLength) as ArrayBuffer)
+      : buffer;
+    await store.set(filename, arrayBuffer, {
+      metadata: { contentType },
+    });
+    return true;
+  } catch (err) {
+    console.error("Netlify Blobs saveMediaBlob error:", err);
+    return false;
+  }
+}
+
+export async function getMediaBlob(filename: string): Promise<{ buffer: ArrayBuffer; contentType: string } | null> {
+  const store = getNetlifyStore("dr-rattan-uploads");
+  if (!store) return null;
+  try {
+    const res = await store.getWithMetadata(filename, { type: "arrayBuffer" });
+    if (!res || !res.data) return null;
+    const contentType = (res.metadata?.contentType as string) || "application/octet-stream";
+    return { buffer: res.data, contentType };
+  } catch {
+    return null;
+  }
+}
+
+export async function deleteMediaBlob(filename: string): Promise<boolean> {
+  const store = getNetlifyStore("dr-rattan-uploads");
+  if (!store) return false;
+  try {
+    await store.delete(filename);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+export function getStorageDiagnostics() {
+  const hasNetlify = Boolean(process.env.NETLIFY || process.env.NETLIFY_BLOBS_CONTEXT || (process.env.NETLIFY_SITE_ID && process.env.NETLIFY_AUTH_TOKEN));
+  const hasUpstash = Boolean((process.env.UPSTASH_REDIS_REST_URL || process.env.KV_REST_API_URL) && (process.env.UPSTASH_REDIS_REST_TOKEN || process.env.KV_REST_API_TOKEN));
+  const hasGitHub = Boolean(process.env.GITHUB_TOKEN || process.env.GITHUB_PAT);
+  return {
+    isServerless,
+    storageProviders: {
+      netlifyBlobs: hasNetlify,
+      upstashRedis: hasUpstash,
+      githubRepo: hasGitHub,
+      filesystem: true,
+    }
+  };
+}
+
 
 // Default initial content representing current website data
 export const defaultSiteContent: SiteContent = {
@@ -554,56 +797,61 @@ const defaultMediaItems: MediaItem[] = [
 
 // Content Accessors
 export async function getSiteContent(): Promise<SiteContent> {
+  const data = await readPersistentJson<SiteContent>("site-content", CONTENT_FILE, BUNDLED_CONTENT_FILE);
+  if (data) {
+    memoryContent = data;
+    return data;
+  }
   if (memoryContent) return memoryContent;
-  
-  // 1. Try reading updated file in writable DATA_DIR
-  try {
-    const data = await fs.readFile(CONTENT_FILE, "utf-8");
-    memoryContent = JSON.parse(data);
-    return memoryContent as SiteContent;
-  } catch {
-    // Ignore
-  }
-
-  // 2. Try reading bundled repository data
-  try {
-    const data = await fs.readFile(BUNDLED_CONTENT_FILE, "utf-8");
-    memoryContent = JSON.parse(data);
-    return memoryContent as SiteContent;
-  } catch {
-    // Ignore
-  }
-
-  // 3. Fallback to default in-memory content
   memoryContent = defaultSiteContent;
   return defaultSiteContent;
 }
 
-export async function updateSiteContent(content: SiteContent): Promise<void> {
+export async function updateSiteContent(content: SiteContent): Promise<{ success: boolean; persistedTo: string[]; savedAt: string; content: SiteContent }> {
   memoryContent = content;
-  await atomicWriteJson(CONTENT_FILE, content);
+  const result = await writePersistentJson("site-content", content, CONTENT_FILE);
+
+  // Invalidate Next.js cache across all public pages
+  try {
+    const { revalidatePath } = await import("next/cache");
+    revalidatePath("/", "layout");
+    revalidatePath("/");
+    revalidatePath("/about");
+    revalidatePath("/services");
+    revalidatePath("/doctors");
+    revalidatePath("/research");
+    revalidatePath("/faqs");
+    revalidatePath("/gallery");
+    revalidatePath("/contact");
+    revalidatePath("/book-appointment");
+  } catch {
+    // revalidatePath only works in Next.js runtime
+  }
+
+  return {
+    success: result.success,
+    persistedTo: result.persistedTo,
+    savedAt: new Date().toISOString(),
+    content,
+  };
 }
 
 // Submissions Accessors
 export async function getSubmissions(): Promise<Submission[]> {
-  if (memorySubmissions) return memorySubmissions;
-  await ensureDir();
-  try {
-    const data = await fs.readFile(SUBMISSIONS_FILE, "utf-8");
-    memorySubmissions = JSON.parse(data);
-    return memorySubmissions as Submission[];
-  } catch {
-    memorySubmissions = [];
-    await atomicWriteJson(SUBMISSIONS_FILE, []);
-    return [];
+  const data = await readPersistentJson<Submission[]>("submissions", SUBMISSIONS_FILE);
+  if (data && Array.isArray(data)) {
+    memorySubmissions = data;
+    return data;
   }
+  if (memorySubmissions) return memorySubmissions;
+  return [];
 }
 
 export async function addSubmission(submission: Submission): Promise<Submission> {
   const list = await getSubmissions();
   list.unshift(submission);
   memorySubmissions = list;
-  await atomicWriteJson(SUBMISSIONS_FILE, list);
+  await writePersistentJson("submissions", list, SUBMISSIONS_FILE);
   return submission;
 }
 
@@ -614,7 +862,7 @@ export async function updateSubmission(id: string, updates: Partial<Submission>)
 
   list[index] = { ...list[index], ...updates } as Submission;
   memorySubmissions = list;
-  await atomicWriteJson(SUBMISSIONS_FILE, list);
+  await writePersistentJson("submissions", list, SUBMISSIONS_FILE);
   return list[index];
 }
 
@@ -624,21 +872,20 @@ export async function deleteSubmission(id: string): Promise<boolean> {
   if (filtered.length === list.length) return false;
 
   memorySubmissions = filtered;
-  await atomicWriteJson(SUBMISSIONS_FILE, filtered);
+  await writePersistentJson("submissions", filtered, SUBMISSIONS_FILE);
   return true;
 }
 
 // Media Accessors
 export async function getMediaList(): Promise<MediaItem[]> {
-  if (memoryMedia) return memoryMedia;
-  try {
-    const data = await fs.readFile(MEDIA_FILE, "utf-8");
-    memoryMedia = JSON.parse(data);
-    return memoryMedia as MediaItem[];
-  } catch {
-    memoryMedia = defaultMediaItems;
-    return defaultMediaItems;
+  const data = await readPersistentJson<MediaItem[]>("media", MEDIA_FILE);
+  if (data && Array.isArray(data) && data.length > 0) {
+    memoryMedia = data;
+    return data;
   }
+  if (memoryMedia && memoryMedia.length > 0) return memoryMedia;
+  memoryMedia = defaultMediaItems;
+  return defaultMediaItems;
 }
 
 export const getMediaItems = getMediaList;
@@ -647,7 +894,7 @@ export async function addMediaItem(item: MediaItem): Promise<MediaItem> {
   const list = await getMediaList();
   list.unshift(item);
   memoryMedia = list;
-  await atomicWriteJson(MEDIA_FILE, list);
+  await writePersistentJson("media", list, MEDIA_FILE);
   return item;
 }
 
@@ -658,7 +905,7 @@ export async function updateMediaItem(id: string, updates: Partial<MediaItem>): 
 
   list[index] = { ...list[index], ...updates };
   memoryMedia = list;
-  await atomicWriteJson(MEDIA_FILE, list);
+  await writePersistentJson("media", list, MEDIA_FILE);
   return list[index];
 }
 
@@ -669,17 +916,18 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
 
   const filtered = list.filter(m => m.id !== id);
   memoryMedia = filtered;
-  await atomicWriteJson(MEDIA_FILE, filtered);
+  await writePersistentJson("media", filtered, MEDIA_FILE);
 
-  // If the file is in /uploads/, delete the disk file as well if accessible
+  // If stored in /uploads/, delete from disk and Netlify Blobs
   if (item.url.startsWith("/uploads/")) {
+    const filename = item.filename || path.basename(item.url);
+    await deleteMediaBlob(filename);
     try {
-      const isServerlessEnv = Boolean(process.env.NETLIFY || process.env.VERCEL || process.env.AWS_LAMBDA_FUNCTION_NAME);
-      const uploadBasePath = process.env.UPLOAD_DIR || (isServerlessEnv ? path.join("/tmp", "uploads") : path.join(process.cwd(), "public", "uploads"));
-      const diskPath = path.join(uploadBasePath, item.filename || path.basename(item.url));
+      const uploadBasePath = process.env.UPLOAD_DIR || (isServerless ? path.join("/tmp", "uploads") : path.join(process.cwd(), "public", "uploads"));
+      const diskPath = path.join(uploadBasePath, filename);
       await fs.unlink(diskPath);
-    } catch (err) {
-      console.warn("Could not delete physical file:", err);
+    } catch {
+      // Ignore
     }
   }
   return true;
@@ -687,24 +935,25 @@ export async function deleteMediaItem(id: string): Promise<boolean> {
 
 // Admin User Accessors
 export async function getAdminUser(): Promise<AdminUser> {
-  if (memoryAdmin) return memoryAdmin;
-  try {
-    const data = await fs.readFile(ADMIN_FILE, "utf-8");
-    memoryAdmin = JSON.parse(data);
-    return memoryAdmin as AdminUser;
-  } catch {
-    // Default admin: admin@drrattanentclinic.com / Admin@Rattan2026
-    const { hash, salt } = hashPassword("Admin@Rattan2026");
-    const defaultAdmin: AdminUser = {
-      email: "admin@drrattanentclinic.com",
-      passwordHash: hash,
-      salt,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
-    };
-    memoryAdmin = defaultAdmin;
-    return defaultAdmin;
+  const data = await readPersistentJson<AdminUser>("admin-user", ADMIN_FILE);
+  if (data) {
+    memoryAdmin = data;
+    return data;
   }
+  if (memoryAdmin) return memoryAdmin;
+
+  // Default admin: admin@drrattanentclinic.com / Admin@Rattan2026
+  const { hash, salt } = hashPassword("Admin@Rattan2026");
+  const defaultAdmin: AdminUser = {
+    email: "admin@drrattanentclinic.com",
+    passwordHash: hash,
+    salt,
+    createdAt: new Date().toISOString(),
+    updatedAt: new Date().toISOString()
+  };
+  memoryAdmin = defaultAdmin;
+  await writePersistentJson("admin-user", defaultAdmin, ADMIN_FILE);
+  return defaultAdmin;
 }
 
 export async function updateAdminPassword(newPassword: string): Promise<void> {
@@ -716,5 +965,6 @@ export async function updateAdminPassword(newPassword: string): Promise<void> {
     salt,
     updatedAt: new Date().toISOString()
   };
-  await atomicWriteJson(ADMIN_FILE, updated);
+  memoryAdmin = updated;
+  await writePersistentJson("admin-user", updated, ADMIN_FILE);
 }

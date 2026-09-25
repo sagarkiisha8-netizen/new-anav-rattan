@@ -4,7 +4,8 @@ import { Metadata } from "next";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import { getSiteContent } from "@/lib/db";
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export const metadata: Metadata = {
   title: "About Us | Dr. Rattan ENT Clinic Chandigarh",
@@ -15,6 +16,7 @@ export const metadata: Metadata = {
 export default async function AboutPage() {
   const siteContent = await getSiteContent();
   const about = siteContent.about;
+  const doctors = siteContent.doctors || [];
 
   return (
     <main>
@@ -43,7 +45,7 @@ export default async function AboutPage() {
         <div style={{ maxWidth: "1200px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "48px", alignItems: "center" }}>
           <div>
             <div className="section-label" style={{ color: "var(--gold)", marginBottom: "0.5rem" }}>
-              35+ YEARS OF SURGICAL CARE
+              {about.experienceYears || "35+"} YEARS OF SURGICAL CARE
             </div>
             <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 36px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.25 }}>
               A Legacy Built on PGI Rigour & Diagnostic Integrity
@@ -57,11 +59,11 @@ export default async function AboutPage() {
 
             <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px", marginTop: "2rem" }}>
               <div style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "16px" }}>
-                <div style={{ fontFamily: "var(--serif)", fontSize: "28px", color: "var(--navy)", fontWeight: 700 }}>35+</div>
+                <div style={{ fontFamily: "var(--serif)", fontSize: "28px", color: "var(--navy)", fontWeight: 700 }}>{about.experienceYears || "35+"}</div>
                 <div style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "4px" }}>Years of Clinical Experience</div>
               </div>
               <div style={{ borderLeft: "3px solid var(--gold)", paddingLeft: "16px" }}>
-                <div style={{ fontFamily: "var(--serif)", fontSize: "28px", color: "var(--navy)", fontWeight: 700 }}>PGI & KEM</div>
+                <div style={{ fontFamily: "var(--serif)", fontSize: "28px", color: "var(--navy)", fontWeight: 700 }}>{about.trainingInstitution || "PGI & KEM"}</div>
                 <div style={{ fontSize: "13px", color: "var(--text-muted)", marginTop: "4px" }}>Premier Institutional Training</div>
               </div>
             </div>
@@ -111,7 +113,7 @@ export default async function AboutPage() {
                 Our Mission
               </h3>
               <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.75 }}>
-                To deliver honest, evidence-driven, and patient-centered ENT healthcare. We aim to restore hearing, alleviate chronic sinonasal discomfort, safeguard vocal function, and resolve balance disorders through accurate clinical workup and ethical medical counseling.
+                {about.mission || "To deliver honest, evidence-driven, and patient-centered ENT healthcare. We aim to restore hearing, alleviate chronic sinonasal discomfort, safeguard vocal function, and resolve balance disorders through accurate clinical workup and ethical medical counseling."}
               </p>
             </div>
 
@@ -124,7 +126,7 @@ export default async function AboutPage() {
                 Our Vision
               </h3>
               <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.75 }}>
-                To remain the regional benchmark for otological microsurgery, auditory implant rehabilitation, and skull base care in North India, upholding the highest standards of safety, sterility, and long-term functional recovery for every patient.
+                {about.vision || "To remain the regional benchmark for otological microsurgery, auditory implant rehabilitation, and skull base care in North India, upholding the highest standards of safety, sterility, and long-term functional recovery for every patient."}
               </p>
             </div>
 
@@ -137,7 +139,7 @@ export default async function AboutPage() {
                 Conservative Surgical Ethics
               </h3>
               <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.75 }}>
-                We believe surgery is reserved for conditions where conservative medical management has reached its limits or where definitive anatomical correction is clinically mandatory. Every patient receives a transparent explanation of risks, benefits, and alternatives.
+                {about.ethics || "We believe surgery is reserved for conditions where conservative medical management has reached its limits or where definitive anatomical correction is clinically mandatory. Every patient receives a transparent explanation of risks, benefits, and alternatives."}
               </p>
             </div>
           </div>
@@ -160,111 +162,64 @@ export default async function AboutPage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "32px" }}>
-            {/* Dr. Ganesh Dutt Rattan */}
-            <div style={{ 
-              borderRadius: "16px", 
-              border: "1px solid rgba(18,54,83,0.1)", 
-              overflow: "hidden", 
-              background: "#fff",
-              boxShadow: "0 6px 24px rgba(18,54,83,0.06)",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between"
-            }}>
-              <div>
-                <div style={{ height: "340px", position: "relative", background: "var(--cream)" }}>
-                  <Image 
-                    src="/images/dr-ganesh-dutt-rattan-0.jpeg"
-                    alt="Dr. Ganesh Dutt Rattan - Senior ENT Surgeon"
-                    fill
-                    style={{ objectFit: "cover", objectPosition: "top center" }}
-                  />
-                  <div style={{ position: "absolute", bottom: "16px", left: "16px", background: "rgba(18,54,83,0.9)", backdropFilter: "blur(4px)", padding: "4px 12px", borderRadius: "20px", color: "var(--gold)", fontSize: "12px", fontWeight: 600 }}>
-                    Founder & Senior Surgeon
+            {doctors.map((doc, idx) => (
+              <div 
+                key={doc.id || idx}
+                style={{ 
+                  borderRadius: "16px", 
+                  border: "1px solid rgba(18,54,83,0.1)", 
+                  overflow: "hidden", 
+                  background: "#fff",
+                  boxShadow: "0 6px 24px rgba(18,54,83,0.06)",
+                  display: "flex",
+                  flexDirection: "column",
+                  justifyContent: "space-between"
+                }}
+              >
+                <div>
+                  <div style={{ height: "340px", position: "relative", background: "var(--cream)" }}>
+                    <Image 
+                      src={doc.image || (idx === 0 ? "/images/dr-ganesh-dutt-rattan-0.jpeg" : "/images/dr-anav-rattan-1.jpeg")}
+                      alt={doc.name}
+                      fill
+                      style={{ objectFit: "cover", objectPosition: "top center" }}
+                    />
+                    <div style={{ position: "absolute", bottom: "16px", left: "16px", background: "rgba(18,54,83,0.9)", backdropFilter: "blur(4px)", padding: "4px 12px", borderRadius: "20px", color: "var(--gold)", fontSize: "12px", fontWeight: 600 }}>
+                      {doc.role || (idx === 0 ? "Founder & Senior Surgeon" : "Consultant Otologist")}
+                    </div>
+                  </div>
+
+                  <div style={{ padding: "28px" }}>
+                    <h3 style={{ fontFamily: "var(--serif)", fontSize: "24px", color: "var(--navy)", marginBottom: "4px" }}>
+                      {doc.name}
+                    </h3>
+                    <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--gold)", marginBottom: "12px" }}>
+                      {doc.qualifications || doc.degrees || doc.title}
+                    </div>
+                    <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.7, marginBottom: "16px" }}>
+                      {doc.bio}
+                    </p>
+                    {((doc.specialties && doc.specialties.length > 0) || (doc.achievements && doc.achievements.length > 0)) && (
+                      <ul style={{ listStyle: "none", padding: 0, margin: 0, fontSize: "13px", color: "var(--navy)", display: "flex", flexDirection: "column", gap: "6px" }}>
+                        {(doc.specialties || doc.achievements || []).slice(0, 3).map((h: string, hIdx: number) => (
+                          <li key={hIdx}>✓ {h}</li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
                 </div>
 
-                <div style={{ padding: "28px" }}>
-                  <h3 style={{ fontFamily: "var(--serif)", fontSize: "24px", color: "var(--navy)", marginBottom: "4px" }}>
-                    Dr. Ganesh Dutt Rattan
-                  </h3>
-                  <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--gold)", marginBottom: "12px" }}>
-                    MBBS · DLO · MS (ENT), PGI Chandigarh · PMC Reg. 23702
-                  </div>
-                  <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.7, marginBottom: "16px" }}>
-                    Former Senior Resident at PGI Chandigarh and Sir Ganga Ram Hospital, New Delhi. Over 35 years of clinical and surgical expertise across all facets of ear, nose, throat, and pediatric otolaryngology.
-                  </p>
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0, fontSize: "13px", color: "var(--navy)", display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <li>✓ 35+ Years operative experience</li>
-                    <li>✓ PGI Chandigarh Alumni</li>
-                    <li>✓ Sir Ganga Ram Hospital Senior Residency</li>
-                  </ul>
+                <div style={{ padding: "0 28px 28px" }}>
+                  <Link 
+                    href={`/doctors/${doc.slug || (doc.name.includes("Ganesh") ? "ganesh-dutt-rattan" : "anav-rattan")}`} 
+                    className="btn-navy"
+                    style={{ width: "100%", justifyContent: "center", textDecoration: "none", display: "flex", padding: "11px 18px", fontSize: "14px" }}
+                  >
+                    View Full Profile & Credentials →
+                  </Link>
                 </div>
               </div>
-
-              <div style={{ padding: "0 28px 28px" }}>
-                <Link 
-                  href="/doctors/ganesh-dutt-rattan" 
-                  className="btn-navy"
-                  style={{ width: "100%", justifyContent: "center", textDecoration: "none", display: "flex", padding: "11px 18px", fontSize: "14px" }}
-                >
-                  View Full Profile & Credentials →
-                </Link>
-              </div>
-            </div>
-
-            {/* Dr. Anav Rattan */}
-            <div style={{ 
-              borderRadius: "16px", 
-              border: "1px solid rgba(18,54,83,0.1)", 
-              overflow: "hidden", 
-              background: "#fff",
-              boxShadow: "0 6px 24px rgba(18,54,83,0.06)",
-              display: "flex",
-              flexDirection: "column",
-              justifyContent: "space-between"
-            }}>
-              <div>
-                <div style={{ height: "340px", position: "relative", background: "var(--cream)" }}>
-                  <Image 
-                    src="/images/dr-anav-rattan-1.jpeg"
-                    alt="Dr. Anav Rattan - Specialist in Otology, Cochlear Implants and Skull Base"
-                    fill
-                    style={{ objectFit: "cover", objectPosition: "top center" }}
-                  />
-                  <div style={{ position: "absolute", bottom: "16px", left: "16px", background: "rgba(18,54,83,0.9)", backdropFilter: "blur(4px)", padding: "4px 12px", borderRadius: "20px", color: "var(--gold)", fontSize: "12px", fontWeight: 600 }}>
-                    Consultant Otologist & Skull Base Surgeon
-                  </div>
-                </div>
-
-                <div style={{ padding: "28px" }}>
-                  <h3 style={{ fontFamily: "var(--serif)", fontSize: "24px", color: "var(--navy)", marginBottom: "4px" }}>
-                    Dr. Anav Rattan
-                  </h3>
-                  <div style={{ fontSize: "13px", fontWeight: 600, color: "var(--gold)", marginBottom: "12px" }}>
-                    MS (ENT), DNB, MNAMS · Seth G.S. Medical College & KEM Hospital, Mumbai
-                  </div>
-                  <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.7, marginBottom: "16px" }}>
-                    Trained at Seth G.S. Medical College & KEM Hospital, Mumbai, and PGI Chandigarh. Subspecialist in microscopic ear surgery, cochlear implantation, lateral skull base surgery, and complex vestibular disorders.
-                  </p>
-                  <ul style={{ listStyle: "none", padding: 0, margin: 0, fontSize: "13px", color: "var(--navy)", display: "flex", flexDirection: "column", gap: "6px" }}>
-                    <li>✓ KEM Hospital Mumbai Surgical Training</li>
-                    <li>✓ Certified Cochlear Implant Surgeon</li>
-                    <li>✓ National Conference Speaker (IAOHNS)</li>
-                  </ul>
-                </div>
-              </div>
-
-              <div style={{ padding: "0 28px 28px" }}>
-                <Link 
-                  href="/doctors/anav-rattan" 
-                  className="btn-navy"
-                  style={{ width: "100%", justifyContent: "center", textDecoration: "none", display: "flex", padding: "11px 18px", fontSize: "14px" }}
-                >
-                  View Full Profile & Credentials →
-                </Link>
-              </div>
-            </div>
+            ))}
           </div>
         </div>
       </section>
@@ -285,45 +240,22 @@ export default async function AboutPage() {
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "24px" }}>
-            <div style={{ background: "#fff", padding: "28px", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)" }}>
-              <div style={{ fontSize: "28px", marginBottom: "12px" }}>🔬</div>
-              <h3 style={{ fontFamily: "var(--serif)", fontSize: "18px", color: "var(--navy)", marginBottom: "8px" }}>
-                High-Magnification Otomicroscopy
-              </h3>
-              <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.65 }}>
-                Enables microscopic assessment of the tympanic membrane, retraction pockets, middle ear mucosa, and precise micro-suction toilet for chronic discharge.
-              </p>
-            </div>
-
-            <div style={{ background: "#fff", padding: "28px", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)" }}>
-              <div style={{ fontSize: "28px", marginBottom: "12px" }}>📸</div>
-              <h3 style={{ fontFamily: "var(--serif)", fontSize: "18px", color: "var(--navy)", marginBottom: "8px" }}>
-                High-Definition Rigid & Flexible Endoscopy
-              </h3>
-              <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.65 }}>
-                Karl Storz endoscopic visualization of sinonasal passages, osteomeatal complexes, adenoids, nasopharynx, and dynamic vocal cord motion.
-              </p>
-            </div>
-
-            <div style={{ background: "#fff", padding: "28px", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)" }}>
-              <div style={{ fontSize: "28px", marginBottom: "12px" }}>📊</div>
-              <h3 style={{ fontFamily: "var(--serif)", fontSize: "18px", color: "var(--navy)", marginBottom: "8px" }}>
-                Audiological Assessment Suite
-              </h3>
-              <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.65 }}>
-                Sound-treated room testing including Pure Tone Audiometry (air/bone conduction), speech audiometry, and impedance tympanometry for middle ear pressure.
-              </p>
-            </div>
-
-            <div style={{ background: "#fff", padding: "28px", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)" }}>
-              <div style={{ fontSize: "28px", marginBottom: "12px" }}>🛡️</div>
-              <h3 style={{ fontFamily: "var(--serif)", fontSize: "18px", color: "var(--navy)", marginBottom: "8px" }}>
-                Hospital-Grade Autoclaving
-              </h3>
-              <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.65 }}>
-                Rigorous multi-stage sterilization protocols, single-use disposables, and ultrasonic cleaning meeting institutional safety benchmarks.
-              </p>
-            </div>
+            {(about.facilities && about.facilities.length > 0 ? about.facilities : [
+              { icon: "🔬", title: "High-Magnification Otomicroscopy", desc: "Enables microscopic assessment of the tympanic membrane, retraction pockets, middle ear mucosa, and precise micro-suction." },
+              { icon: "📸", title: "High-Definition Rigid & Flexible Endoscopy", desc: "Karl Storz endoscopic visualization of sinonasal passages, osteomeatal complexes, adenoids, and dynamic vocal cord motion." },
+              { icon: "📊", title: "Audiological Assessment Suite", desc: "Sound-treated room testing including Pure Tone Audiometry, speech audiometry, and impedance tympanometry for middle ear pressure." },
+              { icon: "🛡️", title: "Hospital-Grade Autoclaving", desc: "Rigorous multi-stage sterilization protocols, single-use disposables, and ultrasonic cleaning meeting institutional safety benchmarks." }
+            ]).map((fac: { icon?: string; title: string; desc: string }, fIdx: number) => (
+              <div key={fIdx} style={{ background: "#fff", padding: "28px", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)" }}>
+                <div style={{ fontSize: "28px", marginBottom: "12px" }}>{fac.icon || "🏥"}</div>
+                <h3 style={{ fontFamily: "var(--serif)", fontSize: "18px", color: "var(--navy)", marginBottom: "8px" }}>
+                  {fac.title}
+                </h3>
+                <p style={{ fontSize: "13px", color: "var(--text-muted)", lineHeight: 1.65 }}>
+                  {fac.desc}
+                </p>
+              </div>
+            ))}
           </div>
         </div>
       </section>
@@ -341,15 +273,15 @@ export default async function AboutPage() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: "20px" }}>
-            {[
+            {(about.patientJourney && about.patientJourney.length > 0 ? about.patientJourney : [
               { step: "01", title: "Comprehensive Clinical Consultation", desc: "Detailed discussion of your symptoms, duration, prior prescriptions, and full medical history without rushing." },
               { step: "02", title: "Objective Diagnostic Workup", desc: "In-clinic microscopic or endoscopic examination and audiometric evaluation when indicated, providing instant clarity on anatomy." },
               { step: "03", title: "Transparent Decision-Making", desc: "We review findings directly with you on monitor displays, explaining medical management options and surgical indications clearly." },
               { step: "04", title: "Personalised Treatment & Follow-up", desc: "Structured medical treatment courses or meticulous operative planning followed by scheduled post-intervention reviews." },
-            ].map((item, idx) => (
+            ]).map((item: { step?: string; title: string; desc: string }, idx: number) => (
               <div key={idx} style={{ display: "flex", gap: "20px", alignItems: "flex-start", padding: "20px", borderRadius: "12px", background: "var(--cream)", border: "1px solid rgba(18,54,83,0.06)" }}>
                 <span style={{ fontSize: "16px", fontWeight: 700, color: "var(--gold)", background: "var(--navy)", padding: "8px 14px", borderRadius: "8px", flexShrink: 0 }}>
-                  {item.step}
+                  {item.step || `0${idx + 1}`}
                 </span>
                 <div>
                   <h4 style={{ fontFamily: "var(--serif)", fontSize: "18px", color: "var(--navy)", marginBottom: "6px" }}>{item.title}</h4>

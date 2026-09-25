@@ -41,11 +41,34 @@ const doctors: Doctor[] = [
   }
 ];
 
-export default function MeetTheDoctorsSection() {
+import { DoctorProfile } from "@/lib/types";
+
+interface MeetTheDoctorsProps {
+  doctors?: DoctorProfile[];
+}
+
+export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheDoctorsProps = {}) {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isVisible, setIsVisible] = useState(false);
   const sectionRef = useRef<HTMLElement>(null);
   const carouselRef = useRef<HTMLDivElement>(null);
+
+  const displayDoctors: Doctor[] = propDoctors && propDoctors.length > 0
+    ? propDoctors.map((d, i) => {
+        const fallback = doctors[i] || doctors[0];
+        return {
+          id: d.id || fallback.id,
+          name: d.name || fallback.name,
+          role: d.title || d.role || fallback.role,
+          qualifications: d.degrees || d.qualifications || fallback.qualifications,
+          bio: d.bio || fallback.bio,
+          slug: d.slug || fallback.slug,
+          image: d.image || fallback.image,
+          objectPosition: fallback.objectPosition || "center 10%",
+          alt: `${d.name || fallback.name}, ENT Specialist at Dr. Rattan ENT Clinic`,
+        };
+      })
+    : doctors;
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -70,7 +93,7 @@ export default function MeetTheDoctorsSection() {
     const scrollLeft = carouselRef.current.scrollLeft;
     const cardWidth = carouselRef.current.offsetWidth * 0.85;
     const newIndex = Math.round(scrollLeft / cardWidth);
-    if (newIndex >= 0 && newIndex < doctors.length) {
+    if (newIndex >= 0 && newIndex < displayDoctors.length) {
       setActiveIndex(newIndex);
     }
   };
@@ -175,7 +198,7 @@ export default function MeetTheDoctorsSection() {
 
         {/* DESKTOP 2-COLUMN PROFILE CARDS */}
         <div className="doc-desktop-layout">
-          {doctors.map((doc, idx) => {
+          {displayDoctors.map((doc, idx) => {
             const isLeft = idx === 0;
             const delay = idx * 120;
             return (
@@ -260,7 +283,7 @@ export default function MeetTheDoctorsSection() {
             role="region"
             aria-label="Doctors Carousel"
           >
-            {doctors.map((doc, idx) => (
+            {displayDoctors.map((doc, idx) => (
               <div 
                 key={doc.id}
                 className="doc-profile-card doc-mobile-card"
@@ -335,7 +358,7 @@ export default function MeetTheDoctorsSection() {
             </button>
 
             <div className="doc-dots-container" role="tablist" aria-label="Doctors pagination">
-              {doctors.map((_, i) => (
+              {displayDoctors.map((_, i) => (
                 <button
                   key={i}
                   role="tab"
@@ -348,8 +371,8 @@ export default function MeetTheDoctorsSection() {
             </div>
 
             <button
-              onClick={() => scrollToDoctor(Math.min(doctors.length - 1, activeIndex + 1))}
-              disabled={activeIndex === doctors.length - 1}
+              onClick={() => scrollToDoctor(Math.min(displayDoctors.length - 1, activeIndex + 1))}
+              disabled={activeIndex === displayDoctors.length - 1}
               className="doc-nav-btn"
               aria-label="Next doctor"
             >

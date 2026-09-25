@@ -14,7 +14,7 @@ export default function AdminServicesPage() {
 
   const loadServices = async () => {
     try {
-      const res = await fetch('/api/admin/content');
+      const res = await fetch('/api/admin/content', { cache: 'no-store' });
       const data = await res.json();
       const contentObj = data.content || data;
       if (contentObj && contentObj.services) {
@@ -101,7 +101,7 @@ export default function AdminServicesPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to save service');
 
-      setContent(updatedContent);
+      setContent(data.content || updatedContent);
       setEditingService(null);
       setStatusMessage({
         type: 'success',
@@ -132,7 +132,7 @@ export default function AdminServicesPage() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || 'Failed to delete service');
 
-      setContent(updatedContent);
+      setContent(data.content || updatedContent);
       setStatusMessage({ type: 'success', text: `Service "${name}" deleted.` });
     } catch (err: unknown) {
       alert(err instanceof Error ? err.message : 'Error deleting service');

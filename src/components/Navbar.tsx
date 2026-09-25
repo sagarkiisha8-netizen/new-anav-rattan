@@ -37,6 +37,36 @@ export default function Navbar() {
     setIsServicesMobileOpen(prev => !prev);
   };
 
+  const [contact, setContact] = useState<{
+    phone?: string;
+    whatsapp?: string;
+    email?: string;
+    morningOpd?: string;
+    eveningOpd?: string;
+    sundayOpd?: string;
+  }>({
+    phone: "0172-2610806",
+    whatsapp: "+91 9988004806",
+    email: "rattananav@gmail.com",
+    morningOpd: "10:00 AM – 2:00 PM",
+    eveningOpd: "5:30 PM – 8:00 PM",
+    sundayOpd: "11:00 AM – 1:00 PM",
+  });
+
+  useEffect(() => {
+    fetch("/api/admin/content")
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.content?.contact) {
+          setContact((prev) => ({ ...prev, ...d.content.contact }));
+        }
+      })
+      .catch(() => {});
+  }, []);
+
+  const phoneClean = (contact.phone || "0172-2610806").replace(/[^0-9]/g, "");
+  const whatsappClean = (contact.whatsapp || "+91 9988004806").replace(/[^0-9]/g, "");
+
   return (
     <>
       {/* Top Gradient Rule */}
@@ -45,12 +75,12 @@ export default function Navbar() {
       {/* Top Bar */}
       <div className="top-bar">
         <div className="top-bar-left">
-          Mon–Sat: 10 AM–2 PM & 5:30–8 PM &nbsp;·&nbsp; Sun: 11 AM–1 PM
+          Mon–Sat: {contact.morningOpd?.split("(")[0]?.trim() || "10 AM–2 PM"} &amp; {contact.eveningOpd?.split("(")[0]?.trim() || "5:30–8 PM"} &nbsp;·&nbsp; Sun: {contact.sundayOpd?.split("(")[0]?.trim() || "11 AM–1 PM"}
         </div>
         <div className="top-bar-right">
-          <a href="tel:01722610806" aria-label="Call Clinic">📞 0172-2610806</a>
-          <a href="https://wa.me/919988004806" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">💬 WhatsApp</a>
-          <a href="mailto:rattananav@gmail.com" aria-label="Send Email">✉ rattananav@gmail.com</a>
+          <a href={`tel:${phoneClean}`} aria-label="Call Clinic">📞 {contact.phone || "0172-2610806"}</a>
+          <a href={`https://wa.me/${whatsappClean}`} target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp">💬 WhatsApp</a>
+          <a href={`mailto:${contact.email || "rattananav@gmail.com"}`} aria-label="Send Email">✉ {contact.email || "rattananav@gmail.com"}</a>
         </div>
       </div>
 

@@ -3,6 +3,9 @@ import { getAdminSession } from '@/lib/auth';
 import { getSubmissions, updateSubmission, deleteSubmission } from '@/lib/db';
 import { SubmissionStatus, SubmissionType } from '@/lib/types';
 
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
+
 export async function GET(request: NextRequest) {
   const session = await getAdminSession();
   if (!session) {

@@ -38,7 +38,13 @@ export default function AdminPagesEditor() {
   const [activePage, setActivePage] = useState<PageKey>('home');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [lastSaved, setLastSaved] = useState<string | null>(null);
+  const [persistenceInfo, setPersistenceInfo] = useState<string | null>(null);
   const [statusMessage, setStatusMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
+
+  // Dirty tracking
+  const initialContentRef = useRef<string | null>(null);
+  const isDirty = content && initialContentRef.current ? JSON.stringify(content) !== initialContentRef.current : false;
 
   // Media picker modal state
   const [mediaList, setMediaList] = useState<MediaItem[]>([]);
@@ -51,16 +57,34 @@ export default function AdminPagesEditor() {
     loadAllData();
   }, []);
 
+  // Prevent accidental navigation when unsaved
+  useEffect(() => {
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      if (isDirty) {
+        e.preventDefault();
+        e.returnValue = "You have unsaved changes in the editor. Are you sure you want to leave?";
+        return e.returnValue;
+      }
+    };
+    window.addEventListener("beforeunload", handleBeforeUnload);
+    return () => window.removeEventListener("beforeunload", handleBeforeUnload);
+  }, [isDirty]);
+
   async function loadAllData() {
     try {
       const [resContent, resMedia] = await Promise.all([
-        fetch('/api/admin/content'),
-        fetch('/api/admin/media'),
+        fetch('/api/admin/content', { cache: 'no-store' }),
+        fetch('/api/admin/media', { cache: 'no-store' }),
       ]);
 
       const dataContent = await resContent.json();
       const contentObj: SiteContent = dataContent.content || dataContent;
       setContent(contentObj);
+      initialContentRef.current = JSON.stringify(contentObj);
+
+      if (dataContent.persistence?.target) {
+        setPersistenceInfo(dataContent.persistence.target);
+      }
 
       const dataMedia = await resMedia.json();
       if (dataMedia.media) {
@@ -118,7 +142,7 @@ export default function AdminPagesEditor() {
     }
   };
 
-  const handleSaveAndPublish = async () => {
+  const handleSave = async (isDraft = false) => {
     if (!content) return;
     setSaving(true);
     setStatusMessage(null);
@@ -131,17 +155,43 @@ export default function AdminPagesEditor() {
       });
 
       const data = await res.json();
-      if (!res.ok) throw new Error(data.error || 'Failed to publish changes');
+      if (!res.ok) throw new Error(data.error || 'Failed to save changes');
+
+      // Update local state with the exact persisted content returned by server
+      if (data.content) {
+        setContent(data.content);
+        initialContentRef.current = JSON.stringify(data.content);
+      } else {
+        initialContentRef.current = JSON.stringify(content);
+      }
+
+      const now = new Date().toLocaleTimeString();
+      setLastSaved(now);
+
+      const targetDesc = data.persistence?.target || "Persistent Storage";
+      setPersistenceInfo(targetDesc);
 
       setStatusMessage({
         type: 'success',
-        text: `Published successfully! Updates to ${PAGE_LIST.find((p) => p.key === activePage)?.label} are now live on the website.`,
+        text: isDraft
+          ? `Draft saved to ${targetDesc} at ${now}.`
+          : `Published & saved to ${targetDesc} at ${now}! Live on website.`,
       });
     } catch (err: unknown) {
-      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error publishing content' });
+      setStatusMessage({ type: 'error', text: err instanceof Error ? err.message : 'Error saving content' });
     } finally {
       setSaving(false);
     }
+  };
+
+  const handleReload = async () => {
+    if (isDirty) {
+      const confirmDiscard = window.confirm("You have unsaved changes. Discard them and reload from server storage?");
+      if (!confirmDiscard) return;
+    }
+    setLoading(true);
+    await loadAllData();
+    setStatusMessage({ type: 'success', text: 'Reloaded latest content from storage.' });
   };
 
   if (loading || !content) {
@@ -164,6 +214,15 @@ export default function AdminPagesEditor() {
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
               <span className="admin-badge admin-badge-gold">Interactive CMS</span>
               <span style={{ fontSize: '12px', color: '#64748b' }}>Website Pages Editor</span>
+              {isDirty ? (
+                <span className="admin-badge admin-badge-amber" style={{ animation: 'pulse 2s infinite' }}>
+                  ● Unsaved Changes
+                </span>
+              ) : (
+                <span className="admin-badge admin-badge-green">
+                  ✓ Synced with Storage
+                </span>
+              )}
             </div>
             <h2 style={{ fontSize: '22px', fontWeight: 800, color: '#123653', margin: 0 }}>
               {currentPageMeta.icon} {currentPageMeta.label}
@@ -171,9 +230,26 @@ export default function AdminPagesEditor() {
             <p style={{ fontSize: '13px', color: '#64748b', margin: '4px 0 0' }}>
               {currentPageMeta.desc}
             </p>
+            {(lastSaved || persistenceInfo) && (
+              <div style={{ display: 'flex', gap: '12px', alignItems: 'center', marginTop: '6px', fontSize: '11.5px', color: '#64748b' }}>
+                {lastSaved && <span>Last saved: <strong>{lastSaved}</strong></span>}
+                {persistenceInfo && <span>· Persistence: <strong style={{ color: '#0f766e' }}>{persistenceInfo}</strong></span>}
+              </div>
+            )}
           </div>
 
           <div style={{ display: 'flex', alignItems: 'center', gap: '10px', flexWrap: 'wrap' }}>
+            <button
+              onClick={handleReload}
+              disabled={saving}
+              title="Reload content from server storage"
+              className="admin-btn admin-btn-secondary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '13px' }}
+            >
+              <span>🔄</span>
+              <span>Reload</span>
+            </button>
+
             <a
               href={currentPageMeta.publicUrl}
               target="_blank"
@@ -181,11 +257,21 @@ export default function AdminPagesEditor() {
               className="admin-btn admin-btn-secondary"
               style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}
             >
-              <span>View on website</span>
+              <span>View live</span>
               <span>↗</span>
             </a>
+
             <button
-              onClick={handleSaveAndPublish}
+              onClick={() => handleSave(true)}
+              disabled={saving}
+              className="admin-btn admin-btn-secondary"
+              style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontWeight: 600 }}
+            >
+              {saving ? 'Saving...' : 'Save Draft'}
+            </button>
+
+            <button
+              onClick={() => handleSave(false)}
               disabled={saving}
               className="admin-btn admin-btn-gold"
               style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '10px 20px', fontWeight: 700 }}
@@ -193,7 +279,7 @@ export default function AdminPagesEditor() {
               {saving ? (
                 <>
                   <div className="admin-spinner" style={{ width: '16px', height: '16px', borderWidth: '2px' }} />
-                  <span>Publishing...</span>
+                  <span>Saving & Publishing...</span>
                 </>
               ) : (
                 <>

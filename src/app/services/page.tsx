@@ -9,7 +9,8 @@ export const metadata: Metadata = {
     "Comprehensive ENT diagnostic, medical, and advanced surgical interventions in Chandigarh. Specialising in Otology, Hearing Restoration, Cochlear Implants, Endoscopic Sinus Surgery, Voice Disorders, and Skull Base Surgery.",
 };
 
-export const revalidate = 60;
+export const dynamic = "force-dynamic";
+export const revalidate = 0;
 
 export default async function ServicesPage() {
   const siteContent = await getSiteContent();
