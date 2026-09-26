@@ -580,14 +580,14 @@ export default async function ServiceDetailPage({ params }: Props) {
       </section>
 
       {/* CLINICAL CONTENT CONTAINER */}
-      <section style={{ padding: "4.5rem 2rem", background: "var(--cream)" }}>
+      <section style={{ padding: "4rem 1.25rem", background: "var(--cream)" }}>
         <div style={{ maxWidth: "1000px", margin: "0 auto" }}>
           
           {/* SYMPTOMS & CONDITIONS GRID */}
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "2rem", marginBottom: "3rem" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: "1.5rem", marginBottom: "3rem" }}>
             
             {/* Symptoms Card */}
-            <div style={{ background: "#ffffff", padding: "2.2rem", borderRadius: "14px", border: "1px solid var(--border)", boxShadow: "0 6px 20px rgba(18,54,83,0.05)" }}>
+            <div style={{ background: "#ffffff", padding: "clamp(20px, 4vw, 2.2rem)", borderRadius: "14px", border: "1px solid var(--border)", boxShadow: "0 6px 20px rgba(18,54,83,0.05)", width: "100%", boxSizing: "border-box" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "1.25rem" }}>
                 <span style={{ fontSize: "20px" }}>⚠️</span>
                 <h2 style={{ fontFamily: "var(--serif)", fontSize: "22px", color: "var(--navy)", margin: 0 }}>
@@ -605,7 +605,7 @@ export default async function ServiceDetailPage({ params }: Props) {
             </div>
 
             {/* Conditions Treated Card */}
-            <div style={{ background: "#ffffff", padding: "2.2rem", borderRadius: "14px", border: "1px solid var(--border)", boxShadow: "0 6px 20px rgba(18,54,83,0.05)" }}>
+            <div style={{ background: "#ffffff", padding: "clamp(20px, 4vw, 2.2rem)", borderRadius: "14px", border: "1px solid var(--border)", boxShadow: "0 6px 20px rgba(18,54,83,0.05)", width: "100%", boxSizing: "border-box" }}>
               <div style={{ display: "flex", alignItems: "center", gap: "10px", marginBottom: "1.25rem" }}>
                 <span style={{ fontSize: "20px" }}>🩺</span>
                 <h2 style={{ fontFamily: "var(--serif)", fontSize: "22px", color: "var(--navy)", margin: 0 }}>
@@ -624,12 +624,12 @@ export default async function ServiceDetailPage({ params }: Props) {
           </div>
 
           {/* DIAGNOSIS & ADVANCED TREATMENT OPTIONS */}
-          <div style={{ background: "#ffffff", padding: "2.5rem", borderRadius: "16px", border: "1px solid rgba(201,162,74,0.3)", boxShadow: "0 10px 30px rgba(18,54,83,0.06)", marginBottom: "3rem" }}>
-            <h2 style={{ fontFamily: "var(--serif)", fontSize: "26px", color: "var(--navy)", marginBottom: "1.5rem" }}>
+          <div style={{ background: "#ffffff", padding: "clamp(22px, 4vw, 2.5rem)", borderRadius: "16px", border: "1px solid rgba(201,162,74,0.3)", boxShadow: "0 10px 30px rgba(18,54,83,0.06)", marginBottom: "3rem", width: "100%", boxSizing: "border-box" }}>
+            <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(22px, 4vw, 26px)", color: "var(--navy)", marginBottom: "1.5rem" }}>
               Diagnostic & Advanced Treatment Protocols
             </h2>
             
-            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: "2.5rem" }}>
+            <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))", gap: "2rem" }}>
               <div>
                 <h3 style={{ fontSize: "16px", fontWeight: 700, color: "var(--gold)", textTransform: "uppercase", letterSpacing: "1px", marginBottom: "1rem" }}>
                   1. Clinical Diagnosis

@@ -40,11 +40,12 @@ export default async function DoctorsPage() {
       </section>
 
       {/* Doctors Grid */}
-      <section style={{ padding: "5rem 2rem", background: "var(--cream)" }}>
-        <div style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(360px, 1fr))", gap: "36px" }}>
+      <section className="doctors-list-section" style={{ padding: "4.5rem 1.25rem", background: "var(--cream)" }}>
+        <div className="doctors-list-grid" style={{ maxWidth: "1100px", margin: "0 auto", display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 360px), 1fr))", gap: "32px" }}>
           {doctors.map((doctor) => (
             <div
               key={doctor.id}
+              className="doctor-profile-card"
               style={{
                 background: "#fff",
                 borderRadius: "16px",
@@ -54,16 +55,19 @@ export default async function DoctorsPage() {
                 display: "flex",
                 flexDirection: "column",
                 justifyContent: "space-between",
+                width: "100%",
+                boxSizing: "border-box",
               }}
             >
               <div>
                 {doctor.image && doctor.image.trim() !== "" ? (
-                  <div style={{ height: "380px", position: "relative", background: "var(--navy)" }}>
+                  <div className="doctor-card-image" style={{ width: "100%", aspectRatio: "4 / 5", position: "relative", overflow: "hidden", background: "var(--navy)" }}>
                     <Image
                       src={doctor.image}
                       alt={doctor.name}
                       fill
-                      style={{ objectFit: "cover", objectPosition: "top center" }}
+                      sizes="(max-width: 768px) 100vw, 540px"
+                      style={{ objectFit: "cover", objectPosition: "center top" }}
                       priority
                     />
                     <div

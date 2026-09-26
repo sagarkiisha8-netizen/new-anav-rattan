@@ -175,7 +175,7 @@ export default async function AboutPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "32px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "32px" }}>
             {doctors.map((doc, idx) => (
               <div 
                 key={doc.id || idx}
@@ -187,16 +187,19 @@ export default async function AboutPage() {
                   boxShadow: "0 6px 24px rgba(18,54,83,0.06)",
                   display: "flex",
                   flexDirection: "column",
-                  justifyContent: "space-between"
+                  justifyContent: "space-between",
+                  width: "100%",
+                  boxSizing: "border-box",
                 }}
               >
                 <div>
-                  <div style={{ height: "340px", position: "relative", background: "var(--cream)" }}>
+                  <div className="doctor-card-image" style={{ width: "100%", aspectRatio: "4 / 5", position: "relative", overflow: "hidden", background: "var(--cream)" }}>
                     <Image 
                       src={doc.image || (idx === 0 ? "/images/dr-ganesh-dutt-rattan-0.jpeg" : "/images/dr-anav-rattan-1.jpeg")}
                       alt={doc.name}
                       fill
-                      style={{ objectFit: "cover", objectPosition: "top center" }}
+                      sizes="(max-width: 768px) 100vw, 520px"
+                      style={{ objectFit: "cover", objectPosition: "center top" }}
                     />
                     <div style={{ position: "absolute", bottom: "16px", left: "16px", background: "rgba(18,54,83,0.9)", backdropFilter: "blur(4px)", padding: "4px 12px", borderRadius: "20px", color: "var(--gold)", fontSize: "12px", fontWeight: 600 }}>
                       {doc.role || (idx === 0 ? "Founder & Senior Surgeon" : "Consultant Otologist")}

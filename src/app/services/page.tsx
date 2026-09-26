@@ -48,11 +48,11 @@ export default async function ServicesPage() {
       </section>
 
       {/* Services Grid Section */}
-      <section style={{ padding: "4.5rem 2rem", background: "var(--cream)" }}>
+      <section style={{ padding: "4.5rem 1.25rem", background: "var(--cream)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ 
             display: "grid", 
-            gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", 
+            gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", 
             gap: "24px" 
           }}>
             {servicesList.map((srv) => (
@@ -61,12 +61,14 @@ export default async function ServicesPage() {
                 style={{
                   background: "#fff",
                   borderRadius: "14px",
-                  padding: "32px 28px",
+                  padding: "clamp(22px, 4vw, 32px) clamp(18px, 3.5vw, 28px)",
                   boxShadow: "0 4px 20px rgba(18,54,83,0.06)",
                   border: "1px solid rgba(18,54,83,0.08)",
                   display: "flex",
                   flexDirection: "column",
                   justifyContent: "space-between",
+                  width: "100%",
+                  boxSizing: "border-box",
                   transition: "transform 0.25s ease, box-shadow 0.25s ease, border-color 0.25s ease"
                 }}
               >

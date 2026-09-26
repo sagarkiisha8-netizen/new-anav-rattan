@@ -72,7 +72,7 @@ export default function ContactClientView({ contact }: { contact?: ContactConfig
   return (
     <main>
       {/* Header */}
-      <section style={{ padding: "5rem 2rem 4rem", background: "linear-gradient(135deg, var(--navy) 0%, #0d283f 100%)", color: "#fff" }}>
+      <section style={{ padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem) clamp(2.5rem, 5vw, 4rem)", background: "linear-gradient(135deg, var(--navy) 0%, #0d283f 100%)", color: "#fff" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ marginBottom: "1.5rem" }}>
             <Breadcrumbs items={[{ label: "Contact Us" }]} />
@@ -81,7 +81,7 @@ export default function ContactClientView({ contact }: { contact?: ContactConfig
             <div className="section-label" style={{ color: "var(--gold)", marginBottom: "0.5rem" }}>
               CLINIC LOCATION & INQUIRIES
             </div>
-            <h1 style={{ fontFamily: "var(--serif)", fontSize: "clamp(32px, 4vw, 44px)", lineHeight: 1.2, color: "#fff", marginBottom: "1.25rem" }}>
+            <h1 style={{ fontFamily: "var(--serif)", fontSize: "clamp(28px, 4vw, 44px)", lineHeight: 1.2, color: "#fff", marginBottom: "1.25rem" }}>
               Get in Touch with Dr. Rattan ENT Clinic
             </h1>
             <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.85)", lineHeight: 1.75 }}>
@@ -92,15 +92,15 @@ export default function ContactClientView({ contact }: { contact?: ContactConfig
       </section>
 
       {/* Main Content */}
-      <section style={{ padding: "5rem 2rem", background: "var(--cream)" }}>
+      <section style={{ padding: "clamp(2.5rem, 5vw, 5rem) clamp(1rem, 4vw, 2rem)", background: "var(--cream)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(340px, 1fr))", gap: "40px", alignItems: "start" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 340px), 1fr))", gap: "clamp(24px, 4vw, 40px)", alignItems: "start" }}>
             
             {/* Left: Contact Details & OPD Hours */}
             <div style={{ display: "flex", flexDirection: "column", gap: "24px" }}>
               {/* Card 1: Clinic Coordinates */}
-              <div style={{ background: "#fff", padding: "32px", borderRadius: "14px", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 4px 20px rgba(18,54,83,0.04)" }}>
-                <h2 style={{ fontFamily: "var(--serif)", fontSize: "24px", color: "var(--navy)", marginBottom: "1.5rem" }}>
+              <div style={{ background: "#fff", padding: "clamp(20px, 4vw, 32px)", borderRadius: "14px", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 4px 20px rgba(18,54,83,0.04)" }}>
+                <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(20px, 3vw, 24px)", color: "var(--navy)", marginBottom: "1.5rem" }}>
                   Clinic Address & Access
                 </h2>
 

@@ -139,6 +139,7 @@ export interface DoctorProfile {
   experienceYears?: number;
   surgeriesCount?: string;
   image: string;
+  objectPosition?: string;
   specialties: string[];
   achievements?: string[];
   schedule?: string;

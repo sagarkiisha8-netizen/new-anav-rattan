@@ -89,7 +89,7 @@ export default function AppointmentClientView({ doctors, contact }: AppointmentP
   return (
     <main>
       {/* Header */}
-      <section style={{ padding: "5rem 2rem 4rem", background: "linear-gradient(135deg, var(--navy) 0%, #0d283f 100%)", color: "#fff" }}>
+      <section style={{ padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem) clamp(2.5rem, 5vw, 4rem)", background: "linear-gradient(135deg, var(--navy) 0%, #0d283f 100%)", color: "#fff" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ marginBottom: "1.5rem" }}>
             <Breadcrumbs items={[{ label: "Book Appointment" }]} />
@@ -98,7 +98,7 @@ export default function AppointmentClientView({ doctors, contact }: AppointmentP
             <div className="section-label" style={{ color: "var(--gold)", marginBottom: "0.5rem" }}>
               PRIORITY OPD REGISTRATION
             </div>
-            <h1 style={{ fontFamily: "var(--serif)", fontSize: "clamp(32px, 4vw, 44px)", lineHeight: 1.2, color: "#fff", marginBottom: "1.25rem" }}>
+            <h1 style={{ fontFamily: "var(--serif)", fontSize: "clamp(28px, 4vw, 44px)", lineHeight: 1.2, color: "#fff", marginBottom: "1.25rem" }}>
               Schedule Your ENT Consultation
             </h1>
             <p style={{ fontSize: "16px", color: "rgba(255,255,255,0.85)", lineHeight: 1.75 }}>
@@ -109,38 +109,46 @@ export default function AppointmentClientView({ doctors, contact }: AppointmentP
       </section>
 
       {/* Main Form Section */}
-      <section style={{ padding: "4.5rem 2rem", background: "var(--cream)" }}>
+      <section style={{ padding: "clamp(2.5rem, 5vw, 4.5rem) clamp(1rem, 4vw, 2rem)", background: "var(--cream)" }}>
         <div style={{ maxWidth: "900px", margin: "0 auto" }}>
           
           {submitted ? (
-            <div style={{ background: "#fff", borderRadius: "16px", padding: "48px 36px", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 8px 30px rgba(18,54,83,0.06)", textAlign: "center" }}>
+            <div style={{ background: "#fff", borderRadius: "16px", padding: "clamp(24px, 5vw, 48px) clamp(16px, 4vw, 36px)", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 8px 30px rgba(18,54,83,0.06)", textAlign: "center" }}>
               <div style={{ width: "72px", height: "72px", background: "rgba(201,162,74,0.15)", borderRadius: "50%", display: "flex", alignItems: "center", justifyContent: "center", fontSize: "36px", margin: "0 auto 1.5rem", color: "var(--navy)" }}>
                 ✓
               </div>
-              <h2 style={{ fontFamily: "var(--serif)", fontSize: "32px", color: "var(--navy)", marginBottom: "12px" }}>
+              <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(24px, 4vw, 32px)", color: "var(--navy)", marginBottom: "12px" }}>
                 Appointment Request Received
               </h2>
-              <p style={{ color: "var(--text)", fontSize: "16px", lineHeight: 1.7, maxWidth: "560px", margin: "0 auto 2rem" }}>
+              <p style={{ color: "var(--text)", fontSize: "15px", lineHeight: 1.7, maxWidth: "560px", margin: "0 auto 2rem" }}>
                 Thank you, <strong>{formData.patientName}</strong>. Your consultation request has been logged. Our receptionist will reach out via call/WhatsApp at <strong>{formData.phone}</strong> to confirm your slot time.
               </p>
 
               {/* Summary Card */}
-              <div style={{ background: "var(--cream)", padding: "24px", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)", textAlign: "left", maxWidth: "560px", margin: "0 auto 2.5rem" }}>
+              <div style={{ background: "var(--cream)", padding: "clamp(16px, 3vw, 24px)", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)", textAlign: "left", maxWidth: "560px", margin: "0 auto 2.5rem" }}>
                 <div style={{ fontSize: "13px", fontWeight: 700, textTransform: "uppercase", letterSpacing: "0.08em", color: "var(--gold)", marginBottom: "12px" }}>
                   Appointment Summary
                 </div>
-                <div style={{ display: "grid", gridTemplateColumns: "140px 1fr", gap: "8px", fontSize: "14px" }}>
-                  <span style={{ color: "var(--text-muted)" }}>Specialist:</span>
-                  <strong style={{ color: "var(--navy)" }}>{formData.doctor}</strong>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 140px), 1fr))", gap: "8px 16px", fontSize: "14px" }}>
+                  <div>
+                    <span style={{ color: "var(--text-muted)", display: "block", fontSize: "12px" }}>Specialist</span>
+                    <strong style={{ color: "var(--navy)" }}>{formData.doctor}</strong>
+                  </div>
 
-                  <span style={{ color: "var(--text-muted)" }}>Visit Type:</span>
-                  <span style={{ color: "var(--navy)" }}>{formData.visitType}</span>
+                  <div>
+                    <span style={{ color: "var(--text-muted)", display: "block", fontSize: "12px" }}>Visit Type</span>
+                    <span style={{ color: "var(--navy)", fontWeight: 500 }}>{formData.visitType}</span>
+                  </div>
 
-                  <span style={{ color: "var(--text-muted)" }}>Date & Slot:</span>
-                  <span style={{ color: "var(--navy)" }}>{formData.preferredDate || "First Available"} · {formData.preferredSlot}</span>
+                  <div>
+                    <span style={{ color: "var(--text-muted)", display: "block", fontSize: "12px" }}>Date & Slot</span>
+                    <span style={{ color: "var(--navy)", fontWeight: 500 }}>{formData.preferredDate || "First Available"} · {formData.preferredSlot}</span>
+                  </div>
 
-                  <span style={{ color: "var(--text-muted)" }}>Clinic Location:</span>
-                  <span style={{ color: "var(--navy)" }}>SCO 123, Sector 33C, Chandigarh</span>
+                  <div>
+                    <span style={{ color: "var(--text-muted)", display: "block", fontSize: "12px" }}>Clinic Location</span>
+                    <span style={{ color: "var(--navy)", fontWeight: 500 }}>SCO 123, Sector 33C, Chandigarh</span>
+                  </div>
                 </div>
               </div>
 
@@ -180,9 +188,9 @@ export default function AppointmentClientView({ doctors, contact }: AppointmentP
               </div>
             </div>
           ) : (
-            <div style={{ background: "#fff", borderRadius: "16px", padding: "40px 36px", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 8px 30px rgba(18,54,83,0.06)" }}>
+            <div style={{ background: "#fff", borderRadius: "16px", padding: "clamp(20px, 5vw, 40px) clamp(16px, 4vw, 36px)", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 8px 30px rgba(18,54,83,0.06)" }}>
               <div style={{ marginBottom: "2rem", borderBottom: "1px solid rgba(18,54,83,0.08)", paddingBottom: "1.5rem" }}>
-                <h2 style={{ fontFamily: "var(--serif)", fontSize: "26px", color: "var(--navy)", marginBottom: "6px" }}>
+                <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(22px, 3.5vw, 26px)", color: "var(--navy)", marginBottom: "6px" }}>
                   Patient Registration Details
                 </h2>
                 <p style={{ color: "var(--text-muted)", fontSize: "14px", margin: 0 }}>
@@ -199,7 +207,7 @@ export default function AppointmentClientView({ doctors, contact }: AppointmentP
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: "22px" }}>
                 
                 {/* Specialist and Visit Type Row */}
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "18px" }}>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 260px), 1fr))", gap: "18px" }}>
                   <div>
                     <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--navy)", marginBottom: "6px" }}>
                       Consulting Specialist *
@@ -260,8 +268,8 @@ export default function AppointmentClientView({ doctors, contact }: AppointmentP
                 </div>
 
                 {/* Patient Name, Age, Gender */}
-                <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr 1fr", gap: "16px" }}>
-                  <div>
+                <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 150px), 1fr))", gap: "16px" }}>
+                  <div style={{ gridColumn: "span 2" }}>
                     <label style={{ display: "block", fontSize: "13px", fontWeight: 600, color: "var(--navy)", marginBottom: "6px" }}>
                       Patient Full Name *
                     </label>

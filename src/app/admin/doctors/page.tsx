@@ -57,6 +57,7 @@ export default function AdminDoctorsPage() {
       title: 'Consultant ENT Surgeon',
       role: 'Consultant',
       image: '/images/dr-rattan-and-dr-anav-rattan-hero2.png',
+      objectPosition: 'center top',
       degrees: 'MS (ENT)',
       qualifications: 'MBBS, MS (ENT)',
       regNumber: '',
@@ -77,6 +78,7 @@ export default function AdminDoctorsPage() {
     setIsNew(false);
     setEditingDoctor({
       ...doctor,
+      objectPosition: doctor.objectPosition || 'center top',
       specialties: doctor.specialties && doctor.specialties.length > 0 ? doctor.specialties : [''],
       education: doctor.education && doctor.education.length > 0 ? doctor.education : [''],
     });
@@ -477,6 +479,23 @@ export default function AdminDoctorsPage() {
                     setEditingDoctor({ ...editingDoctor, image: newUrl });
                   }}
                 />
+
+                <div className="admin-form-group" style={{ marginTop: '12px' }}>
+                  <label className="admin-label">Portrait Focal Position / Alignment</label>
+                  <select
+                    className="admin-input"
+                    value={editingDoctor.objectPosition || 'center top'}
+                    onChange={(e) => setEditingDoctor({ ...editingDoctor, objectPosition: e.target.value })}
+                  >
+                    <option value="center top">Center Top (Recommended for Doctor Headshots)</option>
+                    <option value="center 20%">Center 20% (Upper-Chest Framing)</option>
+                    <option value="center center">Center Center</option>
+                    <option value="center bottom">Center Bottom</option>
+                  </select>
+                  <span style={{ fontSize: '11px', color: '#64748b', marginTop: '4px', display: 'block' }}>
+                    Ensures doctor faces and heads remain perfectly aligned and uncropped across mobile & desktop card viewports.
+                  </span>
+                </div>
               </div>
 
               {/* Basic Info */}

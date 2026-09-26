@@ -67,7 +67,7 @@ export default async function ResearchPage() {
   return (
     <main>
       {/* Header */}
-      <section style={{ padding: "5rem 2rem 4rem", background: "linear-gradient(135deg, var(--navy) 0%, #0d283f 100%)", color: "#fff" }}>
+      <section style={{ padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem) clamp(2.5rem, 5vw, 4rem)", background: "linear-gradient(135deg, var(--navy) 0%, #0d283f 100%)", color: "#fff" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
           <div style={{ marginBottom: "1.5rem" }}>
             <Breadcrumbs items={[{ label: "Academic Research & Training" }]} />
@@ -90,19 +90,19 @@ export default async function ResearchPage() {
       {(() => {
         const hasM1Image = Boolean(m1.image && m1.image.trim());
         return (
-          <section style={{ padding: "5rem 2rem", background: "#fff" }}>
+          <section style={{ padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)", background: "#fff" }}>
             <div style={{ maxWidth: hasM1Image ? "1200px" : "840px", margin: "0 auto" }}>
               <div style={{
                 display: hasM1Image ? "grid" : "block",
-                gridTemplateColumns: hasM1Image ? "repeat(auto-fit, minmax(320px, 1fr))" : undefined,
-                gap: hasM1Image ? "48px" : undefined,
+                gridTemplateColumns: hasM1Image ? "repeat(auto-fit, minmax(min(100%, 320px), 1fr))" : undefined,
+                gap: hasM1Image ? "clamp(24px, 4vw, 48px)" : undefined,
                 alignItems: "center"
               }}>
                 <div>
                   <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", background: "rgba(201,162,74,0.12)", padding: "4px 10px", borderRadius: "16px", display: "inline-block", marginBottom: "1rem" }}>
                     {m1.badge}
                   </span>
-                  <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 34px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.3 }}>
+                  <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(24px, 3.2vw, 34px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.3 }}>
                     {m1.title}
                   </h2>
                   <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.8, marginBottom: "1.2rem" }}>
@@ -121,7 +121,7 @@ export default async function ResearchPage() {
 
                 {hasM1Image && (
                   <div style={{ borderRadius: "16px", overflow: "hidden", boxShadow: "0 12px 36px rgba(18,54,83,0.1)", border: "1px solid rgba(18,54,83,0.1)", background: "var(--cream)" }}>
-                    <div style={{ position: "relative", height: "380px" }}>
+                    <div style={{ position: "relative", height: "clamp(240px, 40vw, 380px)", width: "100%" }}>
                       <Image 
                         src={m1.image}
                         alt={m1.caption || "Dr. Anav Rattan at IAOHNS 2023 Conference in Jammu"}
@@ -147,17 +147,17 @@ export default async function ResearchPage() {
       {(() => {
         const hasM2Image = Boolean(m2.image && m2.image.trim());
         return (
-          <section style={{ padding: "5rem 2rem", background: "var(--cream)" }}>
+          <section style={{ padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)", background: "var(--cream)" }}>
             <div style={{ maxWidth: hasM2Image ? "1200px" : "840px", margin: "0 auto" }}>
               <div style={{
                 display: hasM2Image ? "grid" : "block",
-                gridTemplateColumns: hasM2Image ? "repeat(auto-fit, minmax(320px, 1fr))" : undefined,
-                gap: hasM2Image ? "48px" : undefined,
+                gridTemplateColumns: hasM2Image ? "repeat(auto-fit, minmax(min(100%, 320px), 1fr))" : undefined,
+                gap: hasM2Image ? "clamp(24px, 4vw, 48px)" : undefined,
                 alignItems: "center"
               }}>
                 {hasM2Image && (
                   <div style={{ order: 2, borderRadius: "16px", overflow: "hidden", boxShadow: "0 12px 36px rgba(18,54,83,0.1)", border: "1px solid rgba(18,54,83,0.1)", background: "#fff" }}>
-                    <div style={{ position: "relative", height: "420px" }}>
+                    <div style={{ position: "relative", height: "clamp(240px, 45vw, 420px)", width: "100%" }}>
                       <Image 
                         src={m2.image}
                         alt={m2.caption || "Cochlear Implant Programme Certificate at Seth G.S. Medical College & KEM Hospital Mumbai"}
@@ -178,7 +178,7 @@ export default async function ResearchPage() {
               <span style={{ fontSize: "11px", fontWeight: 700, letterSpacing: "0.1em", textTransform: "uppercase", color: "var(--gold)", background: "rgba(201,162,74,0.15)", padding: "4px 10px", borderRadius: "16px", display: "inline-block", marginBottom: "1rem" }}>
                 {m2.badge}
               </span>
-              <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 34px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.3 }}>
+              <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(24px, 3.2vw, 34px)", color: "var(--navy)", marginBottom: "1.25rem", lineHeight: 1.3 }}>
                 {m2.title}
               </h2>
               <p style={{ fontSize: "15px", color: "var(--text)", lineHeight: 1.8, marginBottom: "1.2rem" }}>
@@ -201,13 +201,13 @@ export default async function ResearchPage() {
   })()}
 
       {/* Institutional Foundations: KEM & PGI Gallery */}
-      <section style={{ padding: "5rem 2rem", background: "#fff" }}>
+      <section style={{ padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)", background: "#fff" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: "700px", margin: "0 auto 3.5rem" }}>
+          <div style={{ textAlign: "center", maxWidth: "700px", margin: "0 auto 3rem" }}>
             <div className="section-label" style={{ color: "var(--gold)", marginBottom: "0.5rem" }}>
               INSTITUTIONAL FOUNDATIONS
             </div>
-            <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 36px)", color: "var(--navy)" }}>
+            <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(24px, 3.2vw, 36px)", color: "var(--navy)" }}>
               PGIMER Chandigarh & KEM Hospital Mumbai
             </h2>
             <p style={{ color: "var(--text-muted)", fontSize: "15px", marginTop: "8px" }}>
@@ -215,9 +215,9 @@ export default async function ResearchPage() {
             </p>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 300px), 1fr))", gap: "24px" }}>
             <div style={{ borderRadius: "14px", overflow: "hidden", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 4px 16px rgba(18,54,83,0.05)" }}>
-              <div style={{ position: "relative", height: "240px" }}>
+              <div style={{ position: "relative", height: "clamp(180px, 30vw, 240px)", width: "100%" }}>
                 <Image 
                   src="/images/seth-g-s-medical-college-kem-hospital-mumbai-14.jpeg"
                   alt="Seth G.S. Medical College & KEM Hospital Mumbai"
@@ -236,7 +236,7 @@ export default async function ResearchPage() {
             </div>
 
             <div style={{ borderRadius: "14px", overflow: "hidden", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 4px 16px rgba(18,54,83,0.05)" }}>
-              <div style={{ position: "relative", height: "240px" }}>
+              <div style={{ position: "relative", height: "clamp(180px, 30vw, 240px)", width: "100%" }}>
                 <Image 
                   src="/images/kem-hospital-auditorium-department-gathering-13.jpeg"
                   alt="KEM Hospital Auditorium Academic Department Gathering"
@@ -255,7 +255,7 @@ export default async function ResearchPage() {
             </div>
 
             <div style={{ borderRadius: "14px", overflow: "hidden", border: "1px solid rgba(18,54,83,0.08)", boxShadow: "0 4px 16px rgba(18,54,83,0.05)" }}>
-              <div style={{ position: "relative", height: "240px" }}>
+              <div style={{ position: "relative", height: "clamp(180px, 30vw, 240px)", width: "100%" }}>
                 <Image 
                   src="/images/operating-theatre-pgi-chandigarh-10.jpeg"
                   alt="Operating Theatre at PGIMER Chandigarh"
@@ -277,21 +277,21 @@ export default async function ResearchPage() {
       </section>
 
       {/* Primary Areas of Clinical Investigation */}
-      <section style={{ padding: "5rem 2rem", background: "var(--cream)" }}>
+      <section style={{ padding: "clamp(3rem, 6vw, 5rem) clamp(1rem, 4vw, 2rem)", background: "var(--cream)" }}>
         <div style={{ maxWidth: "1200px", margin: "0 auto" }}>
-          <div style={{ textAlign: "center", maxWidth: "700px", margin: "0 auto 3.5rem" }}>
+          <div style={{ textAlign: "center", maxWidth: "700px", margin: "0 auto 3rem" }}>
             <div className="section-label" style={{ color: "var(--gold)", marginBottom: "0.5rem" }}>
               ONGOING CLINICAL INQUIRY
             </div>
-            <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.2vw, 36px)", color: "var(--navy)" }}>
+            <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(24px, 3.2vw, 36px)", color: "var(--navy)" }}>
               Specialised Research & Clinical Interests
             </h2>
           </div>
 
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(320px, 1fr))", gap: "24px" }}>
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(min(100%, 280px), 1fr))", gap: "24px" }}>
             {ongoingInquiries.map((item, idx: number) => (
-              <div key={idx} style={{ background: "#fff", padding: "28px", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)" }}>
-                <h3 style={{ fontFamily: "var(--serif)", fontSize: "20px", color: "var(--navy)", marginBottom: "10px" }}>
+              <div key={idx} style={{ background: "#fff", padding: "clamp(18px, 4vw, 28px)", borderRadius: "12px", border: "1px solid rgba(18,54,83,0.08)" }}>
+                <h3 style={{ fontFamily: "var(--serif)", fontSize: "clamp(18px, 2.5vw, 20px)", color: "var(--navy)", marginBottom: "10px" }}>
                   {item.title}
                 </h3>
                 <p style={{ fontSize: "14px", color: "var(--text-muted)", lineHeight: 1.7 }}>
@@ -304,9 +304,9 @@ export default async function ResearchPage() {
       </section>
 
       {/* CTA */}
-      <section style={{ padding: "4.5rem 2rem", background: "var(--navy)", color: "#fff", textAlign: "center" }}>
+      <section style={{ padding: "clamp(3rem, 5vw, 4.5rem) clamp(1rem, 4vw, 2rem)", background: "var(--navy)", color: "#fff", textAlign: "center" }}>
         <div style={{ maxWidth: "700px", margin: "0 auto" }}>
-          <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 3.5vw, 36px)", color: "#fff", marginBottom: "1rem" }}>
+          <h2 style={{ fontFamily: "var(--serif)", fontSize: "clamp(24px, 3.5vw, 36px)", color: "#fff", marginBottom: "1rem" }}>
             Explore Our Comprehensive Photo Gallery
           </h2>
           <p style={{ color: "rgba(255,255,255,0.8)", fontSize: "15px", lineHeight: 1.7, marginBottom: "2rem" }}>

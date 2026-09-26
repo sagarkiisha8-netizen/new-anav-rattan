@@ -25,7 +25,7 @@ const doctors: Doctor[] = [
     bio: "Founder of Dr. Rattan ENT Clinic with over 35 years of surgical experience. Former Senior Resident at PGI Chandigarh and Sir Ganga Ram Hospital.",
     slug: "ganesh-dutt-rattan",
     image: "/images/dr-ganesh-dutt-rattan-0.jpeg",
-    objectPosition: "center 8%",
+    objectPosition: "center top",
     alt: "Dr. Ganesh Dutt Rattan, Senior ENT Surgeon and Founder of Dr. Rattan ENT Clinic"
   },
   {
@@ -36,7 +36,7 @@ const doctors: Doctor[] = [
     bio: "Specialist in Otology, Cochlear Implants, and Skull Base Surgery. Trained at Seth G.S. Medical College, Mumbai and PGI Chandigarh.",
     slug: "anav-rattan",
     image: "/images/dr-anav-rattan-1.jpeg",
-    objectPosition: "center 14%",
+    objectPosition: "center top",
     alt: "Dr. Anav Rattan, Consultant ENT, Otologist, and Skull Base Surgeon at Dr. Rattan ENT Clinic"
   }
 ];
@@ -64,7 +64,7 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           bio: d.bio || fallback.bio,
           slug: d.slug || fallback.slug,
           image: d.image || fallback.image,
-          objectPosition: fallback.objectPosition || "center 10%",
+          objectPosition: "center top",
           alt: `${d.name || fallback.name}, ENT Specialist at Dr. Rattan ENT Clinic`,
         };
       })
@@ -91,7 +91,7 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
   const handleCarouselScroll = () => {
     if (!carouselRef.current) return;
     const scrollLeft = carouselRef.current.scrollLeft;
-    const cardWidth = carouselRef.current.offsetWidth * 0.85;
+    const cardWidth = carouselRef.current.offsetWidth;
     const newIndex = Math.round(scrollLeft / cardWidth);
     if (newIndex >= 0 && newIndex < displayDoctors.length) {
       setActiveIndex(newIndex);
@@ -100,7 +100,7 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
 
   const scrollToDoctor = (index: number) => {
     if (!carouselRef.current) return;
-    const cardWidth = carouselRef.current.offsetWidth * 0.85;
+    const cardWidth = carouselRef.current.offsetWidth;
     carouselRef.current.scrollTo({
       left: index * cardWidth,
       behavior: "smooth"
@@ -434,15 +434,24 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           transform: translateX(4px);
         }
 
-        /* PHOTO CONTAINER (Fixed height for consistent framing) */
+        /* PHOTO CONTAINER (Identical 4:5 framing for Dr. Ganesh & Dr. Anav) */
         .doc-photo-wrapper {
           position: relative;
           width: 100%;
-          height: 390px;
+          aspect-ratio: 4 / 5;
           overflow: hidden;
           background: #0b2438;
           border-top-left-radius: 19px;
           border-top-right-radius: 19px;
+        }
+
+        .doc-photo-wrapper img,
+        .doc-zoom-photo {
+          width: 100% !important;
+          height: 100% !important;
+          display: block !important;
+          object-fit: cover !important;
+          object-position: center top !important;
         }
 
         .doc-photo-gradient {
@@ -480,6 +489,9 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           color: var(--navy);
           line-height: 1.2;
           margin-bottom: 4px;
+          word-break: normal;
+          overflow-wrap: break-word;
+          hyphens: none;
         }
 
         .doc-qualification-text {
@@ -504,17 +516,21 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           line-height: 1.68;
           margin-bottom: 1.8rem;
           flex: 1;
+          word-break: normal;
+          overflow-wrap: break-word;
         }
 
         .doc-action-wrap {
           margin-top: auto;
+          width: 100%;
         }
 
         .doc-profile-btn {
           display: inline-flex;
           align-items: center;
+          justify-content: center;
           gap: 8px;
-          padding: 10px 22px;
+          padding: 11px 22px;
           border: 1.5px solid var(--navy);
           border-radius: 6px;
           background: transparent;
@@ -538,41 +554,54 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
         /* MOBILE CONTROLS & TRACK */
         .doc-mobile-container {
           display: none;
+          width: 100%;
         }
 
         /* RESPONSIVE BREAKPOINTS */
         @media (max-width: 860px) {
+          .doctors-section {
+            padding: 3.5rem 16px !important;
+          }
+
           .doc-desktop-layout {
             display: none;
           }
+
           .doc-mobile-container {
             display: block;
+            width: 100%;
           }
 
           .doc-mobile-track {
             display: flex;
-            gap: 18px;
+            gap: 0;
             overflow-x: auto;
             scroll-snap-type: x mandatory;
             -webkit-overflow-scrolling: touch;
-            padding: 10px 4px 20px;
+            padding: 4px 0 14px;
             scrollbar-width: none;
+            width: 100%;
           }
           .doc-mobile-track::-webkit-scrollbar {
             display: none;
           }
 
           .doc-mobile-card {
-            flex: 0 0 84%;
-            scroll-snap-align: center;
-          }
-
-          .doc-mobile-card .doc-photo-wrapper {
-            height: 330px;
+            flex: 0 0 100%;
+            width: 100%;
+            max-width: 100%;
+            scroll-snap-align: start;
+            box-sizing: border-box;
           }
 
           .doc-mobile-card .doc-info-body {
-            padding: 1.5rem 1.4rem 1.8rem;
+            padding: 1.5rem 1.25rem 1.6rem;
+          }
+
+          .doc-mobile-card .doc-profile-btn {
+            width: 100%;
+            justify-content: center;
+            padding: 12px 18px;
           }
 
           .doc-carousel-controls {
@@ -580,31 +609,33 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
             align-items: center;
             justify-content: center;
             gap: 16px;
-            margin-top: 1rem;
+            margin-top: 1.25rem;
           }
 
           .doc-nav-btn {
-            width: 38px;
-            height: 38px;
+            width: 42px;
+            height: 42px;
             border-radius: 50%;
-            border: 1px solid var(--border);
+            border: 1.5px solid var(--border);
             background: #ffffff;
             color: var(--navy);
-            font-size: 20px;
+            font-size: 22px;
+            line-height: 1;
             display: flex;
             align-items: center;
             justify-content: center;
             cursor: pointer;
+            box-shadow: 0 4px 12px rgba(18, 54, 83, 0.08);
             transition: all 0.2s ease;
           }
           .doc-nav-btn:disabled {
             opacity: 0.35;
             cursor: not-allowed;
           }
-          .doc-nav-btn:not(:disabled):hover {
-            background: var(--cream);
+          .doc-nav-btn:not(:disabled):active {
+            background: var(--gold);
+            color: #ffffff;
             border-color: var(--gold);
-            color: var(--gold);
           }
           .doc-nav-btn:focus-visible {
             outline: 2px solid var(--gold);
@@ -618,35 +649,33 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           }
 
           .doc-dot {
-            width: 8px;
-            height: 8px;
+            width: 9px;
+            height: 9px;
             border-radius: 50%;
             border: none;
             background: rgba(18, 54, 83, 0.25);
             cursor: pointer;
             padding: 0;
-            transition: all 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
           }
           .doc-dot:focus-visible {
             outline: 2px solid var(--gold);
             outline-offset: 2px;
           }
           .doc-dot.active {
-            width: 22px;
+            width: 26px;
             border-radius: 6px;
             background: var(--gold);
+            box-shadow: 0 2px 8px rgba(201, 162, 74, 0.4);
           }
         }
 
         @media (max-width: 420px) {
-          .doc-mobile-card {
-            flex: 0 0 88%;
-          }
-          .doc-mobile-card .doc-photo-wrapper {
-            height: 300px;
-          }
           .doc-name-title {
-            font-size: 21px;
+            font-size: 20px;
+          }
+          .doc-mobile-card .doc-info-body {
+            padding: 1.35rem 1rem 1.4rem;
           }
         }
 
