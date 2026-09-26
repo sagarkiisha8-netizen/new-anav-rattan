@@ -384,7 +384,7 @@ export const defaultSiteContent: SiteContent = {
     subtitle: "Founded on the principles of academic discipline, institutional surgical precision, and unhurried patient listening, Dr. Rattan ENT Clinic has served generations of families across Chandigarh, Punjab, Haryana, and Himachal Pradesh.",
     legacyTitle: "A Legacy Built on PGI Rigour & Diagnostic Integrity",
     legacyParagraph1: "Dr. Rattan ENT Clinic was established by Dr. Ganesh Dutt Rattan following years of senior residency at the prestigious Postgraduate Institute of Medical Education and Research (PGIMER), Chandigarh and Sir Ganga Ram Hospital, New Delhi.",
-    legacyParagraph2: "From its inception, the clinic was envisioned as a center where complex ear, nose, and throat disorders are assessed with institutional diagnostic thoroughness. Today, with Dr. Anav Rattan (MS ENT, DNB, MNAMS) bringing subspecialty mastery in Otology, Cochlear Implants, and Skull Base Surgery from Seth G.S. Medical College & KEM Hospital, Mumbai, the practice combines mature surgical judgment with modern techniques.",
+    legacyParagraph2: "From its inception, the clinic was envisioned as a center where complex ear, nose, and throat disorders are assessed with institutional diagnostic thoroughness. Today, with Dr. Anav Rattan (MS ENT, DNB) bringing subspecialty mastery in Otology, Cochlear Implants, and Skull Base Surgery from Seth G.S. Medical College & KEM Hospital, Mumbai, the practice combines mature surgical judgment with modern techniques.",
     legacyImage: "/images/dr-rattan-and-dr-anav-rattan-hero2.png",
     experienceYears: "35+",
     trainingInstitution: "PGI & KEM",
@@ -520,7 +520,7 @@ export const defaultSiteContent: SiteContent = {
       slug: "ganesh-dutt-rattan",
       name: "Dr. Ganesh Dutt Rattan",
       title: "Founder & Senior Consultant ENT Surgeon",
-      degrees: "MBBS · DLO · MS (ENT), PGI Chandigarh",
+      degrees: "MBBS · DLO-IGMC Shimla · MS (ENT), PGI Chandigarh",
       regNumber: "Punjab Medical Council (PMC) Reg. No. 23702",
       bio: "Founder of Dr. Rattan ENT Clinic with over 35 years of dedicated surgical practice. Former Senior Resident at PGIMER Chandigarh and Sir Ganga Ram Hospital, New Delhi.",
       detailedBio: [
@@ -542,7 +542,7 @@ export const defaultSiteContent: SiteContent = {
         "MS (ENT) — Postgraduate Institute of Medical Education and Research (PGIMER), Chandigarh",
         "Former Senior Resident — PGIMER, Chandigarh",
         "Former Senior Resident — Sir Ganga Ram Hospital, New Delhi",
-        "Diploma in Laryngology and Otology (DLO)",
+        "DLO-IGMC Shimla",
         "MBBS — Renowned Government Medical Institution"
       ],
       clinicalFocus: [
@@ -560,12 +560,11 @@ export const defaultSiteContent: SiteContent = {
       slug: "anav-rattan",
       name: "Dr. Anav Rattan",
       title: "Consultant ENT, Otologist & Skull Base Surgeon",
-      degrees: "MS (ENT), DNB, MNAMS",
+      degrees: "MS (ENT), DNB",
       bio: "Subspecialist in Advanced Otology, Cochlear Implantation, Lateral Skull Base Surgery, and Neuro-otology. Trained at Seth G.S. Medical College & KEM Hospital, Mumbai and PGIMER Chandigarh.",
       detailedBio: [
         "Dr. Anav Rattan is an accomplished ENT surgeon with subspecialised training in Otology, Auditory Implantation, and Skull Base Surgery.",
-        "He completed his MS (ENT) from the prestigious Seth G.S. Medical College & KEM Hospital, Mumbai, followed by a demanding Senior Residency at PGIMER, Chandigarh. He holds the prestigious Diplomate of National Board (DNB) and Membership of the National Academy of Medical Sciences (MNAMS).",
-        "Dr. Anav Rattan has completed advanced certified training in the Cochlear Implant Programme at KEM Hospital Mumbai and actively presents his research at national scientific forums, including the Indian Academy of Otolaryngology - Head & Neck Surgery (IAOHNS). His clinical practice integrates high-magnification microsurgery, rigid endoscopy, and vestibular diagnostic protocols."
+        "He completed his MS (ENT) from the prestigious Seth G.S. Medical College & KEM Hospital, Mumbai, followed by a demanding Senior Residency at PGIMER, Chandigarh. He holds the prestigious Diplomate of National Board (DNB)."
       ],
       experience: "Institutional Specialised Practice",
       image: "/images/dr-anav-rattan-1.jpeg",
@@ -581,8 +580,6 @@ export const defaultSiteContent: SiteContent = {
         "Senior Residency — PGIMER, Chandigarh",
         "MS (ENT) — Seth G.S. Medical College & KEM Hospital, Mumbai",
         "DNB (Otorhinolaryngology) — National Board of Examinations",
-        "MNAMS — National Academy of Medical Sciences, New Delhi",
-        "Certified Cochlear Implant Surgeon — KEM Hospital, Mumbai",
         "MBBS — Government Medical College and Hospital, Chandigarh"
       ],
       clinicalFocus: [

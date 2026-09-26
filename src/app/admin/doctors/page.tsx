@@ -533,7 +533,7 @@ export default function AdminDoctorsPage() {
                   />
                 </div>
                 <div className="admin-form-group">
-                  <label className="admin-label">Medical Degrees (e.g. MS ENT, DNB, MNAMS)</label>
+                  <label className="admin-label">Medical Degrees (e.g. MS ENT, DNB)</label>
                   <input
                     type="text"
                     className="admin-input"

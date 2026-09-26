@@ -21,7 +21,7 @@ const doctors: Doctor[] = [
     id: "dr-ganesh-rattan",
     name: "Dr. Ganesh Dutt Rattan",
     role: "Founder & Senior Consultant ENT Surgeon",
-    qualifications: "MBBS · DLO · MS (ENT), PGI Chandigarh",
+    qualifications: "MBBS · DLO-IGMC Shimla · MS (ENT), PGI Chandigarh",
     bio: "Founder of Dr. Rattan ENT Clinic with over 35 years of dedicated surgical practice. Former Senior Resident at PGIMER Chandigarh and Sir Ganga Ram Hospital, New Delhi.",
     slug: "ganesh-dutt-rattan",
     image: "/images/dr-ganesh-dutt-rattan-0.jpeg",

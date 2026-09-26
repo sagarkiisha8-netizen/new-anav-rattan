@@ -64,7 +64,7 @@ export default async function AboutPage() {
                   Dr. Rattan ENT Clinic was established by <strong>Dr. Ganesh Dutt Rattan</strong> following years of senior residency at the prestigious <em>Postgraduate Institute of Medical Education and Research (PGIMER), Chandigarh</em> and <em>Sir Ganga Ram Hospital, New Delhi</em>. 
                 </p>
                 <p style={{ fontSize: "15px", color: "var(--text-muted)", lineHeight: 1.8, marginBottom: "1.5rem" }}>
-                  From its inception, the clinic was envisioned as a center where complex ear, nose, and throat disorders are assessed with institutional diagnostic thoroughness, avoiding hasty judgments or unnecessary surgical interventions. Today, with <strong>Dr. Anav Rattan</strong> (MS ENT, DNB, MNAMS) bringing subspecialty mastery in Otology, Cochlear Implants, and Skull Base Surgery from Seth G.S. Medical College & KEM Hospital, Mumbai, the practice combines mature surgical judgment with modern techniques.
+                  From its inception, the clinic was envisioned as a center where complex ear, nose, and throat disorders are assessed with institutional diagnostic thoroughness, avoiding hasty judgments or unnecessary surgical interventions. Today, with <strong>Dr. Anav Rattan</strong> (MS ENT, DNB) bringing subspecialty mastery in Otology, Cochlear Implants, and Skull Base Surgery from Seth G.S. Medical College & KEM Hospital, Mumbai, the practice combines mature surgical judgment with modern techniques.
                 </p>
 
                 <div style={{ display: "grid", gridTemplateColumns: "repeat(2, 1fr)", gap: "16px", marginTop: "2rem" }}>

@@ -26,7 +26,7 @@ interface PageMeta {
 const PAGE_LIST: PageMeta[] = [
   { key: 'home', label: 'Home Page', icon: '🏠', publicUrl: '/', desc: 'Hero section, stats, why choose us, testimonials & CTAs' },
   { key: 'about', label: 'About Our Clinic', icon: 'ℹ️', publicUrl: '/about', desc: 'Heritage, PGI background, mission/vision, facilities & patient journey' },
-  { key: 'research', label: 'Research & Milestones', icon: '🔬', publicUrl: '/research', desc: 'IAOHNS conference, KEM cochlear certification & clinical inquiries' },
+  { key: 'research', label: 'Research & Milestones', icon: '🔬', publicUrl: '/research', desc: 'IAOHNS conference, clinical milestones & surgical inquiries' },
   { key: 'faqs', label: 'Frequently Asked Questions', icon: '❓', publicUrl: '/faqs', desc: 'All 13 clinical questions across ear, sinus, throat, vertigo & pediatrics' },
   { key: 'gallery', label: 'Photo & Surgical Gallery', icon: '🖼️', publicUrl: '/gallery', desc: 'All 15 clinic and surgical photos, categories & captions' },
   { key: 'contact', label: 'Contact & Location', icon: '📍', publicUrl: '/contact', desc: 'Address, phone numbers, email, Google Maps & OPD hours' },

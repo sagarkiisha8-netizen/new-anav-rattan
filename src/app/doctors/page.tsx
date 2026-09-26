@@ -10,7 +10,7 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: "Our ENT Specialists | Dr. Rattan ENT Clinic Chandigarh",
   description:
-    "Consult Dr. Ganesh Dutt Rattan (Founder, 35+ years experience, PGI Chandigarh alumnus) and Dr. Anav Rattan (MS, DNB, MNAMS, KEM Hospital Mumbai alumnus) in Chandigarh.",
+    "Consult Dr. Ganesh Dutt Rattan (Founder, 35+ years experience, PGI Chandigarh alumnus) and Dr. Anav Rattan (MS, DNB, KEM Hospital Mumbai alumnus) in Chandigarh.",
 };
 
 export default async function DoctorsPage() {

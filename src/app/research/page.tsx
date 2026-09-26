@@ -11,7 +11,7 @@ export const revalidate = 0;
 export const metadata: Metadata = {
   title: "Academic Research & Conferences | Dr. Rattan ENT Clinic Chandigarh",
   description:
-    "Explore the clinical research, national conference presentations (IAOHNS), cochlear implant certifications (KEM Hospital Mumbai), and temporal bone surgery training of our ENT surgeons.",
+    "Explore the clinical research, national conference presentations (IAOHNS), and temporal bone surgery training of our ENT surgeons.",
 };
 
 export default async function ResearchPage() {
