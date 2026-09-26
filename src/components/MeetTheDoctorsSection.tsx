@@ -20,24 +20,24 @@ const doctors: Doctor[] = [
   {
     id: "dr-ganesh-rattan",
     name: "Dr. Ganesh Dutt Rattan",
-    role: "Senior ENT Surgeon & Founder",
-    qualifications: "MS (ENT), PGI Chandigarh",
-    bio: "Founder of Dr. Rattan ENT Clinic with over 35 years of surgical experience. Former Senior Resident at PGI Chandigarh and Sir Ganga Ram Hospital.",
+    role: "Founder & Senior Consultant ENT Surgeon",
+    qualifications: "MBBS · DLO · MS (ENT), PGI Chandigarh",
+    bio: "Founder of Dr. Rattan ENT Clinic with over 35 years of dedicated surgical practice. Former Senior Resident at PGIMER Chandigarh and Sir Ganga Ram Hospital, New Delhi.",
     slug: "ganesh-dutt-rattan",
     image: "/images/dr-ganesh-dutt-rattan-0.jpeg",
-    objectPosition: "center 16%",
-    alt: "Dr. Ganesh Dutt Rattan, Senior ENT Surgeon and Founder of Dr. Rattan ENT Clinic"
+    objectPosition: "center 2%",
+    alt: "Dr. Ganesh Dutt Rattan, Founder & Senior Consultant ENT Surgeon at Dr. Rattan ENT Clinic"
   },
   {
     id: "dr-anav-rattan",
     name: "Dr. Anav Rattan",
-    role: "Consultant ENT Surgeon",
-    qualifications: "MS (ENT), DNB, MNAMS",
-    bio: "Specialist in Advanced Otology, Cochlear Implantation, Lateral Skull Base Surgery, and Neuro-otology. Trained at Seth G.S. Medical College & KEM Hospital, Mumbai and PGIMER Chandigarh.",
+    role: "Consultant ENT, Otologist & Skull Base Surgeon",
+    qualifications: "MBBS MS ENT DNB",
+    bio: "Subspecialist in Advanced Otology, Cochlear Implantation, Lateral Skull Base Surgery, and Neuro-otology. Trained at Seth G.S. Medical College & KEM Hospital, Mumbai and PGIMER Chandigarh.",
     slug: "anav-rattan",
     image: "/images/dr-anav-rattan-1.jpeg",
-    objectPosition: "center 18%",
-    alt: "Dr. Anav Rattan, Consultant ENT, Otologist, and Skull Base Surgeon at Dr. Rattan ENT Clinic"
+    objectPosition: "center 5%",
+    alt: "Dr. Anav Rattan, Consultant ENT, Otologist & Skull Base Surgeon at Dr. Rattan ENT Clinic"
   }
 ];
 
@@ -57,7 +57,7 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
     ? propDoctors.map((d, i) => {
         const fallback = doctors[i] || doctors[0];
         const isGanesh = (d.slug && d.slug.includes("ganesh")) || (d.name && d.name.toLowerCase().includes("ganesh")) || i === 0;
-        const objPos = isGanesh ? "center 16%" : "center 18%";
+        const objPos = isGanesh ? "center 2%" : "center 5%";
         return {
           id: d.id || fallback.id,
           name: d.name || fallback.name,
@@ -436,14 +436,14 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           transform: translateX(4px);
         }
 
-        /* PHOTO CONTAINER (Identical 4:4.6 framing for Dr. Ganesh & Dr. Anav) */
+        /* PHOTO CONTAINER (Identical 4:4.4 framing with breathing room for both doctors) */
         .doc-photo-wrapper {
           position: relative;
           width: 100%;
-          aspect-ratio: 4 / 4.6;
-          max-height: 380px;
+          aspect-ratio: 4 / 4.4;
+          max-height: 420px;
           overflow: hidden;
-          background: #0b2438;
+          background: #f7f4ee;
           border-top-left-radius: 19px;
           border-top-right-radius: 19px;
         }

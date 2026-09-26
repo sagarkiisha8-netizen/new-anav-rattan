@@ -475,6 +475,241 @@ const serviceCatalog: Record<string, ServiceDetail> = {
         a: "No. The vast majority (>90%) of thyroid nodules are benign. High-resolution ultrasound and an ultrasound-guided FNAC safely determine whether medical observation or surgical excision is needed."
       }
     ]
+  },
+
+  "experienced-ent-specialists": {
+    slug: "experienced-ent-specialists",
+    title: "Experienced ENT Specialists",
+    badge: "Institutional Surgical Lineage",
+    intro: "PGI-trained ENT surgeons bringing decades of institutional experience, high-volume surgical precision, and academic excellence to your ear, nose, and throat care.",
+    symptoms: [
+      "Complex or recurrent ear, nose, and throat conditions requiring expert surgical review",
+      "Chronic sinus disease unresponsive to standard medications",
+      "Hearing loss, severe dizziness, or skull base conditions requiring subspecialist care",
+      "Seeking a trusted second opinion regarding recommended ENT surgeries"
+    ],
+    conditions: [
+      "Chronic Suppurative Otitis Media (CSOM) with eardrum perforation & mastoiditis",
+      "Cholesteatoma and ossicular chain damage",
+      "Functional Endoscopic Sinus Surgery (FESS) surgical cases",
+      "Lateral skull base lesions, acoustic neuromas, and glomus tumours",
+      "Complex pediatric and adult airway, thyroid, and neck conditions"
+    ],
+    diagnosis: [
+      "High-magnification surgical stereomicroscopy",
+      "High-definition rigid video endoscopy and stroboscopy",
+      "Diagnostic Pure Tone & Speech Audiometry in calibrated sound booth",
+      "High-Resolution Temporal Bone and Paranasal Sinus CT review",
+      "Institutional multidisciplinary surgical assessment and recovery planning"
+    ],
+    treatments: [
+      "Microscopic Tympanoplasty & Mastoidectomy for chronic ear disease",
+      "Stapedotomy for Otosclerosis hearing restoration",
+      "Functional Endoscopic Sinus Surgery (FESS)",
+      "Cochlear Implantation & Bone Conduction Hearing Implants",
+      "Senior consultant surgical oversight and dedicated post-operative care"
+    ],
+    whenToConsult: [
+      "When seeking expert surgical consultation for chronic or unresolved ENT disorders",
+      "If recurring ear discharge, sinus blockage, or voice hoarseness persists despite medication",
+      "For comprehensive pre-surgical evaluation and second opinions"
+    ],
+    faqs: [
+      {
+        q: "What institutional background do the surgeons at Dr. Rattan ENT Clinic have?",
+        a: "Our surgeons are trained and have served at premier national institutions including PGIMER Chandigarh, Seth G.S. Medical College & KEM Hospital Mumbai, and Sir Ganga Ram Hospital New Delhi, providing over 35 years of dedicated surgical practice."
+      },
+      {
+        q: "Can I receive a second opinion regarding an upcoming ENT surgery?",
+        a: "Yes. We regularly provide detailed clinical evaluations and objective second opinions on tympanoplasty, mastoidectomy, sinus surgery, tonsillectomy, and skull base procedures."
+      }
+    ]
+  },
+
+  "personalised-treatment": {
+    slug: "personalised-treatment",
+    title: "Personalised Treatment",
+    badge: "Individualized Patient Care",
+    intro: "Tailored treatment protocols focused entirely on your specific health needs, anatomy, and lifestyle, combining evidence-based medicine with conservative, patient-centric solutions.",
+    symptoms: [
+      "Unique or recurrent combinations of ear, nose, or throat symptoms",
+      "Inadequate response to generalized or one-size-fits-all medical regimens",
+      "Chronic allergies, sinusitis, or reflux-induced throat irritation requiring targeted management",
+      "Hearing challenges tailored to individual occupational and daily lifestyle demands"
+    ],
+    conditions: [
+      "Allergic Rhinitis and chronic seasonal environmental allergies",
+      "Complex hearing impairment and custom audiological rehabilitation",
+      "Chronic pharyngitis, GERD-related throat irritation, and vocal strain",
+      "Recurring pediatric otitis media and tonsillar hypertrophy",
+      "Recurrent Benign Paroxysmal Positional Vertigo (BPPV)"
+    ],
+    diagnosis: [
+      "Detailed clinical history and lifestyle-aligned symptom evaluation",
+      "Targeted endoscopic and audiological diagnostic workup",
+      "Allergy profiling and environmental trigger identification",
+      "Personalized baseline audiograms and vestibular assessments"
+    ],
+    treatments: [
+      "Individualized medical therapy with step-up/step-down regimens",
+      "Custom hearing rehabilitation and acoustic fitting",
+      "Conservative management prioritized before considering surgical intervention",
+      "Structured home-care, voice hygiene, and rehabilitation plans",
+      "Proactive follow-up scheduling and direct consultant access"
+    ],
+    whenToConsult: [
+      "When symptoms persist despite routine standard treatments",
+      "When you desire an individualized, conservative approach tailored to your health history",
+      "For comprehensive allergy, voice, or hearing management"
+    ],
+    faqs: [
+      {
+        q: "How are treatment plans customized for each patient?",
+        a: "We take into account your detailed medical history, specific diagnostic findings, daily occupational demands, and individual preferences to recommend treatments ranging from conservative therapies to advanced interventions."
+      },
+      {
+        q: "Are conservative, non-surgical options explored first?",
+        a: "Always. Wherever medically viable and safe, we prioritize conservative medical therapy, lifestyle modifications, and non-invasive options before recommending surgical solutions."
+      }
+    ]
+  },
+
+  "advanced-diagnosis": {
+    slug: "advanced-diagnosis",
+    title: "Advanced Diagnosis",
+    badge: "Precision Diagnostic Tools",
+    intro: "Equipped with state-of-the-art diagnostic tools for precise, accurate evaluation of ear, nose, throat, audiology, and balance disorders in Chandigarh.",
+    symptoms: [
+      "Unexplained hearing decline, ear fullness, or persistent ringing sounds",
+      "Persistent nasal obstruction, chronic sinus headaches, or olfactory changes",
+      "Hoarseness, voice fatigue, or chronic difficulty swallowing",
+      "Dizziness, spinning sensations, lightheadedness, or unsteadiness"
+    ],
+    conditions: [
+      "Tympanic membrane perforations and ossicular problems",
+      "Nasal polyposis, deviated nasal septum, and sinus drainage blockage",
+      "Vocal cord nodules, polyps, cysts, and paresis",
+      "Inner ear vestibular dysfunction and labyrinthine disorders",
+      "Hidden skull base and middle ear pathologies"
+    ],
+    diagnosis: [
+      "High-Definition Rigid Oto-Endoscopy with live patient display",
+      "High-Resolution Diagnostic Nasal Endoscopy (DNE)",
+      "Fiberoptic Video Laryngoscopy (FOL) for vocal cord imaging",
+      "Pure Tone Audiometry (PTA) & High-Frequency Audiology in sound-treated booth",
+      "Impedance Audiometry & Tympanometry",
+      "Comprehensive Vestibular & Balance Assessment protocols"
+    ],
+    treatments: [
+      "Precise targeted treatment plans based on objective imaging",
+      "Point-of-care micro-suction cleaning under stereoscopic magnification",
+      "Immediate digital endoscopy report delivery to patients",
+      "Collaborative review of CT and MRI temporal bone and sinus scans"
+    ],
+    whenToConsult: [
+      "For definitive diagnosis of unresolved ear, nose, or throat symptoms",
+      "Before undertaking any recommended ENT surgical intervention",
+      "When routine examinations have failed to identify the root cause of symptoms"
+    ],
+    faqs: [
+      {
+        q: "Are endoscopic examinations painful?",
+        a: "No. Diagnostic oto-endoscopy, nasal endoscopy, and video laryngoscopy are gentle, minimally invasive office procedures performed in minutes with topical numbing sprays where appropriate."
+      },
+      {
+        q: "Can I view the endoscopic examination images?",
+        a: "Yes. Our high-definition endoscopic camera systems display real-time video on screens so you and your doctor can observe and discuss your condition clearly."
+      }
+    ]
+  },
+
+  "transparent-guidance": {
+    slug: "transparent-guidance",
+    title: "Transparent Guidance",
+    badge: "Honest, Ethical Medical Advice",
+    intro: "Clear, honest explanations of your condition, treatment alternatives, expected outcomes, and procedural details so you can make confident, informed healthcare decisions.",
+    symptoms: [
+      "Uncertainty regarding surgical necessity or medical options",
+      "Conflicting medical opinions received for ENT conditions",
+      "Questions regarding post-operative recovery timelines and risks",
+      "Need for clear, honest counsel on chronic condition management"
+    ],
+    conditions: [
+      "Indications for elective ENT surgery (Tonsillectomy, Septoplasty, FESS, Tympanoplasty)",
+      "Management options for chronic hearing loss and tinnitus",
+      "Long-term management of chronic allergic rhinosinusitis",
+      "Pediatric ENT conditions and watchful waiting strategies"
+    ],
+    diagnosis: [
+      "Visual walkthrough of endoscopic findings and scan images",
+      "Objective evaluation of clinical necessity versus optional treatments",
+      "Review of risk factors, lifestyle contributors, and prognosis"
+    ],
+    treatments: [
+      "Comprehensive pre-consultation counseling sessions",
+      "Transparent discussion of expected recovery times and success rates",
+      "Clear guidance on non-surgical alternatives and observation periods",
+      "Detailed post-operative care instructions and transparent cost estimates"
+    ],
+    whenToConsult: [
+      "When you want unbiased medical advice without pressure to undergo surgery",
+      "When deciding between conservative management and surgical interventions",
+      "For an honest, transparent assessment of pediatric or adult ENT conditions"
+    ],
+    faqs: [
+      {
+        q: "Will surgery only be recommended when strictly necessary?",
+        a: "Yes. We adhere strictly to evidence-based medical ethics. Surgery is only advised when clear clinical indications exist and conservative management is insufficient."
+      },
+      {
+        q: "Do you explain scan results and endoscopic images during the appointment?",
+        a: "Absolutely. We review CT/MRI imaging and live endoscopic findings together on screen so you understand exactly what is happening and why a particular treatment is recommended."
+      }
+    ]
+  },
+
+  "comfortable-experience": {
+    slug: "comfortable-experience",
+    title: "Comfortable Experience",
+    badge: "Warm, Patient-Centric Care",
+    intro: "Warm, compassionate, and attentive clinical care in a welcoming, hygienic, and modern facility designed for patient comfort, gentle procedures, and peace of mind.",
+    symptoms: [
+      "Anxiety related to clinical procedures, ear cleaning, or endoscopies",
+      "Pediatric patients needing gentle, reassuring clinical handling",
+      "Elderly patients requiring accessible, patient-paced consultations"
+    ],
+    conditions: [
+      "Routine and emergency ENT consultations",
+      "Office procedures including micro-suction ear wax removal",
+      "Pre-operative evaluations and routine follow-up checkups",
+      "Pediatric ENT screening in a child-friendly atmosphere"
+    ],
+    diagnosis: [
+      "Gentle clinical examinations performed at the patient's comfort level",
+      "Step-by-step procedural explanations before each diagnostic step",
+      "Modern, ergonomic examination chairs and clean acoustic booths"
+    ],
+    treatments: [
+      "Pain-free microscopic ear debridement and suctioning",
+      "Comfort-focused outpatient minor procedures",
+      "Child-friendly examination techniques that prevent anxiety",
+      "Prompt appointment scheduling and minimal clinic waiting times"
+    ],
+    whenToConsult: [
+      "For gentle, anxiety-free ENT care for children and adults alike",
+      "When seeking routine hygiene care such as microscopic ear cleaning",
+      "For comprehensive checkups in a warm, respectful clinical setting"
+    ],
+    faqs: [
+      {
+        q: "Is the clinic equipped for elderly or anxious patients?",
+        a: "Yes. Our facility is designed for accessibility, with gentle handling, calm examination rooms, and ample time allocated so patients never feel rushed."
+      },
+      {
+        q: "How are pediatric patients made comfortable during examinations?",
+        a: "Our specialists use gentle, non-threatening approaches, explaining instruments playfully and allowing parents to remain close at all times."
+      }
+    ]
   }
 };
 

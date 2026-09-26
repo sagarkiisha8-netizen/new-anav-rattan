@@ -138,14 +138,14 @@ export default function HomeServicesSection({ services }: HomeServicesSectionPro
         <div className="sec-header services-sec-header">
           <div className="sec-eyebrow services-eyebrow">
             <span className="eyebrow-line" />
-            Our Services
+            Clinical Specialities
             <span className="eyebrow-line" />
           </div>
           <h2 className="sec-title services-main-title">
-            Comprehensive <em className="gold-em">ENT</em> Solutions
+            Specialized <em className="gold-em">ENT</em> Treatments
           </h2>
           <p className="sec-sub services-sub-title">
-            Advanced diagnostic and treatment facilities for complete ear, nose, and throat health in Chandigarh.
+            State-of-the-art diagnostic and surgical care across all ear, nose, throat, head and neck subspecialties.
           </p>
         </div>
 
