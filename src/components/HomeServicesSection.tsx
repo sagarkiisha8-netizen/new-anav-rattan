@@ -177,9 +177,18 @@ export default function HomeServicesSection({ services }: HomeServicesSectionPro
                   <Link 
                     href={`/services/${srv.slug}`} 
                     className="service-card-btn"
+                    style={{
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: "8px",
+                      color: "#C9A24A",
+                      textDecoration: "none",
+                      fontWeight: 600,
+                      fontSize: "13.5px",
+                    }}
                   >
                     <span>View Service</span>
-                    <span className="service-btn-arrow">→</span>
+                    <span className="service-btn-arrow" style={{ color: "#C9A24A", display: "inline-block" }}>→</span>
                   </Link>
                 </div>
               </div>
@@ -235,6 +244,20 @@ export default function HomeServicesSection({ services }: HomeServicesSectionPro
                     <Link 
                       href={`/services/${srv.slug}`} 
                       className="services-mobile-cta-btn"
+                      style={{
+                        display: "inline-flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        gap: "8px",
+                        width: "100%",
+                        padding: "12px 20px",
+                        background: "var(--navy, #123653)",
+                        color: "#ffffff",
+                        borderRadius: "8px",
+                        fontWeight: 600,
+                        textDecoration: "none",
+                        fontSize: "13.5px"
+                      }}
                     >
                       <span>Explore Service Details</span>
                       <span className="btn-arrow">→</span>
@@ -286,453 +309,26 @@ export default function HomeServicesSection({ services }: HomeServicesSectionPro
           <Link 
             href="/services" 
             className="services-explore-all-btn"
+            style={{
+              display: "inline-flex",
+              alignItems: "center",
+              gap: "10px",
+              padding: "12px 28px",
+              borderRadius: "8px",
+              background: "#ffffff",
+              border: "1.5px solid var(--navy, #123653)",
+              color: "var(--navy, #123653)",
+              fontSize: "14px",
+              fontWeight: 600,
+              textDecoration: "none",
+              boxShadow: "0 4px 14px rgba(18, 54, 83, 0.08)"
+            }}
           >
             <span>View All 9 Specialized ENT Services</span>
             <span className="btn-arrow">→</span>
           </Link>
         </div>
       </div>
-
-      <style jsx>{`
-        .services-section-wrap {
-          background: var(--cream);
-          padding: 5.5rem 2rem 5rem;
-          position: relative;
-          border-bottom: 1px solid var(--border);
-          overflow: hidden;
-        }
-
-        .services-container {
-          max-width: var(--max-w, 1280px);
-          margin: 0 auto;
-          width: 100%;
-        }
-
-        .services-sec-header {
-          text-align: center;
-          margin-bottom: 3.5rem;
-        }
-
-        .services-eyebrow {
-          justify-content: center;
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          font-size: 11.5px;
-          font-weight: 600;
-          letter-spacing: 2.5px;
-          text-transform: uppercase;
-          color: var(--gold);
-          margin-bottom: 0.75rem;
-        }
-
-        .eyebrow-line {
-          display: inline-block;
-          width: 20px;
-          height: 1.5px;
-          background: var(--gold);
-        }
-
-        .services-main-title {
-          font-family: var(--serif);
-          font-size: clamp(28px, 3.8vw, 42px);
-          color: var(--navy);
-          line-height: 1.18;
-          margin-bottom: 0.75rem;
-          letter-spacing: -0.5px;
-          word-break: normal;
-          overflow-wrap: break-word;
-          hyphens: none;
-        }
-
-        .gold-em {
-          color: var(--gold);
-          font-style: italic;
-        }
-
-        .services-sub-title {
-          font-size: 15.5px;
-          color: var(--muted);
-          max-width: 600px;
-          margin: 0 auto;
-          line-height: 1.65;
-        }
-
-        /* ========================================================
-           DESKTOP GRID
-           ======================================================== */
-        .services-desktop-grid {
-          display: grid;
-          grid-template-columns: repeat(3, 1fr);
-          gap: 24px;
-          width: 100%;
-        }
-
-        .service-card-item {
-          background: #ffffff;
-          padding: 2.2rem 2rem 2rem;
-          border-radius: 16px;
-          border: 1px solid var(--border);
-          box-shadow: 0 4px 18px rgba(18, 54, 83, 0.05);
-          display: flex;
-          flex-direction: column;
-          justify-content: space-between;
-          position: relative;
-          overflow: hidden;
-          transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease, border-color 0.35s ease;
-        }
-
-        .service-card-item:hover {
-          transform: translateY(-5px);
-          border-color: rgba(201, 162, 74, 0.5);
-          box-shadow: 0 14px 34px rgba(18, 54, 83, 0.1), 0 0 18px rgba(201, 162, 74, 0.15);
-        }
-
-        .service-card-top {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          margin-bottom: 1.25rem;
-        }
-
-        .service-num-badge {
-          font-family: var(--serif);
-          font-size: 13px;
-          font-weight: 700;
-          color: var(--gold);
-          background: rgba(201, 162, 74, 0.12);
-          border: 1px solid rgba(201, 162, 74, 0.25);
-          padding: 3px 10px;
-          border-radius: 20px;
-          letter-spacing: 1px;
-        }
-
-        .service-cat-pill {
-          font-size: 11px;
-          font-weight: 700;
-          text-transform: uppercase;
-          letter-spacing: 0.8px;
-          color: var(--navy);
-          background: rgba(18, 54, 83, 0.05);
-          padding: 3px 10px;
-          border-radius: 12px;
-        }
-
-        .service-card-title {
-          font-family: var(--serif);
-          font-size: 21px;
-          font-weight: 600;
-          color: var(--navy);
-          line-height: 1.28;
-          margin-bottom: 10px;
-          word-break: normal;
-          overflow-wrap: break-word;
-          hyphens: none;
-        }
-
-        .service-card-desc {
-          font-size: 14.5px;
-          color: var(--muted);
-          line-height: 1.68;
-          margin-bottom: 1.75rem;
-          flex-grow: 1;
-        }
-
-        .service-card-action {
-          margin-top: auto;
-          border-top: 1px solid rgba(18, 54, 83, 0.06);
-          padding-top: 1rem;
-        }
-
-        .service-card-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 8px;
-          font-size: 13.5px;
-          font-weight: 600;
-          color: var(--gold);
-          text-decoration: none;
-          transition: transform 0.25s ease, color 0.2s ease;
-        }
-
-        .service-card-btn:hover {
-          color: #b38b36;
-          transform: translateX(4px);
-        }
-
-        .service-btn-arrow {
-          display: inline-block;
-          transition: transform 0.25s ease;
-        }
-
-        .service-card-btn:hover .service-btn-arrow {
-          transform: translateX(4px);
-        }
-
-        /* ========================================================
-           MOBILE CAROUSEL (HIDDEN ON DESKTOP)
-           ======================================================== */
-        .services-mobile-carousel-wrap {
-          display: none;
-          width: 100%;
-          outline: none;
-        }
-
-        .services-bottom-link-row {
-          text-align: center;
-          margin-top: 3rem;
-        }
-
-        .services-explore-all-btn {
-          display: inline-flex;
-          align-items: center;
-          gap: 10px;
-          padding: 12px 28px;
-          border-radius: 8px;
-          background: #ffffff;
-          border: 1.5px solid var(--navy);
-          color: var(--navy);
-          font-size: 14px;
-          font-weight: 600;
-          text-decoration: none;
-          box-shadow: 0 4px 14px rgba(18, 54, 83, 0.06);
-          transition: all 0.3s ease;
-        }
-
-        .services-explore-all-btn:hover {
-          background: var(--navy);
-          color: #ffffff;
-          transform: translateY(-2px);
-          box-shadow: 0 8px 22px rgba(18, 54, 83, 0.16);
-        }
-
-        /* ========================================================
-           RESPONSIVE BREAKPOINTS
-           ======================================================== */
-        @media (max-width: 1024px) and (min-width: 768px) {
-          .services-desktop-grid {
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
-          }
-        }
-
-        @media (max-width: 767px) {
-          .services-section-wrap {
-            padding: 3.5rem 16px 3.5rem;
-          }
-
-          .services-desktop-grid {
-            display: none;
-          }
-
-          .services-mobile-carousel-wrap {
-            display: block;
-            width: 100%;
-            max-width: 100%;
-          }
-
-          .services-sec-header {
-            margin-bottom: 2rem;
-          }
-
-          .services-main-title {
-            font-size: clamp(24px, 6.5vw, 30px);
-          }
-
-          .services-sub-title {
-            font-size: 14px;
-            padding: 0 4px;
-          }
-
-          /* Mobile Stage: Exactly 1 card visible */
-          .services-mobile-stage {
-            width: 100%;
-            margin: 0 auto;
-          }
-
-          .services-mobile-card-single {
-            background: #ffffff;
-            border: 1.5px solid rgba(201, 162, 74, 0.45);
-            border-radius: 16px;
-            padding: 1.75rem 1.35rem 1.6rem;
-            box-shadow: 0 10px 30px rgba(18, 54, 83, 0.09), 0 0 16px rgba(201, 162, 74, 0.12);
-            display: flex;
-            flex-direction: column;
-            width: 100%;
-            box-sizing: border-box;
-            animation: serviceFadeIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-            position: relative;
-          }
-
-          @keyframes serviceFadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(12px) scale(0.98);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0) scale(1);
-            }
-          }
-
-          .services-mobile-card-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 8px;
-            margin-bottom: 1.1rem;
-            flex-wrap: wrap;
-          }
-
-          .services-mobile-step-count {
-            font-size: 11.5px;
-            font-weight: 600;
-            color: var(--muted);
-            margin-left: auto;
-          }
-
-          .services-mobile-card-title {
-            font-family: var(--serif);
-            font-size: clamp(21px, 5.8vw, 25px);
-            font-weight: 600;
-            color: var(--navy);
-            line-height: 1.25;
-            margin-bottom: 0.5rem;
-            word-break: normal;
-            overflow-wrap: break-word;
-            hyphens: none;
-          }
-
-          .services-card-gold-line {
-            width: 36px;
-            height: 2px;
-            background: var(--gold);
-            margin: 8px 0 14px;
-            border-radius: 2px;
-          }
-
-          .services-mobile-card-desc {
-            font-size: 14.5px;
-            color: var(--text);
-            line-height: 1.68;
-            margin-bottom: 1.75rem;
-            word-break: normal;
-            overflow-wrap: break-word;
-          }
-
-          .services-mobile-action-wrap {
-            margin-top: auto;
-          }
-
-          .services-mobile-cta-btn {
-            display: flex;
-            width: 100%;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 13px 20px;
-            border-radius: 8px;
-            background: var(--navy);
-            color: #ffffff;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            border: 1.5px solid var(--gold);
-            box-shadow: 0 4px 14px rgba(18, 54, 83, 0.18);
-            transition: all 0.25s ease;
-          }
-
-          .services-mobile-cta-btn:active {
-            transform: scale(0.98);
-          }
-
-          /* Carousel Controls */
-          .services-carousel-controls {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 16px;
-            margin-top: 1.5rem;
-          }
-
-          .services-nav-arrow-btn {
-            width: 42px;
-            height: 42px;
-            border-radius: 50%;
-            border: 1.5px solid var(--border);
-            background: #ffffff;
-            color: var(--navy);
-            font-size: 22px;
-            line-height: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            box-shadow: 0 4px 12px rgba(18, 54, 83, 0.08);
-            transition: all 0.2s ease;
-          }
-
-          .services-nav-arrow-btn:active {
-            background: var(--gold);
-            color: #ffffff;
-            border-color: var(--gold);
-            transform: scale(0.95);
-          }
-
-          .services-dots-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-          }
-
-          .services-carousel-dot {
-            width: 9px;
-            height: 9px;
-            border-radius: 50%;
-            border: none;
-            background: rgba(18, 54, 83, 0.25);
-            cursor: pointer;
-            padding: 0;
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-          }
-
-          .services-carousel-dot.active {
-            width: 26px;
-            border-radius: 6px;
-            background: var(--gold);
-            box-shadow: 0 2px 8px rgba(201, 162, 74, 0.4);
-          }
-
-          .services-bottom-link-row {
-            margin-top: 2rem;
-          }
-
-          .services-explore-all-btn {
-            width: 100%;
-            justify-content: center;
-            padding: 12px 16px;
-            font-size: 13.5px;
-          }
-        }
-
-        @media (max-width: 360px) {
-          .services-section-wrap {
-            padding: 3rem 12px 3rem;
-          }
-
-          .services-mobile-card-single {
-            padding: 1.4rem 1.1rem 1.3rem;
-          }
-
-          .services-mobile-card-title {
-            font-size: 19.5px;
-          }
-
-          .services-mobile-card-desc {
-            font-size: 13.5px;
-          }
-        }
-      `}</style>
     </section>
   );
 }

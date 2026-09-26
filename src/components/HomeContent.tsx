@@ -88,7 +88,17 @@ export default function HomeContent({ initialContent }: { initialContent?: SiteC
   return (
     <main>
       {/* HERO SECTION */}
-      <section className="hero-section-outer">
+      <section 
+        className="hero-section-outer"
+        style={{
+          background: "linear-gradient(135deg, #0b2438 0%, #123653 55%, #0e2e47 100%)",
+          position: "relative",
+          padding: "clamp(3.5rem, 6vw, 5.5rem) clamp(1rem, 4vw, 2rem)",
+          overflow: "hidden",
+          borderBottom: "1px solid rgba(201, 162, 74, 0.2)",
+          width: "100%",
+        }}
+      >
         {/* Soft glowing ambient lights & decorative gold lines */}
         <div style={{ position: "absolute", width: "420px", height: "420px", borderRadius: "50%", background: "radial-gradient(circle, rgba(201,162,74,0.12), transparent 70%)", top: "-40px", left: "10%", pointerEvents: "none" }}></div>
         <div style={{ position: "absolute", width: "500px", height: "500px", borderRadius: "50%", background: "radial-gradient(circle, rgba(201,162,74,0.14), transparent 70%)", bottom: "-80px", right: "5%", pointerEvents: "none" }}></div>
@@ -108,7 +118,7 @@ export default function HomeContent({ initialContent }: { initialContent?: SiteC
               <h1 className="hero-title-text" style={{ fontFamily: "var(--serif)", fontSize: "clamp(26px, 5.8vw, 50px)", lineHeight: 1.18, color: "#ffffff", marginBottom: "1.25rem", letterSpacing: "-0.5px", wordBreak: "normal", overflowWrap: "break-word", hyphens: "none" }}>
                 {heroTitle}
               </h1>
-              <p style={{ fontSize: "15.5px", color: "rgba(255,255,255,0.8)", maxWidth: hasHeroImage ? "520px" : "720px", lineHeight: 1.75, marginBottom: "2rem", wordBreak: "normal", overflowWrap: "break-word" }}>
+              <p style={{ fontSize: "15.5px", color: "rgba(255,255,255,0.85)", maxWidth: hasHeroImage ? "520px" : "720px", lineHeight: 1.75, marginBottom: "2rem", wordBreak: "normal", overflowWrap: "break-word" }}>
                 {heroDescription}
               </p>
               <div className="hero-actions" style={{ display: "flex", gap: "14px", flexWrap: "wrap", alignItems: "center", marginBottom: "2rem" }}>

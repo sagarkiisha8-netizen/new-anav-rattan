@@ -194,7 +194,8 @@ export default async function DoctorProfilePage({ params }: Props) {
                   border: "1px solid rgba(18,54,83,0.1)",
                   position: "relative",
                   width: "100%",
-                  aspectRatio: "4 / 5",
+                  aspectRatio: "4 / 4.6",
+                  maxHeight: "420px",
                   background: "var(--cream)",
                   marginBottom: "24px"
                 }}>
@@ -203,7 +204,10 @@ export default async function DoctorProfilePage({ params }: Props) {
                     alt={doctor.name} 
                     fill 
                     sizes="(max-width: 768px) 100vw, 480px"
-                    style={{ objectFit: "cover", objectPosition: "center top" }} 
+                    style={{ 
+                      objectFit: "cover", 
+                      objectPosition: (doctor.slug && doctor.slug.includes("ganesh")) ? "center 16%" : "center 18%" 
+                    }} 
                     priority
                   />
                 </div>

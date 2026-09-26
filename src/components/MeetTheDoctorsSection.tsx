@@ -25,7 +25,7 @@ const doctors: Doctor[] = [
     bio: "Founder of Dr. Rattan ENT Clinic with over 35 years of surgical experience. Former Senior Resident at PGI Chandigarh and Sir Ganga Ram Hospital.",
     slug: "ganesh-dutt-rattan",
     image: "/images/dr-ganesh-dutt-rattan-0.jpeg",
-    objectPosition: "center top",
+    objectPosition: "center 16%",
     alt: "Dr. Ganesh Dutt Rattan, Senior ENT Surgeon and Founder of Dr. Rattan ENT Clinic"
   },
   {
@@ -33,10 +33,10 @@ const doctors: Doctor[] = [
     name: "Dr. Anav Rattan",
     role: "Consultant ENT Surgeon",
     qualifications: "MS (ENT), DNB, MNAMS",
-    bio: "Specialist in Otology, Cochlear Implants, and Skull Base Surgery. Trained at Seth G.S. Medical College, Mumbai and PGI Chandigarh.",
+    bio: "Specialist in Advanced Otology, Cochlear Implantation, Lateral Skull Base Surgery, and Neuro-otology. Trained at Seth G.S. Medical College & KEM Hospital, Mumbai and PGIMER Chandigarh.",
     slug: "anav-rattan",
     image: "/images/dr-anav-rattan-1.jpeg",
-    objectPosition: "center top",
+    objectPosition: "center 18%",
     alt: "Dr. Anav Rattan, Consultant ENT, Otologist, and Skull Base Surgeon at Dr. Rattan ENT Clinic"
   }
 ];
@@ -56,6 +56,8 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
   const displayDoctors: Doctor[] = propDoctors && propDoctors.length > 0
     ? propDoctors.map((d, i) => {
         const fallback = doctors[i] || doctors[0];
+        const isGanesh = (d.slug && d.slug.includes("ganesh")) || (d.name && d.name.toLowerCase().includes("ganesh")) || i === 0;
+        const objPos = isGanesh ? "center 16%" : "center 18%";
         return {
           id: d.id || fallback.id,
           name: d.name || fallback.name,
@@ -64,7 +66,7 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           bio: d.bio || fallback.bio,
           slug: d.slug || fallback.slug,
           image: d.image || fallback.image,
-          objectPosition: "center top",
+          objectPosition: objPos,
           alt: `${d.name || fallback.name}, ENT Specialist at Dr. Rattan ENT Clinic`,
         };
       })
@@ -434,11 +436,12 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           transform: translateX(4px);
         }
 
-        /* PHOTO CONTAINER (Identical 4:5 framing for Dr. Ganesh & Dr. Anav) */
+        /* PHOTO CONTAINER (Identical 4:4.6 framing for Dr. Ganesh & Dr. Anav) */
         .doc-photo-wrapper {
           position: relative;
           width: 100%;
-          aspect-ratio: 4 / 5;
+          aspect-ratio: 4 / 4.6;
+          max-height: 380px;
           overflow: hidden;
           background: #0b2438;
           border-top-left-radius: 19px;
@@ -451,7 +454,6 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
           height: 100% !important;
           display: block !important;
           object-fit: cover !important;
-          object-position: center top !important;
         }
 
         .doc-photo-gradient {
@@ -466,7 +468,7 @@ export default function MeetTheDoctorsSection({ doctors: propDoctors }: MeetTheD
 
         /* CARD BODY */
         .doc-info-body {
-          padding: 1.8rem 2rem 2.2rem;
+          padding: 1.5rem 1.6rem 1.6rem;
           display: flex;
           flex-direction: column;
           flex: 1;
